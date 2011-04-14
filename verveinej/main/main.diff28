@@ -1,0 +1,4921 @@
+Index: branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/SmalltalkMonticelloSourceLanguage.java
+===================================================================
+--- branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/SmalltalkMonticelloSourceLanguage.java	(revision 0)
++++ branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/SmalltalkMonticelloSourceLanguage.java	(revision 95)
+@@ -0,0 +1,17 @@
++// Automagically generated code, please do not change
++package fr.inria.verveine.core.gen.famix;
++
++import ch.akuhn.fame.FameDescription;
++import ch.akuhn.fame.FamePackage;
++
++
++@FamePackage("FAMIX")
++@FameDescription("SmalltalkMonticelloSourceLanguage")
++public class SmalltalkMonticelloSourceLanguage extends SourceLanguage {
++
++
++
++
++
++}
++
+Index: branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/AnnotationTypeAttribute.java
+===================================================================
+--- branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/AnnotationTypeAttribute.java	(revision 0)
++++ branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/AnnotationTypeAttribute.java	(revision 95)
+@@ -0,0 +1,107 @@
++// Automagically generated code, please do not change
++package fr.inria.verveine.core.gen.famix;
++
++import ch.akuhn.fame.internal.MultivalueSet;
++import java.util.*;
++import ch.akuhn.fame.FameProperty;
++import ch.akuhn.fame.FameDescription;
++import ch.akuhn.fame.FamePackage;
++
++
++@FamePackage("FAMIX")
++@FameDescription("AnnotationTypeAttribute")
++public class AnnotationTypeAttribute extends NamedEntity {
++
++
++
++    private Type declaredType;
++    
++    @FameProperty(name = "declaredType")
++    public Type getDeclaredType() {
++        return declaredType;
++    }
++
++    public void setDeclaredType(Type declaredType) {
++        this.declaredType = declaredType;
++    }
++    
++    private AnnotationType parentAnnotationType;
++    
++    @FameProperty(name = "parentAnnotationType", opposite = "attributes")
++    public AnnotationType getParentAnnotationType() {
++        return parentAnnotationType;
++    }
++
++    @Override
++	public ContainerEntity getBelongsTo() {
++		return null;
++	}
++
++    public void setParentAnnotationType(AnnotationType parentAnnotationType) {
++        if (this.parentAnnotationType != null) {
++            if (this.parentAnnotationType.equals(parentAnnotationType)) return;
++            this.parentAnnotationType.getAttributes().remove(this);
++        }
++        this.parentAnnotationType = parentAnnotationType;
++        if (parentAnnotationType == null) return;
++        parentAnnotationType.getAttributes().add(this);
++    }
++    
++    private Collection<AnnotationInstanceAttribute> annotationAttributeInstances; 
++
++    @FameProperty(name = "annotationAttributeInstances", opposite = "annotationTypeAttribute", derived = true)
++    public Collection<AnnotationInstanceAttribute> getAnnotationAttributeInstances() {
++        if (annotationAttributeInstances == null) {
++            annotationAttributeInstances = new MultivalueSet<AnnotationInstanceAttribute>() {
++                @Override
++                protected void clearOpposite(AnnotationInstanceAttribute e) {
++                    e.setAnnotationTypeAttribute(null);
++                }
++                @Override
++                protected void setOpposite(AnnotationInstanceAttribute e) {
++                    e.setAnnotationTypeAttribute(AnnotationTypeAttribute.this);
++                }
++            };
++        }
++        return annotationAttributeInstances;
++    }
++    
++    public void setAnnotationAttributeInstances(Collection<? extends AnnotationInstanceAttribute> annotationAttributeInstances) {
++        this.getAnnotationAttributeInstances().clear();
++        this.getAnnotationAttributeInstances().addAll(annotationAttributeInstances);
++    }                    
++    
++        
++    public void addAnnotationAttributeInstances(AnnotationInstanceAttribute one) {
++        this.getAnnotationAttributeInstances().add(one);
++    }   
++    
++    public void addAnnotationAttributeInstances(AnnotationInstanceAttribute one, AnnotationInstanceAttribute... many) {
++        this.getAnnotationAttributeInstances().add(one);
++        for (AnnotationInstanceAttribute each : many)
++            this.getAnnotationAttributeInstances().add(each);
++    }   
++    
++    public void addAnnotationAttributeInstances(Iterable<? extends AnnotationInstanceAttribute> many) {
++        for (AnnotationInstanceAttribute each : many)
++            this.getAnnotationAttributeInstances().add(each);
++    }   
++                
++    public void addAnnotationAttributeInstances(AnnotationInstanceAttribute[] many) {
++        for (AnnotationInstanceAttribute each : many)
++            this.getAnnotationAttributeInstances().add(each);
++    }
++    
++    public int numberOfAnnotationAttributeInstances() {
++        return getAnnotationAttributeInstances().size();
++    }
++
++    public boolean hasAnnotationAttributeInstances() {
++        return !getAnnotationAttributeInstances().isEmpty();
++    }
++    
++                
++
++
++}
++
+Index: branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/ThrownException.java
+===================================================================
+--- branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/ThrownException.java	(revision 0)
++++ branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/ThrownException.java	(revision 95)
+@@ -0,0 +1,35 @@
++// Automagically generated code, please do not change
++package fr.inria.verveine.core.gen.famix;
++
++import ch.akuhn.fame.FameProperty;
++import ch.akuhn.fame.FameDescription;
++import ch.akuhn.fame.FamePackage;
++
++
++@FamePackage("FAMIX")
++@FameDescription("ThrownException")
++public class ThrownException extends Exception {
++
++
++
++    private Method definingMethod;
++    
++    @FameProperty(name = "definingMethod", opposite = "thrownExceptions")
++    public Method getDefiningMethod() {
++        return definingMethod;
++    }
++
++    public void setDefiningMethod(Method definingMethod) {
++        if (this.definingMethod != null) {
++            if (this.definingMethod.equals(definingMethod)) return;
++            this.definingMethod.getThrownExceptions().remove(this);
++        }
++        this.definingMethod = definingMethod;
++        if (definingMethod == null) return;
++        definingMethod.getThrownExceptions().add(this);
++    }
++    
++
++
++}
++
+Index: branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/EnumValue.java
+===================================================================
+--- branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/EnumValue.java	(revision 0)
++++ branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/EnumValue.java	(revision 95)
+@@ -0,0 +1,35 @@
++// Automagically generated code, please do not change
++package fr.inria.verveine.core.gen.famix;
++
++import ch.akuhn.fame.FameProperty;
++import ch.akuhn.fame.FameDescription;
++import ch.akuhn.fame.FamePackage;
++
++
++@FamePackage("FAMIX")
++@FameDescription("EnumValue")
++public class EnumValue extends NamedEntity {
++
++
++
++    private Enum parentEnum;
++    
++    @FameProperty(name = "parentEnum", opposite = "values")
++    public Enum getParentEnum() {
++        return parentEnum;
++    }
++
++    public void setParentEnum(Enum parentEnum) {
++        if (this.parentEnum != null) {
++            if (this.parentEnum.equals(parentEnum)) return;
++            this.parentEnum.getValues().remove(this);
++        }
++        this.parentEnum = parentEnum;
++        if (parentEnum == null) return;
++        parentEnum.getValues().add(this);
++    }
++    
++
++
++}
++
+Index: branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/Access.java
+===================================================================
+--- branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/Access.java	(revision 0)
++++ branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/Access.java	(revision 95)
+@@ -0,0 +1,77 @@
++// Automagically generated code, please do not change
++package fr.inria.verveine.core.gen.famix;
++
++import ch.akuhn.fame.FameProperty;
++import ch.akuhn.fame.FameDescription;
++import ch.akuhn.fame.FamePackage;
++
++
++@FamePackage("FAMIX")
++@FameDescription("Access")
++public class Access extends Association {
++
++
++
++    private Boolean isWrite;
++    
++    @FameProperty(name = "isWrite")
++    public Boolean getIsWrite() {
++        return isWrite;
++    }
++
++    public void setIsWrite(Boolean isWrite) {
++        this.isWrite = isWrite;
++    }
++    
++    private BehaviouralEntity accessor;
++    
++    @FameProperty(name = "accessor", opposite = "accesses")
++    public BehaviouralEntity getAccessor() {
++        return accessor;
++    }
++
++    public void setAccessor(BehaviouralEntity accessor) {
++        if (this.accessor != null) {
++            if (this.accessor.equals(accessor)) return;
++            this.accessor.getAccesses().remove(this);
++        }
++        this.accessor = accessor;
++        if (accessor == null) return;
++        accessor.getAccesses().add(this);
++    }
++    
++    private StructuralEntity variable;
++    
++    @FameProperty(name = "variable", opposite = "incomingAccesses")
++    public StructuralEntity getVariable() {
++        return variable;
++    }
++
++    public void setVariable(StructuralEntity variable) {
++        if (this.variable != null) {
++            if (this.variable.equals(variable)) return;
++            this.variable.getIncomingAccesses().remove(this);
++        }
++        this.variable = variable;
++        if (variable == null) return;
++        variable.getIncomingAccesses().add(this);
++    }
++    
++    @FameProperty(name = "isRead", derived = true)
++    public Boolean getIsRead() {
++        // TODO: this is a derived property, implement this method manually.
++    	return ! getIsWrite(); 
++    }
++
++	@Override
++	public NamedEntity getTo() {
++		return this.getVariable();
++	}
++
++	@Override
++	public NamedEntity getFrom() {
++		return this.getAccessor();
++	}
++
++}
++
+Index: branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/SourcedEntity.java
+===================================================================
+--- branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/SourcedEntity.java	(revision 0)
++++ branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/SourcedEntity.java	(revision 95)
+@@ -0,0 +1,107 @@
++// Automagically generated code, please do not change
++package fr.inria.verveine.core.gen.famix;
++
++import ch.akuhn.fame.internal.MultivalueSet;
++import java.util.*;
++import ch.akuhn.fame.FameProperty;
++import ch.akuhn.fame.FameDescription;
++import ch.akuhn.fame.FamePackage;
++
++
++@FamePackage("FAMIX")
++@FameDescription("SourcedEntity")
++public class SourcedEntity extends Entity {
++
++
++
++    private SourceAnchor sourceAnchor;
++    
++    @FameProperty(name = "sourceAnchor", opposite = "element")
++    public SourceAnchor getSourceAnchor() {
++        return sourceAnchor;
++    }
++
++    public void setSourceAnchor(SourceAnchor sourceAnchor) {
++        if (this.sourceAnchor == null ? sourceAnchor != null : !this.sourceAnchor.equals(sourceAnchor)) {
++            SourceAnchor old_sourceAnchor = this.sourceAnchor;
++            this.sourceAnchor = sourceAnchor;
++            if (old_sourceAnchor != null) old_sourceAnchor.setElement(null);
++            if (sourceAnchor != null) sourceAnchor.setElement(this);
++        }
++    }
++    
++    private SourceLanguage declaredSourceLanguage;
++    
++    @FameProperty(name = "declaredSourceLanguage", opposite = "sourcedEntities")
++    public SourceLanguage getDeclaredSourceLanguage() {
++        return declaredSourceLanguage;
++    }
++
++    public void setDeclaredSourceLanguage(SourceLanguage declaredSourceLanguage) {
++        if (this.declaredSourceLanguage != null) {
++            if (this.declaredSourceLanguage.equals(declaredSourceLanguage)) return;
++            this.declaredSourceLanguage.getSourcedEntities().remove(this);
++        }
++        this.declaredSourceLanguage = declaredSourceLanguage;
++        if (declaredSourceLanguage == null) return;
++        declaredSourceLanguage.getSourcedEntities().add(this);
++    }
++    
++    private Collection<Comment> comments; 
++
++    @FameProperty(name = "comments", opposite = "container", derived = true)
++    public Collection<Comment> getComments() {
++        if (comments == null) {
++            comments = new MultivalueSet<Comment>() {
++                @Override
++                protected void clearOpposite(Comment e) {
++                    e.setContainer(null);
++                }
++                @Override
++                protected void setOpposite(Comment e) {
++                    e.setContainer(SourcedEntity.this);
++                }
++            };
++        }
++        return comments;
++    }
++    
++    public void setComments(Collection<? extends Comment> comments) {
++        this.getComments().clear();
++        this.getComments().addAll(comments);
++    }                    
++    
++        
++    public void addComments(Comment one) {
++        this.getComments().add(one);
++    }   
++    
++    public void addComments(Comment one, Comment... many) {
++        this.getComments().add(one);
++        for (Comment each : many)
++            this.getComments().add(each);
++    }   
++    
++    public void addComments(Iterable<? extends Comment> many) {
++        for (Comment each : many)
++            this.getComments().add(each);
++    }   
++                
++    public void addComments(Comment[] many) {
++        for (Comment each : many)
++            this.getComments().add(each);
++    }
++    
++    public int numberOfComments() {
++        return getComments().size();
++    }
++
++    public boolean hasComments() {
++        return !getComments().isEmpty();
++    }
++    
++                
++
++
++}
++
+Index: branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/Comment.java
+===================================================================
+--- branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/Comment.java	(revision 0)
++++ branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/Comment.java	(revision 95)
+@@ -0,0 +1,46 @@
++// Automagically generated code, please do not change
++package fr.inria.verveine.core.gen.famix;
++
++import ch.akuhn.fame.FameProperty;
++import ch.akuhn.fame.FameDescription;
++import ch.akuhn.fame.FamePackage;
++
++
++@FamePackage("FAMIX")
++@FameDescription("Comment")
++public class Comment extends SourcedEntity {
++
++
++
++    private String content;
++    
++    @FameProperty(name = "content")
++    public String getContent() {
++        return content;
++    }
++
++    public void setContent(String content) {
++        this.content = content;
++    }
++    
++    private SourcedEntity container;
++    
++    @FameProperty(name = "container", opposite = "comments")
++    public SourcedEntity getContainer() {
++        return container;
++    }
++
++    public void setContainer(SourcedEntity container) {
++        if (this.container != null) {
++            if (this.container.equals(container)) return;
++            this.container.getComments().remove(this);
++        }
++        this.container = container;
++        if (container == null) return;
++        container.getComments().add(this);
++    }
++    
++
++
++}
++
+Index: branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/Attribute.java
+===================================================================
+--- branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/Attribute.java	(revision 0)
++++ branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/Attribute.java	(revision 95)
+@@ -0,0 +1,51 @@
++// Automagically generated code, please do not change
++package fr.inria.verveine.core.gen.famix;
++
++import ch.akuhn.fame.FameProperty;
++import ch.akuhn.fame.FameDescription;
++import ch.akuhn.fame.FamePackage;
++
++
++@FamePackage("FAMIX")
++@FameDescription("Attribute")
++public class Attribute extends StructuralEntity {
++
++
++
++    private Boolean hasClassScope;
++    
++    @FameProperty(name = "hasClassScope")
++    public Boolean getHasClassScope() {
++        return hasClassScope;
++    }
++
++    public void setHasClassScope(Boolean hasClassScope) {
++        this.hasClassScope = hasClassScope;
++    }
++    
++    private Type parentType;
++    
++    @FameProperty(name = "parentType", opposite = "attributes")
++    public Type getParentType() {
++        return parentType;
++    }
++
++    @Override
++	public ContainerEntity getBelongsTo() {
++		return getParentType();
++	}
++
++    public void setParentType(Type parentType) {
++        if (this.parentType != null) {
++            if (this.parentType.equals(parentType)) return;
++            this.parentType.getAttributes().remove(this);
++        }
++        this.parentType = parentType;
++        if (parentType == null) return;
++        parentType.getAttributes().add(this);
++    }
++    
++
++
++}
++
+Index: branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/Enum.java
+===================================================================
+--- branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/Enum.java	(revision 0)
++++ branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/Enum.java	(revision 95)
+@@ -0,0 +1,74 @@
++// Automagically generated code, please do not change
++package fr.inria.verveine.core.gen.famix;
++
++import ch.akuhn.fame.internal.MultivalueSet;
++import java.util.*;
++import ch.akuhn.fame.FameProperty;
++import ch.akuhn.fame.FameDescription;
++import ch.akuhn.fame.FamePackage;
++
++
++@FamePackage("FAMIX")
++@FameDescription("Enum")
++public class Enum extends Type {
++
++
++
++    private Collection<EnumValue> values; 
++
++    @FameProperty(name = "values", opposite = "parentEnum", derived = true)
++    public Collection<EnumValue> getValues() {
++        if (values == null) {
++            values = new MultivalueSet<EnumValue>() {
++                @Override
++                protected void clearOpposite(EnumValue e) {
++                    e.setParentEnum(null);
++                }
++                @Override
++                protected void setOpposite(EnumValue e) {
++                    e.setParentEnum(Enum.this);
++                }
++            };
++        }
++        return values;
++    }
++    
++    public void setValues(Collection<? extends EnumValue> values) {
++        this.getValues().clear();
++        this.getValues().addAll(values);
++    }                    
++    
++        
++    public void addValues(EnumValue one) {
++        this.getValues().add(one);
++    }   
++    
++    public void addValues(EnumValue one, EnumValue... many) {
++        this.getValues().add(one);
++        for (EnumValue each : many)
++            this.getValues().add(each);
++    }   
++    
++    public void addValues(Iterable<? extends EnumValue> many) {
++        for (EnumValue each : many)
++            this.getValues().add(each);
++    }   
++                
++    public void addValues(EnumValue[] many) {
++        for (EnumValue each : many)
++            this.getValues().add(each);
++    }
++    
++    public int numberOfValues() {
++        return getValues().size();
++    }
++
++    public boolean hasValues() {
++        return !getValues().isEmpty();
++    }
++    
++                
++
++
++}
++
+Index: branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/CSourceLanguage.java
+===================================================================
+--- branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/CSourceLanguage.java	(revision 0)
++++ branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/CSourceLanguage.java	(revision 95)
+@@ -0,0 +1,17 @@
++// Automagically generated code, please do not change
++package fr.inria.verveine.core.gen.famix;
++
++import ch.akuhn.fame.FameDescription;
++import ch.akuhn.fame.FamePackage;
++
++
++@FamePackage("FAMIX")
++@FameDescription("CSourceLanguage")
++public class CSourceLanguage extends SourceLanguage {
++
++
++
++
++
++}
++
+Index: branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/Invocation.java
+===================================================================
+--- branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/Invocation.java	(revision 0)
++++ branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/Invocation.java	(revision 95)
+@@ -0,0 +1,137 @@
++// Automagically generated code, please do not change
++package fr.inria.verveine.core.gen.famix;
++
++import ch.akuhn.fame.internal.MultivalueSet;
++import java.util.*;
++import ch.akuhn.fame.FameProperty;
++import ch.akuhn.fame.FameDescription;
++import ch.akuhn.fame.FamePackage;
++
++
++@FamePackage("FAMIX")
++@FameDescription("Invocation")
++public class Invocation extends Association {
++
++
++
++    private BehaviouralEntity sender;
++    
++    @FameProperty(name = "sender", opposite = "outgoingInvocations")
++    public BehaviouralEntity getSender() {
++        return sender;
++    }
++
++    public void setSender(BehaviouralEntity sender) {
++        if (this.sender != null) {
++            if (this.sender.equals(sender)) return;
++            this.sender.getOutgoingInvocations().remove(this);
++        }
++        this.sender = sender;
++        if (sender == null) return;
++        sender.getOutgoingInvocations().add(this);
++    }
++    
++    private NamedEntity receiver;
++    
++    @FameProperty(name = "receiver", opposite = "receivingInvocations")
++    public NamedEntity getReceiver() {
++        return receiver;
++    }
++
++    public void setReceiver(NamedEntity receiver) {
++        if (this.receiver != null) {
++            if (this.receiver.equals(receiver)) return;
++            this.receiver.getReceivingInvocations().remove(this);
++        }
++        this.receiver = receiver;
++        if (receiver == null) return;
++        receiver.getReceivingInvocations().add(this);
++    }
++    
++    private String receiverSourceCode;
++    
++    @FameProperty(name = "receiverSourceCode")
++    public String getReceiverSourceCode() {
++        return receiverSourceCode;
++    }
++
++    public void setReceiverSourceCode(String receiverSourceCode) {
++        this.receiverSourceCode = receiverSourceCode;
++    }
++    
++    private String signature;
++    
++    @FameProperty(name = "signature")
++    public String getSignature() {
++        return signature;
++    }
++
++    public void setSignature(String signature) {
++        this.signature = signature;
++    }
++    
++    private Collection<BehaviouralEntity> candidates; 
++
++    @FameProperty(name = "candidates", opposite = "incomingInvocations")
++    public Collection<BehaviouralEntity> getCandidates() {
++        if (candidates == null) {
++            candidates = new MultivalueSet<BehaviouralEntity>() {
++                @Override
++                protected void clearOpposite(BehaviouralEntity e) {
++                    e.getIncomingInvocations().remove(Invocation.this);
++                }
++                @Override
++                protected void setOpposite(BehaviouralEntity e) {
++                    e.getIncomingInvocations().add(Invocation.this);
++                }
++            };
++        }
++        return candidates;
++    }
++    
++    public void setCandidates(Collection<? extends BehaviouralEntity> candidates) {
++        this.getCandidates().clear();
++        this.getCandidates().addAll(candidates);
++    }
++    
++    public void addCandidates(BehaviouralEntity one) {
++        this.getCandidates().add(one);
++    }   
++    
++    public void addCandidates(BehaviouralEntity one, BehaviouralEntity... many) {
++        this.getCandidates().add(one);
++        for (BehaviouralEntity each : many)
++            this.getCandidates().add(each);
++    }   
++    
++    public void addCandidates(Iterable<? extends BehaviouralEntity> many) {
++        for (BehaviouralEntity each : many)
++            this.getCandidates().add(each);
++    }   
++                
++    public void addCandidates(BehaviouralEntity[] many) {
++        for (BehaviouralEntity each : many)
++            this.getCandidates().add(each);
++    }
++    
++    public int numberOfCandidates() {
++        return getCandidates().size();
++    }
++
++    public boolean hasCandidates() {
++        return !getCandidates().isEmpty();
++    }
++
++	public NamedEntity getFrom() {
++		return this.getSender();
++	}
++
++	public NamedEntity getTo() {
++		return this.getReceiver();
++	}
++    
++                
++
++
++}
++
+Index: branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/NamespaceGroup.java
+===================================================================
+--- branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/NamespaceGroup.java	(revision 0)
++++ branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/NamespaceGroup.java	(revision 95)
+@@ -0,0 +1,18 @@
++// Automagically generated code, please do not change
++package fr.inria.verveine.core.gen.famix;
++
++import ch.akuhn.fame.FameDescription;
++import ch.akuhn.fame.FamePackage;
++import fr.inria.verveine.core.gen.moose.Group;
++
++
++@FamePackage("FAMIX")
++@FameDescription("NamespaceGroup")
++public class NamespaceGroup extends Group {
++
++
++
++
++
++}
++
+Index: branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/SmalltalkSourceLanguage.java
+===================================================================
+--- branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/SmalltalkSourceLanguage.java	(revision 0)
++++ branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/SmalltalkSourceLanguage.java	(revision 95)
+@@ -0,0 +1,17 @@
++// Automagically generated code, please do not change
++package fr.inria.verveine.core.gen.famix;
++
++import ch.akuhn.fame.FameDescription;
++import ch.akuhn.fame.FamePackage;
++
++
++@FamePackage("FAMIX")
++@FameDescription("SmalltalkSourceLanguage")
++public class SmalltalkSourceLanguage extends SourceLanguage {
++
++
++
++
++
++}
++
+Index: branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/Entity.java
+===================================================================
+--- branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/Entity.java	(revision 0)
++++ branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/Entity.java	(revision 95)
+@@ -0,0 +1,74 @@
++// Automagically generated code, please do not change
++package fr.inria.verveine.core.gen.famix;
++
++import ch.akuhn.fame.internal.MultivalueSet;
++import java.util.*;
++import ch.akuhn.fame.FameProperty;
++import ch.akuhn.fame.FameDescription;
++import ch.akuhn.fame.FamePackage;
++
++
++@FamePackage("FAMIX")
++@FameDescription("Entity")
++public class Entity  {
++
++
++
++    private Collection<AnnotationInstance> annotationInstances; 
++
++    @FameProperty(name = "annotationInstances", opposite = "annotatedEntity", derived = true)
++    public Collection<AnnotationInstance> getAnnotationInstances() {
++        if (annotationInstances == null) {
++            annotationInstances = new MultivalueSet<AnnotationInstance>() {
++                @Override
++                protected void clearOpposite(AnnotationInstance e) {
++                    e.setAnnotatedEntity(null);
++                }
++                @Override
++                protected void setOpposite(AnnotationInstance e) {
++                    e.setAnnotatedEntity(Entity.this);
++                }
++            };
++        }
++        return annotationInstances;
++    }
++    
++    public void setAnnotationInstances(Collection<? extends AnnotationInstance> annotationInstances) {
++        this.getAnnotationInstances().clear();
++        this.getAnnotationInstances().addAll(annotationInstances);
++    }                    
++    
++        
++    public void addAnnotationInstances(AnnotationInstance one) {
++        this.getAnnotationInstances().add(one);
++    }   
++    
++    public void addAnnotationInstances(AnnotationInstance one, AnnotationInstance... many) {
++        this.getAnnotationInstances().add(one);
++        for (AnnotationInstance each : many)
++            this.getAnnotationInstances().add(each);
++    }   
++    
++    public void addAnnotationInstances(Iterable<? extends AnnotationInstance> many) {
++        for (AnnotationInstance each : many)
++            this.getAnnotationInstances().add(each);
++    }   
++                
++    public void addAnnotationInstances(AnnotationInstance[] many) {
++        for (AnnotationInstance each : many)
++            this.getAnnotationInstances().add(each);
++    }
++    
++    public int numberOfAnnotationInstances() {
++        return getAnnotationInstances().size();
++    }
++
++    public boolean hasAnnotationInstances() {
++        return !getAnnotationInstances().isEmpty();
++    }
++    
++                
++
++
++}
++
+Index: branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/Parameter.java
+===================================================================
+--- branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/Parameter.java	(revision 0)
++++ branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/Parameter.java	(revision 95)
+@@ -0,0 +1,40 @@
++// Automagically generated code, please do not change
++package fr.inria.verveine.core.gen.famix;
++
++import ch.akuhn.fame.FameProperty;
++import ch.akuhn.fame.FameDescription;
++import ch.akuhn.fame.FamePackage;
++
++
++@FamePackage("FAMIX")
++@FameDescription("Parameter")
++public class Parameter extends StructuralEntity {
++
++
++
++    private BehaviouralEntity parentBehaviouralEntity;
++    
++    @FameProperty(name = "parentBehaviouralEntity", opposite = "parameters")
++    public BehaviouralEntity getParentBehaviouralEntity() {
++        return parentBehaviouralEntity;
++    }
++
++    @Override
++	public ContainerEntity getBelongsTo() {
++		return getParentBehaviouralEntity();
++	}
++
++    public void setParentBehaviouralEntity(BehaviouralEntity parentBehaviouralEntity) {
++        if (this.parentBehaviouralEntity != null) {
++            if (this.parentBehaviouralEntity.equals(parentBehaviouralEntity)) return;
++            this.parentBehaviouralEntity.getParameters().remove(this);
++        }
++        this.parentBehaviouralEntity = parentBehaviouralEntity;
++        if (parentBehaviouralEntity == null) return;
++        parentBehaviouralEntity.getParameters().add(this);
++    }
++    
++
++
++}
++
+Index: branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/ImplicitVariable.java
+===================================================================
+--- branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/ImplicitVariable.java	(revision 0)
++++ branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/ImplicitVariable.java	(revision 95)
+@@ -0,0 +1,34 @@
++// Automagically generated code, please do not change
++package fr.inria.verveine.core.gen.famix;
++
++import ch.akuhn.fame.FameProperty;
++import ch.akuhn.fame.FameDescription;
++import ch.akuhn.fame.FamePackage;
++
++
++@FamePackage("FAMIX")
++@FameDescription("ImplicitVariable")
++public class ImplicitVariable extends StructuralEntity {
++
++
++
++    private Type container;
++    
++    @FameProperty(name = "container")
++    public Type getContainer() {
++        return container;
++    }
++
++    @Override
++	public ContainerEntity getBelongsTo() {
++		return getContainer();
++	}
++
++    public void setContainer(Type container) {
++        this.container = container;
++    }
++    
++
++
++}
++
+Index: branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/Method.java
+===================================================================
+--- branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/Method.java	(revision 0)
++++ branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/Method.java	(revision 95)
+@@ -0,0 +1,226 @@
++// Automagically generated code, please do not change
++package fr.inria.verveine.core.gen.famix;
++
++import ch.akuhn.fame.internal.MultivalueSet;
++import java.util.*;
++import ch.akuhn.fame.FameProperty;
++import ch.akuhn.fame.FameDescription;
++import ch.akuhn.fame.FamePackage;
++
++
++@FamePackage("FAMIX")
++@FameDescription("Method")
++public class Method extends BehaviouralEntity {
++
++
++
++    private Collection<CaughtException> caughtExceptions; 
++
++    @FameProperty(name = "caughtExceptions", opposite = "definingMethod", derived = true)
++    public Collection<CaughtException> getCaughtExceptions() {
++        if (caughtExceptions == null) {
++            caughtExceptions = new MultivalueSet<CaughtException>() {
++                @Override
++                protected void clearOpposite(CaughtException e) {
++                    e.setDefiningMethod(null);
++                }
++                @Override
++                protected void setOpposite(CaughtException e) {
++                    e.setDefiningMethod(Method.this);
++                }
++            };
++        }
++        return caughtExceptions;
++    }
++    
++    public void setCaughtExceptions(Collection<? extends CaughtException> caughtExceptions) {
++        this.getCaughtExceptions().clear();
++        this.getCaughtExceptions().addAll(caughtExceptions);
++    }                    
++    
++        
++    public void addCaughtExceptions(CaughtException one) {
++        this.getCaughtExceptions().add(one);
++    }   
++    
++    public void addCaughtExceptions(CaughtException one, CaughtException... many) {
++        this.getCaughtExceptions().add(one);
++        for (CaughtException each : many)
++            this.getCaughtExceptions().add(each);
++    }   
++    
++    public void addCaughtExceptions(Iterable<? extends CaughtException> many) {
++        for (CaughtException each : many)
++            this.getCaughtExceptions().add(each);
++    }   
++                
++    public void addCaughtExceptions(CaughtException[] many) {
++        for (CaughtException each : many)
++            this.getCaughtExceptions().add(each);
++    }
++    
++    public int numberOfCaughtExceptions() {
++        return getCaughtExceptions().size();
++    }
++
++    public boolean hasCaughtExceptions() {
++        return !getCaughtExceptions().isEmpty();
++    }
++    
++                
++    private Collection<DeclaredException> declaredExceptions; 
++
++    @FameProperty(name = "declaredExceptions", opposite = "definingMethod", derived = true)
++    public Collection<DeclaredException> getDeclaredExceptions() {
++        if (declaredExceptions == null) {
++            declaredExceptions = new MultivalueSet<DeclaredException>() {
++                @Override
++                protected void clearOpposite(DeclaredException e) {
++                    e.setDefiningMethod(null);
++                }
++                @Override
++                protected void setOpposite(DeclaredException e) {
++                    e.setDefiningMethod(Method.this);
++                }
++            };
++        }
++        return declaredExceptions;
++    }
++    
++    public void setDeclaredExceptions(Collection<? extends DeclaredException> declaredExceptions) {
++        this.getDeclaredExceptions().clear();
++        this.getDeclaredExceptions().addAll(declaredExceptions);
++    }                    
++    
++        
++    public void addDeclaredExceptions(DeclaredException one) {
++        this.getDeclaredExceptions().add(one);
++    }   
++    
++    public void addDeclaredExceptions(DeclaredException one, DeclaredException... many) {
++        this.getDeclaredExceptions().add(one);
++        for (DeclaredException each : many)
++            this.getDeclaredExceptions().add(each);
++    }   
++    
++    public void addDeclaredExceptions(Iterable<? extends DeclaredException> many) {
++        for (DeclaredException each : many)
++            this.getDeclaredExceptions().add(each);
++    }   
++                
++    public void addDeclaredExceptions(DeclaredException[] many) {
++        for (DeclaredException each : many)
++            this.getDeclaredExceptions().add(each);
++    }
++    
++    public int numberOfDeclaredExceptions() {
++        return getDeclaredExceptions().size();
++    }
++
++    public boolean hasDeclaredExceptions() {
++        return !getDeclaredExceptions().isEmpty();
++    }
++    
++                
++    private Boolean hasClassScope;
++    
++    @FameProperty(name = "hasClassScope")
++    public Boolean getHasClassScope() {
++        return hasClassScope;
++    }
++
++    public void setHasClassScope(Boolean hasClassScope) {
++        this.hasClassScope = hasClassScope;
++    }
++    
++    private Collection<ThrownException> thrownExceptions; 
++
++    @FameProperty(name = "thrownExceptions", opposite = "definingMethod", derived = true)
++    public Collection<ThrownException> getThrownExceptions() {
++        if (thrownExceptions == null) {
++            thrownExceptions = new MultivalueSet<ThrownException>() {
++                @Override
++                protected void clearOpposite(ThrownException e) {
++                    e.setDefiningMethod(null);
++                }
++                @Override
++                protected void setOpposite(ThrownException e) {
++                    e.setDefiningMethod(Method.this);
++                }
++            };
++        }
++        return thrownExceptions;
++    }
++    
++    public void setThrownExceptions(Collection<? extends ThrownException> thrownExceptions) {
++        this.getThrownExceptions().clear();
++        this.getThrownExceptions().addAll(thrownExceptions);
++    }                    
++    
++        
++    public void addThrownExceptions(ThrownException one) {
++        this.getThrownExceptions().add(one);
++    }   
++    
++    public void addThrownExceptions(ThrownException one, ThrownException... many) {
++        this.getThrownExceptions().add(one);
++        for (ThrownException each : many)
++            this.getThrownExceptions().add(each);
++    }   
++    
++    public void addThrownExceptions(Iterable<? extends ThrownException> many) {
++        for (ThrownException each : many)
++            this.getThrownExceptions().add(each);
++    }   
++                
++    public void addThrownExceptions(ThrownException[] many) {
++        for (ThrownException each : many)
++            this.getThrownExceptions().add(each);
++    }
++    
++    public int numberOfThrownExceptions() {
++        return getThrownExceptions().size();
++    }
++
++    public boolean hasThrownExceptions() {
++        return !getThrownExceptions().isEmpty();
++    }
++    
++                
++    private Type parentType;
++    
++    @FameProperty(name = "parentType", opposite = "methods")
++    public Type getParentType() {
++        return parentType;
++    }
++
++    @Override
++	public ContainerEntity getBelongsTo() {
++		return getParentType();
++	}
++
++	public void setParentType(Type parentType) {
++        if (this.parentType != null) {
++            if (this.parentType.equals(parentType)) return;
++            this.parentType.getMethods().remove(this);
++        }
++        this.parentType = parentType;
++        if (parentType == null) return;
++        parentType.getMethods().add(this);
++    }
++    
++    private String kind;
++    
++    @FameProperty(name = "kind")
++    public String getKind() {
++        return kind;
++    }
++
++    public void setKind(String kind) {
++        this.kind = kind;
++    }
++    
++
++
++}
++
+Index: branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/NamedEntity.java
+===================================================================
+--- branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/NamedEntity.java	(revision 0)
++++ branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/NamedEntity.java	(revision 95)
+@@ -0,0 +1,242 @@
++// Automagically generated code, please do not change
++package fr.inria.verveine.core.gen.famix;
++
++import ch.akuhn.fame.internal.MultivalueSet;
++import java.util.*;
++import ch.akuhn.fame.FameProperty;
++import ch.akuhn.fame.FameDescription;
++import ch.akuhn.fame.FamePackage;
++
++
++@FamePackage("FAMIX")
++@FameDescription("NamedEntity")
++public class NamedEntity extends SourcedEntity {
++
++
++
++    public NamedEntity() {
++		super();
++		this.setIsFinal(Boolean.FALSE);
++		this.setIsPrivate(Boolean.FALSE);
++		this.setIsProtected(Boolean.FALSE);
++		this.setIsPublic(Boolean.FALSE);
++		this.setIsAbstract(Boolean.FALSE);
++	}
++
++	private Boolean isAbstract;
++    
++    @FameProperty(name = "isAbstract")
++    public Boolean getIsAbstract() {
++        return isAbstract;
++    }
++
++    public void setIsAbstract(Boolean isAbstract) {
++        this.isAbstract = isAbstract;
++    }
++    
++    private Boolean isPrivate;
++    
++    @FameProperty(name = "isPrivate")
++    public Boolean getIsPrivate() {
++        return isPrivate;
++    }
++
++    public void setIsPrivate(Boolean isPrivate) {
++        this.isPrivate = isPrivate;
++    }
++    
++    private Boolean isPackage;
++    
++    @FameProperty(name = "isPackage")
++    public Boolean getIsPackage() {
++        return isPackage;
++    }
++
++    public void setIsPackage(Boolean isPackage) {
++        this.isPackage = isPackage;
++    }
++    
++    private Package parentPackage;
++    
++    @FameProperty(name = "parentPackage", opposite = "childNamedEntities")
++    public Package getParentPackage() {
++        return parentPackage;
++    }
++
++    public void setParentPackage(Package parentPackage) {
++        if (this.parentPackage != null) {
++            if (this.parentPackage.equals(parentPackage)) return;
++            this.parentPackage.getChildNamedEntities().remove(this);
++        }
++        this.parentPackage = parentPackage;
++        if (parentPackage == null) return;
++        parentPackage.getChildNamedEntities().add(this);
++    }
++    
++    private String name;
++    
++    @FameProperty(name = "name")
++    public String getName() {
++        return name;
++    }
++
++    public void setName(String name) {
++        this.name = name;
++    }
++    
++    private Boolean isStub;
++    
++    @FameProperty(name = "isStub")
++    public Boolean getIsStub() {
++        return isStub;
++    }
++
++    public void setIsStub(Boolean isStub) {
++        this.isStub = isStub;
++    }
++    
++    private Boolean isPublic;
++    
++    @FameProperty(name = "isPublic")
++    public Boolean getIsPublic() {
++        return isPublic;
++    }
++
++    public void setIsPublic(Boolean isPublic) {
++        this.isPublic = isPublic;
++    }
++    
++    private Collection<Invocation> receivingInvocations; 
++
++    @FameProperty(name = "receivingInvocations", opposite = "receiver", derived = true)
++    public Collection<Invocation> getReceivingInvocations() {
++        if (receivingInvocations == null) {
++            receivingInvocations = new MultivalueSet<Invocation>() {
++                @Override
++                protected void clearOpposite(Invocation e) {
++                    e.setReceiver(null);
++                }
++                @Override
++                protected void setOpposite(Invocation e) {
++                    e.setReceiver(NamedEntity.this);
++                }
++            };
++        }
++        return receivingInvocations;
++    }
++    
++    public void setReceivingInvocations(Collection<? extends Invocation> receivingInvocations) {
++        this.getReceivingInvocations().clear();
++        this.getReceivingInvocations().addAll(receivingInvocations);
++    }                    
++    
++        
++    public void addReceivingInvocations(Invocation one) {
++        this.getReceivingInvocations().add(one);
++    }   
++    
++    public void addReceivingInvocations(Invocation one, Invocation... many) {
++        this.getReceivingInvocations().add(one);
++        for (Invocation each : many)
++            this.getReceivingInvocations().add(each);
++    }   
++    
++    public void addReceivingInvocations(Iterable<? extends Invocation> many) {
++        for (Invocation each : many)
++            this.getReceivingInvocations().add(each);
++    }   
++                
++    public void addReceivingInvocations(Invocation[] many) {
++        for (Invocation each : many)
++            this.getReceivingInvocations().add(each);
++    }
++    
++    public int numberOfReceivingInvocations() {
++        return getReceivingInvocations().size();
++    }
++
++    public boolean hasReceivingInvocations() {
++        return !getReceivingInvocations().isEmpty();
++    }
++    
++                
++    private Boolean isProtected;
++    
++    @FameProperty(name = "isProtected")
++    public Boolean getIsProtected() {
++        return isProtected;
++    }
++
++    public void setIsProtected(Boolean isProtected) {
++        this.isProtected = isProtected;
++    }
++    
++    private Collection<String> modifiers; 
++
++    @FameProperty(name = "modifiers")
++    public Collection<String> getModifiers() {
++        if (modifiers == null) modifiers = new HashSet<String>();
++        return modifiers;
++    }
++    
++    public void setModifiers(Collection<? extends String> modifiers) {
++        this.getModifiers().clear();
++        this.getModifiers().addAll(modifiers);
++    }                    
++
++    public void addModifiers(String one) {
++        this.getModifiers().add(one);
++    }   
++    
++    public void addModifiers(String one, String... many) {
++        this.getModifiers().add(one);
++        for (String each : many)
++            this.getModifiers().add(each);
++    }   
++    
++    public void addModifiers(Iterable<? extends String> many) {
++        for (String each : many)
++            this.getModifiers().add(each);
++    }   
++                
++    public void addModifiers(String[] many) {
++        for (String each : many)
++            this.getModifiers().add(each);
++    }
++    
++    public int numberOfModifiers() {
++        return getModifiers().size();
++    }
++
++    public boolean hasModifiers() {
++        return !getModifiers().isEmpty();
++    }
++    
++                
++    @FameProperty(name = "belongsTo", derived = true)
++    public ContainerEntity getBelongsTo() {
++        // TODO: this is a derived property, implement this method manually.
++        throw new UnsupportedOperationException("NamedEntity.getBelongsTo() Not implemented in this class, use the proper subclass ("+this.getClass().getName()+")"); 
++    }
++    
++    private Boolean isFinal;
++    
++    @FameProperty(name = "isFinal")
++    public Boolean getIsFinal() {
++        return isFinal;
++    }
++
++    public void setIsFinal(Boolean isFinal) {
++        this.isFinal = isFinal;
++    }
++    
++
++	@Override
++	public String toString() {
++	// mainly for debugging purposes (in Eclipse debugger)
++		return "a " + this.getClass().getCanonicalName() + " named: " + this.getName();
++	}
++    
++
++}
++
+Index: branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/DeclaredException.java
+===================================================================
+--- branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/DeclaredException.java	(revision 0)
++++ branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/DeclaredException.java	(revision 95)
+@@ -0,0 +1,35 @@
++// Automagically generated code, please do not change
++package fr.inria.verveine.core.gen.famix;
++
++import ch.akuhn.fame.FameProperty;
++import ch.akuhn.fame.FameDescription;
++import ch.akuhn.fame.FamePackage;
++
++
++@FamePackage("FAMIX")
++@FameDescription("DeclaredException")
++public class DeclaredException extends Exception {
++
++
++
++    private Method definingMethod;
++    
++    @FameProperty(name = "definingMethod", opposite = "declaredExceptions")
++    public Method getDefiningMethod() {
++        return definingMethod;
++    }
++
++    public void setDefiningMethod(Method definingMethod) {
++        if (this.definingMethod != null) {
++            if (this.definingMethod.equals(definingMethod)) return;
++            this.definingMethod.getDeclaredExceptions().remove(this);
++        }
++        this.definingMethod = definingMethod;
++        if (definingMethod == null) return;
++        definingMethod.getDeclaredExceptions().add(this);
++    }
++    
++
++
++}
++
+Index: branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/AnnotationInstanceAttribute.java
+===================================================================
+--- branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/AnnotationInstanceAttribute.java	(revision 0)
++++ branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/AnnotationInstanceAttribute.java	(revision 95)
+@@ -0,0 +1,63 @@
++// Automagically generated code, please do not change
++package fr.inria.verveine.core.gen.famix;
++
++import ch.akuhn.fame.FameProperty;
++import ch.akuhn.fame.FameDescription;
++import ch.akuhn.fame.FamePackage;
++
++
++@FamePackage("FAMIX")
++@FameDescription("AnnotationInstanceAttribute")
++public class AnnotationInstanceAttribute extends Entity {
++
++
++
++    private AnnotationInstance parentAnnotationInstance;
++    
++    @FameProperty(name = "parentAnnotationInstance", opposite = "attributes")
++    public AnnotationInstance getParentAnnotationInstance() {
++        return parentAnnotationInstance;
++    }
++
++    public void setParentAnnotationInstance(AnnotationInstance parentAnnotationInstance) {
++        if (this.parentAnnotationInstance != null) {
++            if (this.parentAnnotationInstance.equals(parentAnnotationInstance)) return;
++            this.parentAnnotationInstance.getAttributes().remove(this);
++        }
++        this.parentAnnotationInstance = parentAnnotationInstance;
++        if (parentAnnotationInstance == null) return;
++        parentAnnotationInstance.getAttributes().add(this);
++    }
++    
++    private String value;
++    
++    @FameProperty(name = "value")
++    public String getValue() {
++        return value;
++    }
++
++    public void setValue(String value) {
++        this.value = value;
++    }
++    
++    private AnnotationTypeAttribute annotationTypeAttribute;
++    
++    @FameProperty(name = "annotationTypeAttribute", opposite = "annotationAttributeInstances")
++    public AnnotationTypeAttribute getAnnotationTypeAttribute() {
++        return annotationTypeAttribute;
++    }
++
++    public void setAnnotationTypeAttribute(AnnotationTypeAttribute annotationTypeAttribute) {
++        if (this.annotationTypeAttribute != null) {
++            if (this.annotationTypeAttribute.equals(annotationTypeAttribute)) return;
++            this.annotationTypeAttribute.getAnnotationAttributeInstances().remove(this);
++        }
++        this.annotationTypeAttribute = annotationTypeAttribute;
++        if (annotationTypeAttribute == null) return;
++        annotationTypeAttribute.getAnnotationAttributeInstances().add(this);
++    }
++    
++
++
++}
++
+Index: branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/GlobalVariableGroup.java
+===================================================================
+--- branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/GlobalVariableGroup.java	(revision 0)
++++ branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/GlobalVariableGroup.java	(revision 95)
+@@ -0,0 +1,18 @@
++// Automagically generated code, please do not change
++package fr.inria.verveine.core.gen.famix;
++
++import ch.akuhn.fame.FameDescription;
++import ch.akuhn.fame.FamePackage;
++import fr.inria.verveine.core.gen.moose.Group;
++
++
++@FamePackage("FAMIX")
++@FameDescription("GlobalVariableGroup")
++public class GlobalVariableGroup extends Group {
++
++
++
++
++
++}
++
+Index: branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/Module.java
+===================================================================
+--- branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/Module.java	(revision 0)
++++ branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/Module.java	(revision 95)
+@@ -0,0 +1,17 @@
++// Automagically generated code, please do not change
++package fr.inria.verveine.core.gen.famix;
++
++import ch.akuhn.fame.FameDescription;
++import ch.akuhn.fame.FamePackage;
++
++
++@FamePackage("FAMIX")
++@FameDescription("Module")
++public class Module extends ScopingEntity {
++
++
++
++
++
++}
++
+Index: branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/FAMIXModel.java
+===================================================================
+--- branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/FAMIXModel.java	(revision 0)
++++ branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/FAMIXModel.java	(revision 95)
+@@ -0,0 +1,76 @@
++// Automagically generated code, please do not change
++package fr.inria.verveine.core.gen.famix;
++
++import ch.akuhn.fame.MetaRepository;
++
++public class FAMIXModel {
++
++    public static MetaRepository metamodel() {
++        MetaRepository metamodel = new MetaRepository();
++        importInto(metamodel);
++        return metamodel;
++    }
++    
++    public static void importInto(MetaRepository metamodel) {
++		metamodel.with(fr.inria.verveine.core.gen.famix.CSourceLanguage.class);
++		metamodel.with(fr.inria.verveine.core.gen.famix.Comment.class);
++		metamodel.with(fr.inria.verveine.core.gen.famix.AnnotationTypeAttribute.class);
++		metamodel.with(fr.inria.verveine.core.gen.famix.Access.class);
++		metamodel.with(fr.inria.verveine.core.gen.famix.EnumValue.class);
++		metamodel.with(fr.inria.verveine.core.gen.famix.Namespace.class);
++		metamodel.with(fr.inria.verveine.core.gen.famix.Reference.class);
++		metamodel.with(fr.inria.verveine.core.gen.famix.MethodGroup.class);
++		metamodel.with(fr.inria.verveine.core.gen.famix.Invocation.class);
++		metamodel.with(fr.inria.verveine.core.gen.famix.AnnotationTypeGroup.class);
++		metamodel.with(fr.inria.verveine.core.gen.famix.Exception.class);
++		metamodel.with(fr.inria.verveine.core.gen.famix.LocalVariable.class);
++		metamodel.with(fr.inria.verveine.core.gen.famix.Enum.class);
++		metamodel.with(fr.inria.verveine.core.gen.famix.SmalltalkMonticelloSourceLanguage.class);
++		metamodel.with(fr.inria.verveine.core.gen.famix.Attribute.class);
++		metamodel.with(fr.inria.verveine.core.gen.famix.ImplicitVariable.class);
++		metamodel.with(fr.inria.verveine.core.gen.famix.UnknownSourceLanguage.class);
++		metamodel.with(fr.inria.verveine.core.gen.famix.FileAnchor.class);
++		metamodel.with(fr.inria.verveine.core.gen.famix.ScopingEntity.class);
++		metamodel.with(fr.inria.verveine.core.gen.famix.Module.class);
++		metamodel.with(fr.inria.verveine.core.gen.famix.Package.class);
++		metamodel.with(fr.inria.verveine.core.gen.famix.CustomSourceLanguage.class);
++		metamodel.with(fr.inria.verveine.core.gen.famix.ContainerEntity.class);
++		metamodel.with(fr.inria.verveine.core.gen.famix.BehaviouralEntity.class);
++		metamodel.with(fr.inria.verveine.core.gen.famix.AnnotationType.class);
++		metamodel.with(fr.inria.verveine.core.gen.famix.LeafEntity.class);
++		metamodel.with(fr.inria.verveine.core.gen.famix.AnnotationInstanceAttribute.class);
++		metamodel.with(fr.inria.verveine.core.gen.famix.Association.class);
++		metamodel.with(fr.inria.verveine.core.gen.famix.Inheritance.class);
++		metamodel.with(fr.inria.verveine.core.gen.famix.SourcedEntity.class);
++		metamodel.with(fr.inria.verveine.core.gen.famix.CaughtException.class);
++		metamodel.with(fr.inria.verveine.core.gen.famix.ParameterType.class);
++		metamodel.with(fr.inria.verveine.core.gen.famix.NamedEntity.class);
++		metamodel.with(fr.inria.verveine.core.gen.famix.Entity.class);
++		metamodel.with(fr.inria.verveine.core.gen.famix.DeclaredException.class);
++		metamodel.with(fr.inria.verveine.core.gen.famix.Method.class);
++		metamodel.with(fr.inria.verveine.core.gen.famix.SourceAnchor.class);
++		metamodel.with(fr.inria.verveine.core.gen.famix.UnknownVariable.class);
++		metamodel.with(fr.inria.verveine.core.gen.famix.ThrownException.class);
++		metamodel.with(fr.inria.verveine.core.gen.famix.ParameterizedType.class);
++		metamodel.with(fr.inria.verveine.core.gen.famix.StructuralEntity.class);
++		metamodel.with(fr.inria.verveine.core.gen.famix.ClassGroup.class);
++		metamodel.with(fr.inria.verveine.core.gen.famix.NamespaceGroup.class);
++		metamodel.with(fr.inria.verveine.core.gen.famix.SmalltalkSourceLanguage.class);
++		metamodel.with(fr.inria.verveine.core.gen.famix.SourceLanguage.class);
++		metamodel.with(fr.inria.verveine.core.gen.famix.AnnotationInstance.class);
++		metamodel.with(fr.inria.verveine.core.gen.famix.GlobalVariable.class);
++		metamodel.with(fr.inria.verveine.core.gen.famix.Parameter.class);
++		metamodel.with(fr.inria.verveine.core.gen.famix.PackageGroup.class);
++		metamodel.with(fr.inria.verveine.core.gen.famix.SourceTextAnchor.class);
++		metamodel.with(fr.inria.verveine.core.gen.famix.JavaSourceLanguage.class);
++		metamodel.with(fr.inria.verveine.core.gen.famix.Class.class);
++		metamodel.with(fr.inria.verveine.core.gen.famix.PrimitiveType.class);
++		metamodel.with(fr.inria.verveine.core.gen.famix.Type.class);
++		metamodel.with(fr.inria.verveine.core.gen.famix.GlobalVariableGroup.class);
++		metamodel.with(fr.inria.verveine.core.gen.famix.ParameterizableClass.class);
++		metamodel.with(fr.inria.verveine.core.gen.famix.Function.class);
++
++    }
++
++}
++
+Index: branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/AnnotationTypeGroup.java
+===================================================================
+--- branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/AnnotationTypeGroup.java	(revision 0)
++++ branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/AnnotationTypeGroup.java	(revision 95)
+@@ -0,0 +1,18 @@
++// Automagically generated code, please do not change
++package fr.inria.verveine.core.gen.famix;
++
++import ch.akuhn.fame.FameDescription;
++import ch.akuhn.fame.FamePackage;
++import fr.inria.verveine.core.gen.moose.Group;
++
++
++@FamePackage("FAMIX")
++@FameDescription("AnnotationTypeGroup")
++public class AnnotationTypeGroup extends Group {
++
++
++
++
++
++}
++
+Index: branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/SourceAnchor.java
+===================================================================
+--- branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/SourceAnchor.java	(revision 0)
++++ branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/SourceAnchor.java	(revision 95)
+@@ -0,0 +1,34 @@
++// Automagically generated code, please do not change
++package fr.inria.verveine.core.gen.famix;
++
++import ch.akuhn.fame.FameProperty;
++import ch.akuhn.fame.FameDescription;
++import ch.akuhn.fame.FamePackage;
++
++
++@FamePackage("FAMIX")
++@FameDescription("SourceAnchor")
++public class SourceAnchor extends Entity {
++
++
++
++    private SourcedEntity element;
++    
++    @FameProperty(name = "element", opposite = "sourceAnchor")
++    public SourcedEntity getElement() {
++        return element;
++    }
++
++    public void setElement(SourcedEntity element) {
++        if (this.element == null ? element != null : !this.element.equals(element)) {
++            SourcedEntity old_element = this.element;
++            this.element = element;
++            if (old_element != null) old_element.setSourceAnchor(null);
++            if (element != null) element.setSourceAnchor(this);
++        }
++    }
++    
++
++
++}
++
+Index: branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/Package.java
+===================================================================
+--- branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/Package.java	(revision 0)
++++ branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/Package.java	(revision 95)
+@@ -0,0 +1,74 @@
++// Automagically generated code, please do not change
++package fr.inria.verveine.core.gen.famix;
++
++import ch.akuhn.fame.internal.MultivalueSet;
++import java.util.*;
++import ch.akuhn.fame.FameProperty;
++import ch.akuhn.fame.FameDescription;
++import ch.akuhn.fame.FamePackage;
++
++
++@FamePackage("FAMIX")
++@FameDescription("Package")
++public class Package extends ScopingEntity {
++
++
++
++    private Collection<NamedEntity> childNamedEntities; 
++
++    @FameProperty(name = "childNamedEntities", opposite = "parentPackage", derived = true)
++    public Collection<NamedEntity> getChildNamedEntities() {
++        if (childNamedEntities == null) {
++            childNamedEntities = new MultivalueSet<NamedEntity>() {
++                @Override
++                protected void clearOpposite(NamedEntity e) {
++                    e.setParentPackage(null);
++                }
++                @Override
++                protected void setOpposite(NamedEntity e) {
++                    e.setParentPackage(Package.this);
++                }
++            };
++        }
++        return childNamedEntities;
++    }
++    
++    public void setChildNamedEntities(Collection<? extends NamedEntity> childNamedEntities) {
++        this.getChildNamedEntities().clear();
++        this.getChildNamedEntities().addAll(childNamedEntities);
++    }                    
++    
++        
++    public void addChildNamedEntities(NamedEntity one) {
++        this.getChildNamedEntities().add(one);
++    }   
++    
++    public void addChildNamedEntities(NamedEntity one, NamedEntity... many) {
++        this.getChildNamedEntities().add(one);
++        for (NamedEntity each : many)
++            this.getChildNamedEntities().add(each);
++    }   
++    
++    public void addChildNamedEntities(Iterable<? extends NamedEntity> many) {
++        for (NamedEntity each : many)
++            this.getChildNamedEntities().add(each);
++    }   
++                
++    public void addChildNamedEntities(NamedEntity[] many) {
++        for (NamedEntity each : many)
++            this.getChildNamedEntities().add(each);
++    }
++    
++    public int numberOfChildNamedEntities() {
++        return getChildNamedEntities().size();
++    }
++
++    public boolean hasChildNamedEntities() {
++        return !getChildNamedEntities().isEmpty();
++    }
++    
++                
++
++
++}
++
+Index: branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/Namespace.java
+===================================================================
+--- branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/Namespace.java	(revision 0)
++++ branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/Namespace.java	(revision 95)
+@@ -0,0 +1,17 @@
++// Automagically generated code, please do not change
++package fr.inria.verveine.core.gen.famix;
++
++import ch.akuhn.fame.FameDescription;
++import ch.akuhn.fame.FamePackage;
++
++
++@FamePackage("FAMIX")
++@FameDescription("Namespace")
++public class Namespace extends ScopingEntity {
++
++
++
++
++
++}
++
+Index: branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/ParameterizedType.java
+===================================================================
+--- branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/ParameterizedType.java	(revision 0)
++++ branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/ParameterizedType.java	(revision 95)
+@@ -0,0 +1,72 @@
++// Automagically generated code, please do not change
++package fr.inria.verveine.core.gen.famix;
++
++import java.util.*;
++import ch.akuhn.fame.FameProperty;
++import ch.akuhn.fame.FameDescription;
++import ch.akuhn.fame.FamePackage;
++
++
++@FamePackage("FAMIX")
++@FameDescription("ParameterizedType")
++public class ParameterizedType extends Type {
++
++
++
++    private Collection<Type> arguments; 
++
++    @FameProperty(name = "arguments")
++    public Collection<Type> getArguments() {
++        if (arguments == null) arguments = new HashSet<Type>();
++        return arguments;
++    }
++    
++    public void setArguments(Collection<? extends Type> arguments) {
++        this.getArguments().clear();
++        this.getArguments().addAll(arguments);
++    }                    
++
++    public void addArguments(Type one) {
++        this.getArguments().add(one);
++    }   
++    
++    public void addArguments(Type one, Type... many) {
++        this.getArguments().add(one);
++        for (Type each : many)
++            this.getArguments().add(each);
++    }   
++    
++    public void addArguments(Iterable<? extends Type> many) {
++        for (Type each : many)
++            this.getArguments().add(each);
++    }   
++                
++    public void addArguments(Type[] many) {
++        for (Type each : many)
++            this.getArguments().add(each);
++    }
++    
++    public int numberOfArguments() {
++        return getArguments().size();
++    }
++
++    public boolean hasArguments() {
++        return !getArguments().isEmpty();
++    }
++    
++                
++    private ParameterizableClass parameterizableClass;
++    
++    @FameProperty(name = "parameterizableClass")
++    public ParameterizableClass getParameterizableClass() {
++        return parameterizableClass;
++    }
++
++    public void setParameterizableClass(ParameterizableClass parameterizableClass) {
++        this.parameterizableClass = parameterizableClass;
++    }
++    
++
++
++}
++
+Index: branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/BehaviouralEntity.java
+===================================================================
+--- branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/BehaviouralEntity.java	(revision 0)
++++ branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/BehaviouralEntity.java	(revision 95)
+@@ -0,0 +1,332 @@
++// Automagically generated code, please do not change
++package fr.inria.verveine.core.gen.famix;
++
++import ch.akuhn.fame.internal.MultivalueSet;
++import java.util.*;
++import ch.akuhn.fame.FameProperty;
++import ch.akuhn.fame.FameDescription;
++import ch.akuhn.fame.FamePackage;
++
++
++@FamePackage("FAMIX")
++@FameDescription("BehaviouralEntity")
++public class BehaviouralEntity extends ContainerEntity {
++
++
++	private int cyclo = 0;  // metric: Cyclomatic complexity
++	private int nos = 0;    // metric Number Of Statement
++
++
++    private Collection<Access> accesses; 
++
++    @FameProperty(name = "accesses", opposite = "accessor", derived = true)
++    public Collection<Access> getAccesses() {
++        if (accesses == null) {
++            accesses = new MultivalueSet<Access>() {
++                @Override
++                protected void clearOpposite(Access e) {
++                    e.setAccessor(null);
++                }
++                @Override
++                protected void setOpposite(Access e) {
++                    e.setAccessor(BehaviouralEntity.this);
++                }
++            };
++        }
++        return accesses;
++    }
++    
++    public void setAccesses(Collection<? extends Access> accesses) {
++        this.getAccesses().clear();
++        this.getAccesses().addAll(accesses);
++    }                    
++    
++        
++    public void addAccesses(Access one) {
++        this.getAccesses().add(one);
++    }   
++    
++    public void addAccesses(Access one, Access... many) {
++        this.getAccesses().add(one);
++        for (Access each : many)
++            this.getAccesses().add(each);
++    }   
++    
++    public void addAccesses(Iterable<? extends Access> many) {
++        for (Access each : many)
++            this.getAccesses().add(each);
++    }   
++                
++    public void addAccesses(Access[] many) {
++        for (Access each : many)
++            this.getAccesses().add(each);
++    }
++    
++    public int numberOfAccesses() {
++        return getAccesses().size();
++    }
++
++    public boolean hasAccesses() {
++        return !getAccesses().isEmpty();
++    }
++    
++                
++    private Collection<Invocation> outgoingInvocations; 
++
++    @FameProperty(name = "outgoingInvocations", opposite = "sender", derived = true)
++    public Collection<Invocation> getOutgoingInvocations() {
++        if (outgoingInvocations == null) {
++            outgoingInvocations = new MultivalueSet<Invocation>() {
++                @Override
++                protected void clearOpposite(Invocation e) {
++                    e.setSender(null);
++                }
++                @Override
++                protected void setOpposite(Invocation e) {
++                    e.setSender(BehaviouralEntity.this);
++                }
++            };
++        }
++        return outgoingInvocations;
++    }
++    
++    public void setOutgoingInvocations(Collection<? extends Invocation> outgoingInvocations) {
++        this.getOutgoingInvocations().clear();
++        this.getOutgoingInvocations().addAll(outgoingInvocations);
++    }                    
++    
++        
++    public void addOutgoingInvocations(Invocation one) {
++        this.getOutgoingInvocations().add(one);
++    }   
++    
++    public void addOutgoingInvocations(Invocation one, Invocation... many) {
++        this.getOutgoingInvocations().add(one);
++        for (Invocation each : many)
++            this.getOutgoingInvocations().add(each);
++    }   
++    
++    public void addOutgoingInvocations(Iterable<? extends Invocation> many) {
++        for (Invocation each : many)
++            this.getOutgoingInvocations().add(each);
++    }   
++                
++    public void addOutgoingInvocations(Invocation[] many) {
++        for (Invocation each : many)
++            this.getOutgoingInvocations().add(each);
++    }
++    
++    public int numberOfOutgoingInvocations() {
++        return getOutgoingInvocations().size();
++    }
++
++    public boolean hasOutgoingInvocations() {
++        return !getOutgoingInvocations().isEmpty();
++    }
++    
++                
++    private Type declaredType;
++    
++    @FameProperty(name = "declaredType")
++    public Type getDeclaredType() {
++        return declaredType;
++    }
++
++    public void setDeclaredType(Type declaredType) {
++        this.declaredType = declaredType;
++    }
++    
++    private Collection<Invocation> incomingInvocations; 
++
++    @FameProperty(name = "incomingInvocations", opposite = "candidates", derived = true)
++    public Collection<Invocation> getIncomingInvocations() {
++        if (incomingInvocations == null) {
++            incomingInvocations = new MultivalueSet<Invocation>() {
++                @Override
++                protected void clearOpposite(Invocation e) {
++                    e.getCandidates().remove(BehaviouralEntity.this);
++                }
++                @Override
++                protected void setOpposite(Invocation e) {
++                    e.getCandidates().add(BehaviouralEntity.this);
++                }
++            };
++        }
++        return incomingInvocations;
++    }
++    
++    public void setIncomingInvocations(Collection<? extends Invocation> incomingInvocations) {
++        this.getIncomingInvocations().clear();
++        this.getIncomingInvocations().addAll(incomingInvocations);
++    }
++    
++    public void addIncomingInvocations(Invocation one) {
++        this.getIncomingInvocations().add(one);
++    }   
++    
++    public void addIncomingInvocations(Invocation one, Invocation... many) {
++        this.getIncomingInvocations().add(one);
++        for (Invocation each : many)
++            this.getIncomingInvocations().add(each);
++    }   
++    
++    public void addIncomingInvocations(Iterable<? extends Invocation> many) {
++        for (Invocation each : many)
++            this.getIncomingInvocations().add(each);
++    }   
++                
++    public void addIncomingInvocations(Invocation[] many) {
++        for (Invocation each : many)
++            this.getIncomingInvocations().add(each);
++    }
++    
++    public int numberOfIncomingInvocations() {
++        return getIncomingInvocations().size();
++    }
++
++    public boolean hasIncomingInvocations() {
++        return !getIncomingInvocations().isEmpty();
++    }
++    
++                
++    private Collection<LocalVariable> localVariables; 
++
++    @FameProperty(name = "localVariables", opposite = "parentBehaviouralEntity", derived = true)
++    public Collection<LocalVariable> getLocalVariables() {
++        if (localVariables == null) {
++            localVariables = new MultivalueSet<LocalVariable>() {
++                @Override
++                protected void clearOpposite(LocalVariable e) {
++                    e.setParentBehaviouralEntity(null);
++                }
++                @Override
++                protected void setOpposite(LocalVariable e) {
++                    e.setParentBehaviouralEntity(BehaviouralEntity.this);
++                }
++            };
++        }
++        return localVariables;
++    }
++    
++    public void setLocalVariables(Collection<? extends LocalVariable> localVariables) {
++        this.getLocalVariables().clear();
++        this.getLocalVariables().addAll(localVariables);
++    }                    
++    
++        
++    public void addLocalVariables(LocalVariable one) {
++        this.getLocalVariables().add(one);
++    }   
++    
++    public void addLocalVariables(LocalVariable one, LocalVariable... many) {
++        this.getLocalVariables().add(one);
++        for (LocalVariable each : many)
++            this.getLocalVariables().add(each);
++    }   
++    
++    public void addLocalVariables(Iterable<? extends LocalVariable> many) {
++        for (LocalVariable each : many)
++            this.getLocalVariables().add(each);
++    }   
++                
++    public void addLocalVariables(LocalVariable[] many) {
++        for (LocalVariable each : many)
++            this.getLocalVariables().add(each);
++    }
++    
++    public int numberOfLocalVariables() {
++        return getLocalVariables().size();
++    }
++
++    public boolean hasLocalVariables() {
++        return !getLocalVariables().isEmpty();
++    }
++    
++                
++    private Collection<Parameter> parameters; 
++
++    @FameProperty(name = "parameters", opposite = "parentBehaviouralEntity", derived = true)
++    public Collection<Parameter> getParameters() {
++        if (parameters == null) {
++            parameters = new MultivalueSet<Parameter>() {
++                @Override
++                protected void clearOpposite(Parameter e) {
++                    e.setParentBehaviouralEntity(null);
++                }
++                @Override
++                protected void setOpposite(Parameter e) {
++                    e.setParentBehaviouralEntity(BehaviouralEntity.this);
++                }
++            };
++        }
++        return parameters;
++    }
++    
++    public void setParameters(Collection<? extends Parameter> parameters) {
++        this.getParameters().clear();
++        this.getParameters().addAll(parameters);
++    }                    
++    
++        
++    public void addParameters(Parameter one) {
++        this.getParameters().add(one);
++    }   
++    
++    public void addParameters(Parameter one, Parameter... many) {
++        this.getParameters().add(one);
++        for (Parameter each : many)
++            this.getParameters().add(each);
++    }   
++    
++    public void addParameters(Iterable<? extends Parameter> many) {
++        for (Parameter each : many)
++            this.getParameters().add(each);
++    }   
++                
++    public void addParameters(Parameter[] many) {
++        for (Parameter each : many)
++            this.getParameters().add(each);
++    }
++    
++    public int numberOfParameters() {
++        return getParameters().size();
++    }
++
++    public boolean hasParameters() {
++        return !getParameters().isEmpty();
++    }
++    
++                
++    private String signature;
++    
++    @FameProperty(name = "signature")
++    public String getSignature() {
++        return signature;
++    }
++
++    public void setSignature(String signature) {
++        this.signature = signature;
++    }
++
++    public void setCyclo(int cyclo) {
++		this.cyclo = cyclo;
++	}
++
++	@FameProperty(name = "CYCLO")
++	public int getCyclo() {
++		return cyclo;
++	}
++
++    @FameProperty(name = "NOS")
++	public int getNOS() {
++		return nos;
++	}
++
++	public void setNOS(int nos) {
++		this.nos = nos;
++    }
++    
++
++
++}
++
+Index: branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/Exception.java
+===================================================================
+--- branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/Exception.java	(revision 0)
++++ branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/Exception.java	(revision 95)
+@@ -0,0 +1,29 @@
++// Automagically generated code, please do not change
++package fr.inria.verveine.core.gen.famix;
++
++import ch.akuhn.fame.FameProperty;
++import ch.akuhn.fame.FameDescription;
++import ch.akuhn.fame.FamePackage;
++
++
++@FamePackage("FAMIX")
++@FameDescription("Exception")
++public class Exception extends Entity {
++
++
++
++    private Class exceptionClass;
++    
++    @FameProperty(name = "exceptionClass")
++    public Class getExceptionClass() {
++        return exceptionClass;
++    }
++
++    public void setExceptionClass(Class exceptionClass) {
++        this.exceptionClass = exceptionClass;
++    }
++    
++
++
++}
++
+Index: branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/CustomSourceLanguage.java
+===================================================================
+--- branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/CustomSourceLanguage.java	(revision 0)
++++ branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/CustomSourceLanguage.java	(revision 95)
+@@ -0,0 +1,29 @@
++// Automagically generated code, please do not change
++package fr.inria.verveine.core.gen.famix;
++
++import ch.akuhn.fame.FameProperty;
++import ch.akuhn.fame.FameDescription;
++import ch.akuhn.fame.FamePackage;
++
++
++@FamePackage("FAMIX")
++@FameDescription("CustomSourceLanguage")
++public class CustomSourceLanguage extends SourceLanguage {
++
++
++
++    private String name;
++    
++    @FameProperty(name = "name")
++    public String getName() {
++        return name;
++    }
++
++    public void setName(String name) {
++        this.name = name;
++    }
++    
++
++
++}
++
+Index: branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/AnnotationInstance.java
+===================================================================
+--- branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/AnnotationInstance.java	(revision 0)
++++ branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/AnnotationInstance.java	(revision 95)
+@@ -0,0 +1,108 @@
++// Automagically generated code, please do not change
++package fr.inria.verveine.core.gen.famix;
++
++import ch.akuhn.fame.internal.MultivalueSet;
++import java.util.*;
++import ch.akuhn.fame.FameProperty;
++import ch.akuhn.fame.FameDescription;
++import ch.akuhn.fame.FamePackage;
++
++
++@FamePackage("FAMIX")
++@FameDescription("AnnotationInstance")
++public class AnnotationInstance extends Entity {
++
++
++
++    private Entity annotatedEntity;
++    
++    @FameProperty(name = "annotatedEntity", opposite = "annotationInstances")
++    public Entity getAnnotatedEntity() {
++        return annotatedEntity;
++    }
++
++    public void setAnnotatedEntity(Entity annotatedEntity) {
++        if (this.annotatedEntity != null) {
++            if (this.annotatedEntity.equals(annotatedEntity)) return;
++            this.annotatedEntity.getAnnotationInstances().remove(this);
++        }
++        this.annotatedEntity = annotatedEntity;
++        if (annotatedEntity == null) return;
++        annotatedEntity.getAnnotationInstances().add(this);
++    }
++    
++    private AnnotationType annotationType;
++    
++    @FameProperty(name = "annotationType", opposite = "instances")
++    public AnnotationType getAnnotationType() {
++        return annotationType;
++    }
++
++    public void setAnnotationType(AnnotationType annotationType) {
++        if (this.annotationType != null) {
++            if (this.annotationType.equals(annotationType)) return;
++            this.annotationType.getInstances().remove(this);
++        }
++        this.annotationType = annotationType;
++        if (annotationType == null) return;
++        annotationType.getInstances().add(this);
++    }
++    
++    private Collection<AnnotationInstanceAttribute> attributes; 
++
++    @FameProperty(name = "attributes", opposite = "parentAnnotationInstance", derived = true)
++    public Collection<AnnotationInstanceAttribute> getAttributes() {
++        if (attributes == null) {
++            attributes = new MultivalueSet<AnnotationInstanceAttribute>() {
++                @Override
++                protected void clearOpposite(AnnotationInstanceAttribute e) {
++                    e.setParentAnnotationInstance(null);
++                }
++                @Override
++                protected void setOpposite(AnnotationInstanceAttribute e) {
++                    e.setParentAnnotationInstance(AnnotationInstance.this);
++                }
++            };
++        }
++        return attributes;
++    }
++    
++    public void setAttributes(Collection<? extends AnnotationInstanceAttribute> attributes) {
++        this.getAttributes().clear();
++        this.getAttributes().addAll(attributes);
++    }                    
++    
++        
++    public void addAttributes(AnnotationInstanceAttribute one) {
++        this.getAttributes().add(one);
++    }   
++    
++    public void addAttributes(AnnotationInstanceAttribute one, AnnotationInstanceAttribute... many) {
++        this.getAttributes().add(one);
++        for (AnnotationInstanceAttribute each : many)
++            this.getAttributes().add(each);
++    }   
++    
++    public void addAttributes(Iterable<? extends AnnotationInstanceAttribute> many) {
++        for (AnnotationInstanceAttribute each : many)
++            this.getAttributes().add(each);
++    }   
++                
++    public void addAttributes(AnnotationInstanceAttribute[] many) {
++        for (AnnotationInstanceAttribute each : many)
++            this.getAttributes().add(each);
++    }
++    
++    public int numberOfAttributes() {
++        return getAttributes().size();
++    }
++
++    public boolean hasAttributes() {
++        return !getAttributes().isEmpty();
++    }
++    
++                
++
++
++}
++
+Index: branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/ScopingEntity.java
+===================================================================
+--- branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/ScopingEntity.java	(revision 0)
++++ branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/ScopingEntity.java	(revision 95)
+@@ -0,0 +1,204 @@
++// Automagically generated code, please do not change
++package fr.inria.verveine.core.gen.famix;
++
++import ch.akuhn.fame.internal.MultivalueSet;
++import java.util.*;
++import ch.akuhn.fame.FameProperty;
++import ch.akuhn.fame.FameDescription;
++import ch.akuhn.fame.FamePackage;
++
++
++@FamePackage("FAMIX")
++@FameDescription("ScopingEntity")
++public class ScopingEntity extends ContainerEntity {
++
++
++
++    private ScopingEntity parentScope;
++    
++    @FameProperty(name = "parentScope", opposite = "childScopes")
++    public ScopingEntity getParentScope() {
++        return parentScope;
++    }
++
++    @Override
++	public ContainerEntity getBelongsTo() {
++		return getParentScope();
++	}
++
++    public void setParentScope(ScopingEntity parentScope) {
++        if (this.parentScope != null) {
++            if (this.parentScope.equals(parentScope)) return;
++            this.parentScope.getChildScopes().remove(this);
++        }
++        this.parentScope = parentScope;
++        if (parentScope == null) return;
++        parentScope.getChildScopes().add(this);
++    }
++    
++    private Collection<Function> functions; 
++
++    @FameProperty(name = "functions", opposite = "parentScope", derived = true)
++    public Collection<Function> getFunctions() {
++        if (functions == null) {
++            functions = new MultivalueSet<Function>() {
++                @Override
++                protected void clearOpposite(Function e) {
++                    e.setParentScope(null);
++                }
++                @Override
++                protected void setOpposite(Function e) {
++                    e.setParentScope(ScopingEntity.this);
++                }
++            };
++        }
++        return functions;
++    }
++    
++    public void setFunctions(Collection<? extends Function> functions) {
++        this.getFunctions().clear();
++        this.getFunctions().addAll(functions);
++    }                    
++    
++        
++    public void addFunctions(Function one) {
++        this.getFunctions().add(one);
++    }   
++    
++    public void addFunctions(Function one, Function... many) {
++        this.getFunctions().add(one);
++        for (Function each : many)
++            this.getFunctions().add(each);
++    }   
++    
++    public void addFunctions(Iterable<? extends Function> many) {
++        for (Function each : many)
++            this.getFunctions().add(each);
++    }   
++                
++    public void addFunctions(Function[] many) {
++        for (Function each : many)
++            this.getFunctions().add(each);
++    }
++    
++    public int numberOfFunctions() {
++        return getFunctions().size();
++    }
++
++    public boolean hasFunctions() {
++        return !getFunctions().isEmpty();
++    }
++    
++                
++    private Collection<ScopingEntity> childScopes; 
++
++    @FameProperty(name = "childScopes", opposite = "parentScope", derived = true)
++    public Collection<ScopingEntity> getChildScopes() {
++        if (childScopes == null) {
++            childScopes = new MultivalueSet<ScopingEntity>() {
++                @Override
++                protected void clearOpposite(ScopingEntity e) {
++                    e.setParentScope(null);
++                }
++                @Override
++                protected void setOpposite(ScopingEntity e) {
++                    e.setParentScope(ScopingEntity.this);
++                }
++            };
++        }
++        return childScopes;
++    }
++    
++    public void setChildScopes(Collection<? extends ScopingEntity> childScopes) {
++        this.getChildScopes().clear();
++        this.getChildScopes().addAll(childScopes);
++    }                    
++    
++        
++    public void addChildScopes(ScopingEntity one) {
++        this.getChildScopes().add(one);
++    }   
++    
++    public void addChildScopes(ScopingEntity one, ScopingEntity... many) {
++        this.getChildScopes().add(one);
++        for (ScopingEntity each : many)
++            this.getChildScopes().add(each);
++    }   
++    
++    public void addChildScopes(Iterable<? extends ScopingEntity> many) {
++        for (ScopingEntity each : many)
++            this.getChildScopes().add(each);
++    }   
++                
++    public void addChildScopes(ScopingEntity[] many) {
++        for (ScopingEntity each : many)
++            this.getChildScopes().add(each);
++    }
++    
++    public int numberOfChildScopes() {
++        return getChildScopes().size();
++    }
++
++    public boolean hasChildScopes() {
++        return !getChildScopes().isEmpty();
++    }
++    
++                
++    private Collection<GlobalVariable> globalVariables; 
++
++    @FameProperty(name = "globalVariables", opposite = "parentScope", derived = true)
++    public Collection<GlobalVariable> getGlobalVariables() {
++        if (globalVariables == null) {
++            globalVariables = new MultivalueSet<GlobalVariable>() {
++                @Override
++                protected void clearOpposite(GlobalVariable e) {
++                    e.setParentScope(null);
++                }
++                @Override
++                protected void setOpposite(GlobalVariable e) {
++                    e.setParentScope(ScopingEntity.this);
++                }
++            };
++        }
++        return globalVariables;
++    }
++    
++    public void setGlobalVariables(Collection<? extends GlobalVariable> globalVariables) {
++        this.getGlobalVariables().clear();
++        this.getGlobalVariables().addAll(globalVariables);
++    }                    
++    
++        
++    public void addGlobalVariables(GlobalVariable one) {
++        this.getGlobalVariables().add(one);
++    }   
++    
++    public void addGlobalVariables(GlobalVariable one, GlobalVariable... many) {
++        this.getGlobalVariables().add(one);
++        for (GlobalVariable each : many)
++            this.getGlobalVariables().add(each);
++    }   
++    
++    public void addGlobalVariables(Iterable<? extends GlobalVariable> many) {
++        for (GlobalVariable each : many)
++            this.getGlobalVariables().add(each);
++    }   
++                
++    public void addGlobalVariables(GlobalVariable[] many) {
++        for (GlobalVariable each : many)
++            this.getGlobalVariables().add(each);
++    }
++    
++    public int numberOfGlobalVariables() {
++        return getGlobalVariables().size();
++    }
++
++    public boolean hasGlobalVariables() {
++        return !getGlobalVariables().isEmpty();
++    }
++    
++                
++
++
++}
++
+Index: branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/LocalVariable.java
+===================================================================
+--- branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/LocalVariable.java	(revision 0)
++++ branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/LocalVariable.java	(revision 95)
+@@ -0,0 +1,40 @@
++// Automagically generated code, please do not change
++package fr.inria.verveine.core.gen.famix;
++
++import ch.akuhn.fame.FameProperty;
++import ch.akuhn.fame.FameDescription;
++import ch.akuhn.fame.FamePackage;
++
++
++@FamePackage("FAMIX")
++@FameDescription("LocalVariable")
++public class LocalVariable extends StructuralEntity {
++
++
++
++    private BehaviouralEntity parentBehaviouralEntity;
++    
++    @FameProperty(name = "parentBehaviouralEntity", opposite = "localVariables")
++    public BehaviouralEntity getParentBehaviouralEntity() {
++        return parentBehaviouralEntity;
++    }
++
++    @Override
++	public ContainerEntity getBelongsTo() {
++		return getParentBehaviouralEntity();
++	}
++
++    public void setParentBehaviouralEntity(BehaviouralEntity parentBehaviouralEntity) {
++        if (this.parentBehaviouralEntity != null) {
++            if (this.parentBehaviouralEntity.equals(parentBehaviouralEntity)) return;
++            this.parentBehaviouralEntity.getLocalVariables().remove(this);
++        }
++        this.parentBehaviouralEntity = parentBehaviouralEntity;
++        if (parentBehaviouralEntity == null) return;
++        parentBehaviouralEntity.getLocalVariables().add(this);
++    }
++    
++
++
++}
++
+Index: branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/SourceTextAnchor.java
+===================================================================
+--- branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/SourceTextAnchor.java	(revision 0)
++++ branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/SourceTextAnchor.java	(revision 95)
+@@ -0,0 +1,17 @@
++// Automagically generated code, please do not change
++package fr.inria.verveine.core.gen.famix;
++
++import ch.akuhn.fame.FameDescription;
++import ch.akuhn.fame.FamePackage;
++
++
++@FamePackage("FAMIX")
++@FameDescription("SourceTextAnchor")
++public class SourceTextAnchor extends SourceAnchor {
++
++
++
++
++
++}
++
+Index: branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/LeafEntity.java
+===================================================================
+--- branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/LeafEntity.java	(revision 0)
++++ branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/LeafEntity.java	(revision 95)
+@@ -0,0 +1,17 @@
++// Automagically generated code, please do not change
++package fr.inria.verveine.core.gen.famix;
++
++import ch.akuhn.fame.FameDescription;
++import ch.akuhn.fame.FamePackage;
++
++
++@FamePackage("FAMIX")
++@FameDescription("LeafEntity")
++public class LeafEntity extends NamedEntity {
++
++
++
++
++
++}
++
+Index: branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/SourceLanguage.java
+===================================================================
+--- branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/SourceLanguage.java	(revision 0)
++++ branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/SourceLanguage.java	(revision 95)
+@@ -0,0 +1,82 @@
++// Automagically generated code, please do not change
++package fr.inria.verveine.core.gen.famix;
++
++import ch.akuhn.fame.internal.MultivalueSet;
++import java.util.*;
++import ch.akuhn.fame.FameProperty;
++import ch.akuhn.fame.FameDescription;
++import ch.akuhn.fame.FamePackage;
++
++
++@FamePackage("FAMIX")
++@FameDescription("SourceLanguage")
++public class SourceLanguage extends Entity {
++
++
++
++    private Collection<SourcedEntity> sourcedEntities; 
++
++    @FameProperty(name = "sourcedEntities", opposite = "declaredSourceLanguage", derived = true)
++    public Collection<SourcedEntity> getSourcedEntities() {
++        if (sourcedEntities == null) {
++            sourcedEntities = new MultivalueSet<SourcedEntity>() {
++                @Override
++                protected void clearOpposite(SourcedEntity e) {
++                    e.setDeclaredSourceLanguage(null);
++                }
++                @Override
++                protected void setOpposite(SourcedEntity e) {
++                    e.setDeclaredSourceLanguage(SourceLanguage.this);
++                }
++            };
++        }
++        return sourcedEntities;
++    }
++    
++    public void setSourcedEntities(Collection<? extends SourcedEntity> sourcedEntities) {
++        this.getSourcedEntities().clear();
++        this.getSourcedEntities().addAll(sourcedEntities);
++    }                    
++    
++        
++    public void addSourcedEntities(SourcedEntity one) {
++        this.getSourcedEntities().add(one);
++    }   
++    
++    public void addSourcedEntities(SourcedEntity one, SourcedEntity... many) {
++        this.getSourcedEntities().add(one);
++        for (SourcedEntity each : many)
++            this.getSourcedEntities().add(each);
++    }   
++    
++    public void addSourcedEntities(Iterable<? extends SourcedEntity> many) {
++        for (SourcedEntity each : many)
++            this.getSourcedEntities().add(each);
++    }   
++                
++    public void addSourcedEntities(SourcedEntity[] many) {
++        for (SourcedEntity each : many)
++            this.getSourcedEntities().add(each);
++    }
++    
++    public int numberOfSourcedEntities() {
++        return getSourcedEntities().size();
++    }
++
++    public boolean hasSourcedEntities() {
++        return !getSourcedEntities().isEmpty();
++    }
++    
++                
++    @FameProperty(name = "name", derived = true)
++    public String getName() {
++        // TODO: this is a derived property, implement this method manually.
++        //throw new UnsupportedOperationException("Not yet implemented!");
++    	String fullname = this.getClass().getName();
++    	return fullname.substring(0, fullname.indexOf("SourceLanguage"));
++    }
++    
++
++
++}
++
+Index: branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/Class.java
+===================================================================
+--- branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/Class.java	(revision 0)
++++ branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/Class.java	(revision 95)
+@@ -0,0 +1,39 @@
++// Automagically generated code, please do not change
++package fr.inria.verveine.core.gen.famix;
++
++import ch.akuhn.fame.FameProperty;
++import ch.akuhn.fame.FameDescription;
++import ch.akuhn.fame.FamePackage;
++
++
++@FamePackage("FAMIX")
++@FameDescription("Class")
++public class Class extends Type {
++
++    public Class() {
++		super();
++		this.setIsInterface(Boolean.FALSE);  // by default assume a real class
++	}
++
++
++    @FameProperty(name = "isAbstract", derived = true)
++    public Boolean getIsAbstract() {
++        // TODO: this is a derived property, implement this method manually.
++        return this.getModifiers().contains("abstract");
++    }
++    
++    private Boolean isInterface;
++    
++    @FameProperty(name = "isInterface")
++    public Boolean getIsInterface() {
++        return isInterface;
++    }
++
++    public void setIsInterface(Boolean isInterface) {
++        this.isInterface = isInterface;
++    }
++    
++
++
++}
++
+Index: branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/StructuralEntity.java
+===================================================================
+--- branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/StructuralEntity.java	(revision 0)
++++ branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/StructuralEntity.java	(revision 95)
+@@ -0,0 +1,85 @@
++// Automagically generated code, please do not change
++package fr.inria.verveine.core.gen.famix;
++
++import ch.akuhn.fame.internal.MultivalueSet;
++import java.util.*;
++import ch.akuhn.fame.FameProperty;
++import ch.akuhn.fame.FameDescription;
++import ch.akuhn.fame.FamePackage;
++
++
++@FamePackage("FAMIX")
++@FameDescription("StructuralEntity")
++public class StructuralEntity extends LeafEntity {
++
++
++
++    private Type declaredType;
++    
++    @FameProperty(name = "declaredType")
++    public Type getDeclaredType() {
++        return declaredType;
++    }
++
++    public void setDeclaredType(Type declaredType) {
++        this.declaredType = declaredType;
++    }
++    
++    private Collection<Access> incomingAccesses; 
++
++    @FameProperty(name = "incomingAccesses", opposite = "variable", derived = true)
++    public Collection<Access> getIncomingAccesses() {
++        if (incomingAccesses == null) {
++            incomingAccesses = new MultivalueSet<Access>() {
++                @Override
++                protected void clearOpposite(Access e) {
++                    e.setVariable(null);
++                }
++                @Override
++                protected void setOpposite(Access e) {
++                    e.setVariable(StructuralEntity.this);
++                }
++            };
++        }
++        return incomingAccesses;
++    }
++    
++    public void setIncomingAccesses(Collection<? extends Access> incomingAccesses) {
++        this.getIncomingAccesses().clear();
++        this.getIncomingAccesses().addAll(incomingAccesses);
++    }                    
++    
++        
++    public void addIncomingAccesses(Access one) {
++        this.getIncomingAccesses().add(one);
++    }   
++    
++    public void addIncomingAccesses(Access one, Access... many) {
++        this.getIncomingAccesses().add(one);
++        for (Access each : many)
++            this.getIncomingAccesses().add(each);
++    }   
++    
++    public void addIncomingAccesses(Iterable<? extends Access> many) {
++        for (Access each : many)
++            this.getIncomingAccesses().add(each);
++    }   
++                
++    public void addIncomingAccesses(Access[] many) {
++        for (Access each : many)
++            this.getIncomingAccesses().add(each);
++    }
++    
++    public int numberOfIncomingAccesses() {
++        return getIncomingAccesses().size();
++    }
++
++    public boolean hasIncomingAccesses() {
++        return !getIncomingAccesses().isEmpty();
++    }
++    
++                
++
++
++}
++
+Index: branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/UnknownVariable.java
+===================================================================
+--- branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/UnknownVariable.java	(revision 0)
++++ branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/UnknownVariable.java	(revision 95)
+@@ -0,0 +1,22 @@
++// Automagically generated code, please do not change
++package fr.inria.verveine.core.gen.famix;
++
++import ch.akuhn.fame.FameDescription;
++import ch.akuhn.fame.FamePackage;
++
++
++@FamePackage("FAMIX")
++@FameDescription("UnknownVariable")
++public class UnknownVariable extends StructuralEntity {
++
++
++
++    @Override
++	public ContainerEntity getBelongsTo() {
++		return null;
++	}
++
++
++
++}
++
+Index: branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/JavaSourceLanguage.java
+===================================================================
+--- branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/JavaSourceLanguage.java	(revision 0)
++++ branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/JavaSourceLanguage.java	(revision 95)
+@@ -0,0 +1,17 @@
++// Automagically generated code, please do not change
++package fr.inria.verveine.core.gen.famix;
++
++import ch.akuhn.fame.FameDescription;
++import ch.akuhn.fame.FamePackage;
++
++
++@FamePackage("FAMIX")
++@FameDescription("JavaSourceLanguage")
++public class JavaSourceLanguage extends SourceLanguage {
++
++
++
++
++
++}
++
+Index: branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/GlobalVariable.java
+===================================================================
+--- branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/GlobalVariable.java	(revision 0)
++++ branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/GlobalVariable.java	(revision 95)
+@@ -0,0 +1,46 @@
++// Automagically generated code, please do not change
++package fr.inria.verveine.core.gen.famix;
++
++import ch.akuhn.fame.FameProperty;
++import ch.akuhn.fame.FameDescription;
++import ch.akuhn.fame.FamePackage;
++
++
++@FamePackage("FAMIX")
++@FameDescription("GlobalVariable")
++public class GlobalVariable extends StructuralEntity {
++
++
++
++    private ScopingEntity parentScope;
++    
++    @FameProperty(name = "parentScope")
++    public ScopingEntity getParentScope() {
++        return parentScope;
++    }
++
++    public void setParentScope(ScopingEntity parentScope) {
++        this.parentScope = parentScope;
++    }
++    
++    private Module parentModule;
++    
++    @FameProperty(name = "parentModule", opposite = "globalVariables")
++    public Module getParentModule() {
++        return parentModule;
++    }
++
++    public void setParentModule(Module parentModule) {
++        if (this.parentModule != null) {
++            if (this.parentModule.equals(parentModule)) return;
++            this.parentModule.getGlobalVariables().remove(this);
++        }
++        this.parentModule = parentModule;
++        if (parentModule == null) return;
++        parentModule.getGlobalVariables().add(this);
++    }
++    
++
++
++}
++
+Index: branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/PackageGroup.java
+===================================================================
+--- branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/PackageGroup.java	(revision 0)
++++ branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/PackageGroup.java	(revision 95)
+@@ -0,0 +1,18 @@
++// Automagically generated code, please do not change
++package fr.inria.verveine.core.gen.famix;
++
++import ch.akuhn.fame.FameDescription;
++import ch.akuhn.fame.FamePackage;
++import fr.inria.verveine.core.gen.moose.Group;
++
++
++@FamePackage("FAMIX")
++@FameDescription("PackageGroup")
++public class PackageGroup extends Group {
++
++
++
++
++
++}
++
+Index: branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/FileAnchor.java
+===================================================================
+--- branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/FileAnchor.java	(revision 0)
++++ branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/FileAnchor.java	(revision 95)
+@@ -0,0 +1,51 @@
++// Automagically generated code, please do not change
++package fr.inria.verveine.core.gen.famix;
++
++import ch.akuhn.fame.FameProperty;
++import ch.akuhn.fame.FameDescription;
++import ch.akuhn.fame.FamePackage;
++
++
++@FamePackage("FAMIX")
++@FameDescription("FileAnchor")
++public class FileAnchor extends SourceAnchor {
++
++
++
++    private Number startLine;
++    
++    @FameProperty(name = "startLine")
++    public Number getStartLine() {
++        return startLine;
++    }
++
++    public void setStartLine(Number startLine) {
++        this.startLine = startLine;
++    }
++    
++    private Number endLine;
++    
++    @FameProperty(name = "endLine")
++    public Number getEndLine() {
++        return endLine;
++    }
++
++    public void setEndLine(Number endLine) {
++        this.endLine = endLine;
++    }
++    
++    private String fileName;
++    
++    @FameProperty(name = "fileName")
++    public String getFileName() {
++        return fileName;
++    }
++
++    public void setFileName(String fileName) {
++        this.fileName = fileName;
++    }
++    
++
++
++}
++
+Index: branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/PrimitiveType.java
+===================================================================
+--- branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/PrimitiveType.java	(revision 0)
++++ branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/PrimitiveType.java	(revision 95)
+@@ -0,0 +1,17 @@
++// Automagically generated code, please do not change
++package fr.inria.verveine.core.gen.famix;
++
++import ch.akuhn.fame.FameDescription;
++import ch.akuhn.fame.FamePackage;
++
++
++@FamePackage("FAMIX")
++@FameDescription("PrimitiveType")
++public class PrimitiveType extends Type {
++
++
++
++
++
++}
++
+Index: branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/AnnotationType.java
+===================================================================
+--- branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/AnnotationType.java	(revision 0)
++++ branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/AnnotationType.java	(revision 95)
+@@ -0,0 +1,150 @@
++// Automagically generated code, please do not change
++package fr.inria.verveine.core.gen.famix;
++
++import ch.akuhn.fame.internal.MultivalueSet;
++import java.util.*;
++import ch.akuhn.fame.FameProperty;
++import ch.akuhn.fame.FameDescription;
++import ch.akuhn.fame.FamePackage;
++
++
++@FamePackage("FAMIX")
++@FameDescription("AnnotationType")
++public class AnnotationType extends NamedEntity {
++
++
++
++    private ContainerEntity container;
++    
++    @FameProperty(name = "container", opposite = "definedAnnotationTypes")
++    public ContainerEntity getContainer() {
++        return container;
++    }
++
++    @Override
++	public ContainerEntity getBelongsTo() {
++		return getContainer();
++	}
++
++    public void setContainer(ContainerEntity container) {
++        if (this.container != null) {
++            if (this.container.equals(container)) return;
++            this.container.getDefinedAnnotationTypes().remove(this);
++        }
++        this.container = container;
++        if (container == null) return;
++        container.getDefinedAnnotationTypes().add(this);
++    }
++    
++    private Collection<AnnotationTypeAttribute> attributes; 
++
++    @FameProperty(name = "attributes", opposite = "parentAnnotationType", derived = true)
++    public Collection<AnnotationTypeAttribute> getAttributes() {
++        if (attributes == null) {
++            attributes = new MultivalueSet<AnnotationTypeAttribute>() {
++                @Override
++                protected void clearOpposite(AnnotationTypeAttribute e) {
++                    e.setParentAnnotationType(null);
++                }
++                @Override
++                protected void setOpposite(AnnotationTypeAttribute e) {
++                    e.setParentAnnotationType(AnnotationType.this);
++                }
++            };
++        }
++        return attributes;
++    }
++    
++    public void setAttributes(Collection<? extends AnnotationTypeAttribute> attributes) {
++        this.getAttributes().clear();
++        this.getAttributes().addAll(attributes);
++    }                    
++    
++        
++    public void addAttributes(AnnotationTypeAttribute one) {
++        this.getAttributes().add(one);
++    }   
++    
++    public void addAttributes(AnnotationTypeAttribute one, AnnotationTypeAttribute... many) {
++        this.getAttributes().add(one);
++        for (AnnotationTypeAttribute each : many)
++            this.getAttributes().add(each);
++    }   
++    
++    public void addAttributes(Iterable<? extends AnnotationTypeAttribute> many) {
++        for (AnnotationTypeAttribute each : many)
++            this.getAttributes().add(each);
++    }   
++                
++    public void addAttributes(AnnotationTypeAttribute[] many) {
++        for (AnnotationTypeAttribute each : many)
++            this.getAttributes().add(each);
++    }
++    
++    public int numberOfAttributes() {
++        return getAttributes().size();
++    }
++
++    public boolean hasAttributes() {
++        return !getAttributes().isEmpty();
++    }
++    
++                
++    private Collection<AnnotationInstance> instances; 
++
++    @FameProperty(name = "instances", opposite = "annotationType", derived = true)
++    public Collection<AnnotationInstance> getInstances() {
++        if (instances == null) {
++            instances = new MultivalueSet<AnnotationInstance>() {
++                @Override
++                protected void clearOpposite(AnnotationInstance e) {
++                    e.setAnnotationType(null);
++                }
++                @Override
++                protected void setOpposite(AnnotationInstance e) {
++                    e.setAnnotationType(AnnotationType.this);
++                }
++            };
++        }
++        return instances;
++    }
++    
++    public void setInstances(Collection<? extends AnnotationInstance> instances) {
++        this.getInstances().clear();
++        this.getInstances().addAll(instances);
++    }                    
++    
++        
++    public void addInstances(AnnotationInstance one) {
++        this.getInstances().add(one);
++    }   
++    
++    public void addInstances(AnnotationInstance one, AnnotationInstance... many) {
++        this.getInstances().add(one);
++        for (AnnotationInstance each : many)
++            this.getInstances().add(each);
++    }   
++    
++    public void addInstances(Iterable<? extends AnnotationInstance> many) {
++        for (AnnotationInstance each : many)
++            this.getInstances().add(each);
++    }   
++                
++    public void addInstances(AnnotationInstance[] many) {
++        for (AnnotationInstance each : many)
++            this.getInstances().add(each);
++    }
++    
++    public int numberOfInstances() {
++        return getInstances().size();
++    }
++
++    public boolean hasInstances() {
++        return !getInstances().isEmpty();
++    }
++    
++                
++
++
++}
++
+Index: branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/Association.java
+===================================================================
+--- branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/Association.java	(revision 0)
++++ branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/Association.java	(revision 95)
+@@ -0,0 +1,62 @@
++// Automagically generated code, please do not change
++package fr.inria.verveine.core.gen.famix;
++
++import ch.akuhn.fame.FameProperty;
++import ch.akuhn.fame.FameDescription;
++import ch.akuhn.fame.FamePackage;
++
++
++@FamePackage("FAMIX")
++@FameDescription("Association")
++public class Association extends SourcedEntity {
++
++
++
++    @FameProperty(name = "to", derived = true)
++    public NamedEntity getTo() {
++        // TODO: this is a derived property, implement this method manually.
++        throw new UnsupportedOperationException("Association.getTo() Not yet implemented!");  
++    }
++    
++    private Association previous;
++    
++    @FameProperty(name = "previous", opposite = "next")
++    public Association getPrevious() {
++        return previous;
++    }
++
++    public void setPrevious(Association previous) {
++        if (this.previous == null ? previous != null : !this.previous.equals(previous)) {
++            Association old_previous = this.previous;
++            this.previous = previous;
++            if (old_previous != null) old_previous.setNext(null);
++            if (previous != null) previous.setNext(this);
++        }
++    }
++    
++    private Association next;
++    
++    @FameProperty(name = "next", opposite = "previous", derived = true)
++    public Association getNext() {
++        return next;
++    }
++
++    public void setNext(Association next) {
++        if (this.next == null ? next != null : !this.next.equals(next)) {
++            Association old_next = this.next;
++            this.next = next;
++            if (old_next != null) old_next.setPrevious(null);
++            if (next != null) next.setPrevious(this);
++        }
++    }
++    
++    @FameProperty(name = "from", derived = true)
++    public NamedEntity getFrom() {
++        // TODO: this is a derived property, implement this method manually.
++        throw new UnsupportedOperationException("Association.getFrom() Not yet implemented!");  
++    }
++    
++
++
++}
++
+Index: branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/ContainerEntity.java
+===================================================================
+--- branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/ContainerEntity.java	(revision 0)
++++ branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/ContainerEntity.java	(revision 95)
+@@ -0,0 +1,236 @@
++// Automagically generated code, please do not change
++package fr.inria.verveine.core.gen.famix;
++
++import ch.akuhn.fame.internal.MultivalueSet;
++import java.util.*;
++import ch.akuhn.fame.FameProperty;
++import ch.akuhn.fame.FameDescription;
++import ch.akuhn.fame.FamePackage;
++
++
++@FamePackage("FAMIX")
++@FameDescription("ContainerEntity")
++public class ContainerEntity extends NamedEntity {
++
++
++
++    private Collection<AnnotationType> definedAnnotationTypes; 
++
++    @FameProperty(name = "definedAnnotationTypes", opposite = "container", derived = true)
++    public Collection<AnnotationType> getDefinedAnnotationTypes() {
++        if (definedAnnotationTypes == null) {
++            definedAnnotationTypes = new MultivalueSet<AnnotationType>() {
++                @Override
++                protected void clearOpposite(AnnotationType e) {
++                    e.setContainer(null);
++                }
++                @Override
++                protected void setOpposite(AnnotationType e) {
++                    e.setContainer(ContainerEntity.this);
++                }
++            };
++        }
++        return definedAnnotationTypes;
++    }
++    
++    public void setDefinedAnnotationTypes(Collection<? extends AnnotationType> definedAnnotationTypes) {
++        this.getDefinedAnnotationTypes().clear();
++        this.getDefinedAnnotationTypes().addAll(definedAnnotationTypes);
++    }                    
++    
++        
++    public void addDefinedAnnotationTypes(AnnotationType one) {
++        this.getDefinedAnnotationTypes().add(one);
++    }   
++    
++    public void addDefinedAnnotationTypes(AnnotationType one, AnnotationType... many) {
++        this.getDefinedAnnotationTypes().add(one);
++        for (AnnotationType each : many)
++            this.getDefinedAnnotationTypes().add(each);
++    }   
++    
++    public void addDefinedAnnotationTypes(Iterable<? extends AnnotationType> many) {
++        for (AnnotationType each : many)
++            this.getDefinedAnnotationTypes().add(each);
++    }   
++                
++    public void addDefinedAnnotationTypes(AnnotationType[] many) {
++        for (AnnotationType each : many)
++            this.getDefinedAnnotationTypes().add(each);
++    }
++    
++    public int numberOfDefinedAnnotationTypes() {
++        return getDefinedAnnotationTypes().size();
++    }
++
++    public boolean hasDefinedAnnotationTypes() {
++        return !getDefinedAnnotationTypes().isEmpty();
++    }
++    
++                
++    private Collection<Reference> outgoingReferences; 
++
++    @FameProperty(name = "outgoingReferences", opposite = "source", derived = true)
++    public Collection<Reference> getOutgoingReferences() {
++        if (outgoingReferences == null) {
++            outgoingReferences = new MultivalueSet<Reference>() {
++                @Override
++                protected void clearOpposite(Reference e) {
++                    e.setSource(null);
++                }
++                @Override
++                protected void setOpposite(Reference e) {
++                    e.setSource(ContainerEntity.this);
++                }
++            };
++        }
++        return outgoingReferences;
++    }
++    
++    public void setOutgoingReferences(Collection<? extends Reference> outgoingReferences) {
++        this.getOutgoingReferences().clear();
++        this.getOutgoingReferences().addAll(outgoingReferences);
++    }                    
++    
++        
++    public void addOutgoingReferences(Reference one) {
++        this.getOutgoingReferences().add(one);
++    }   
++    
++    public void addOutgoingReferences(Reference one, Reference... many) {
++        this.getOutgoingReferences().add(one);
++        for (Reference each : many)
++            this.getOutgoingReferences().add(each);
++    }   
++    
++    public void addOutgoingReferences(Iterable<? extends Reference> many) {
++        for (Reference each : many)
++            this.getOutgoingReferences().add(each);
++    }   
++                
++    public void addOutgoingReferences(Reference[] many) {
++        for (Reference each : many)
++            this.getOutgoingReferences().add(each);
++    }
++    
++    public int numberOfOutgoingReferences() {
++        return getOutgoingReferences().size();
++    }
++
++    public boolean hasOutgoingReferences() {
++        return !getOutgoingReferences().isEmpty();
++    }
++    
++                
++    private Collection<Type> types; 
++
++    @FameProperty(name = "types", opposite = "container", derived = true)
++    public Collection<Type> getTypes() {
++        if (types == null) {
++            types = new MultivalueSet<Type>() {
++                @Override
++                protected void clearOpposite(Type e) {
++                    e.setContainer(null);
++                }
++                @Override
++                protected void setOpposite(Type e) {
++                    e.setContainer(ContainerEntity.this);
++                }
++            };
++        }
++        return types;
++    }
++    
++    public void setTypes(Collection<? extends Type> types) {
++        this.getTypes().clear();
++        this.getTypes().addAll(types);
++    }                    
++    
++        
++    public void addTypes(Type one) {
++        this.getTypes().add(one);
++    }   
++    
++    public void addTypes(Type one, Type... many) {
++        this.getTypes().add(one);
++        for (Type each : many)
++            this.getTypes().add(each);
++    }   
++    
++    public void addTypes(Iterable<? extends Type> many) {
++        for (Type each : many)
++            this.getTypes().add(each);
++    }   
++                
++    public void addTypes(Type[] many) {
++        for (Type each : many)
++            this.getTypes().add(each);
++    }
++    
++    public int numberOfTypes() {
++        return getTypes().size();
++    }
++
++    public boolean hasTypes() {
++        return !getTypes().isEmpty();
++    }
++    
++                
++    private Collection<Reference> incomingReferences; 
++
++    @FameProperty(name = "incomingReferences", opposite = "target", derived = true)
++    public Collection<Reference> getIncomingReferences() {
++        if (incomingReferences == null) {
++            incomingReferences = new MultivalueSet<Reference>() {
++                @Override
++                protected void clearOpposite(Reference e) {
++                    e.setTarget(null);
++                }
++                @Override
++                protected void setOpposite(Reference e) {
++                    e.setTarget(ContainerEntity.this);
++                }
++            };
++        }
++        return incomingReferences;
++    }
++    
++    public void setIncomingReferences(Collection<? extends Reference> incomingReferences) {
++        this.getIncomingReferences().clear();
++        this.getIncomingReferences().addAll(incomingReferences);
++    }                    
++    
++        
++    public void addIncomingReferences(Reference one) {
++        this.getIncomingReferences().add(one);
++    }   
++    
++    public void addIncomingReferences(Reference one, Reference... many) {
++        this.getIncomingReferences().add(one);
++        for (Reference each : many)
++            this.getIncomingReferences().add(each);
++    }   
++    
++    public void addIncomingReferences(Iterable<? extends Reference> many) {
++        for (Reference each : many)
++            this.getIncomingReferences().add(each);
++    }   
++                
++    public void addIncomingReferences(Reference[] many) {
++        for (Reference each : many)
++            this.getIncomingReferences().add(each);
++    }
++    
++    public int numberOfIncomingReferences() {
++        return getIncomingReferences().size();
++    }
++
++    public boolean hasIncomingReferences() {
++        return !getIncomingReferences().isEmpty();
++    }
++    
++                
++
++
++}
++
+Index: branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/Type.java
+===================================================================
+--- branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/Type.java	(revision 0)
++++ branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/Type.java	(revision 95)
+@@ -0,0 +1,258 @@
++// Automagically generated code, please do not change
++package fr.inria.verveine.core.gen.famix;
++
++import ch.akuhn.fame.internal.MultivalueSet;
++import java.util.*;
++import ch.akuhn.fame.FameProperty;
++import ch.akuhn.fame.FameDescription;
++import ch.akuhn.fame.FamePackage;
++
++
++@FamePackage("FAMIX")
++@FameDescription("Type")
++public class Type extends ContainerEntity {
++
++
++
++    private Collection<Method> methods; 
++
++    @FameProperty(name = "methods", opposite = "parentType", derived = true)
++    public Collection<Method> getMethods() {
++        if (methods == null) {
++            methods = new MultivalueSet<Method>() {
++                @Override
++                protected void clearOpposite(Method e) {
++                    e.setParentType(null);
++                }
++                @Override
++                protected void setOpposite(Method e) {
++                    e.setParentType(Type.this);
++                }
++            };
++        }
++        return methods;
++    }
++    
++    public void setMethods(Collection<? extends Method> methods) {
++        this.getMethods().clear();
++        this.getMethods().addAll(methods);
++    }                    
++    
++        
++    public void addMethods(Method one) {
++        this.getMethods().add(one);
++    }   
++    
++    public void addMethods(Method one, Method... many) {
++        this.getMethods().add(one);
++        for (Method each : many)
++            this.getMethods().add(each);
++    }   
++    
++    public void addMethods(Iterable<? extends Method> many) {
++        for (Method each : many)
++            this.getMethods().add(each);
++    }   
++                
++    public void addMethods(Method[] many) {
++        for (Method each : many)
++            this.getMethods().add(each);
++    }
++    
++    public int numberOfMethods() {
++        return getMethods().size();
++    }
++
++    public boolean hasMethods() {
++        return !getMethods().isEmpty();
++    }
++    
++                
++    private Collection<Inheritance> superInheritances; 
++
++    @FameProperty(name = "superInheritances", opposite = "subclass", derived = true)
++    public Collection<Inheritance> getSuperInheritances() {
++        if (superInheritances == null) {
++            superInheritances = new MultivalueSet<Inheritance>() {
++                @Override
++                protected void clearOpposite(Inheritance e) {
++                    e.setSubclass(null);
++                }
++                @Override
++                protected void setOpposite(Inheritance e) {
++                    e.setSubclass(Type.this);
++                }
++            };
++        }
++        return superInheritances;
++    }
++    
++    public void setSuperInheritances(Collection<? extends Inheritance> superInheritances) {
++        this.getSuperInheritances().clear();
++        this.getSuperInheritances().addAll(superInheritances);
++    }                    
++    
++        
++    public void addSuperInheritances(Inheritance one) {
++        this.getSuperInheritances().add(one);
++    }   
++    
++    public void addSuperInheritances(Inheritance one, Inheritance... many) {
++        this.getSuperInheritances().add(one);
++        for (Inheritance each : many)
++            this.getSuperInheritances().add(each);
++    }   
++    
++    public void addSuperInheritances(Iterable<? extends Inheritance> many) {
++        for (Inheritance each : many)
++            this.getSuperInheritances().add(each);
++    }   
++                
++    public void addSuperInheritances(Inheritance[] many) {
++        for (Inheritance each : many)
++            this.getSuperInheritances().add(each);
++    }
++    
++    public int numberOfSuperInheritances() {
++        return getSuperInheritances().size();
++    }
++
++    public boolean hasSuperInheritances() {
++        return !getSuperInheritances().isEmpty();
++    }
++    
++                
++    private ContainerEntity container;
++    
++    @FameProperty(name = "container", opposite = "types")
++    public ContainerEntity getContainer() {
++        return container;
++    }
++
++    @Override
++	public ContainerEntity getBelongsTo() {
++		return getContainer();
++	}
++
++    public void setContainer(ContainerEntity container) {
++        if (this.container != null) {
++            if (this.container.equals(container)) return;
++            this.container.getTypes().remove(this);
++        }
++        this.container = container;
++        if (container == null) return;
++        container.getTypes().add(this);
++    }
++    
++    private Collection<Attribute> attributes; 
++
++    @FameProperty(name = "attributes", opposite = "parentType", derived = true)
++    public Collection<Attribute> getAttributes() {
++        if (attributes == null) {
++            attributes = new MultivalueSet<Attribute>() {
++                @Override
++                protected void clearOpposite(Attribute e) {
++                    e.setParentType(null);
++                }
++                @Override
++                protected void setOpposite(Attribute e) {
++                    e.setParentType(Type.this);
++                }
++            };
++        }
++        return attributes;
++    }
++    
++    public void setAttributes(Collection<? extends Attribute> attributes) {
++        this.getAttributes().clear();
++        this.getAttributes().addAll(attributes);
++    }                    
++    
++        
++    public void addAttributes(Attribute one) {
++        this.getAttributes().add(one);
++    }   
++    
++    public void addAttributes(Attribute one, Attribute... many) {
++        this.getAttributes().add(one);
++        for (Attribute each : many)
++            this.getAttributes().add(each);
++    }   
++    
++    public void addAttributes(Iterable<? extends Attribute> many) {
++        for (Attribute each : many)
++            this.getAttributes().add(each);
++    }   
++                
++    public void addAttributes(Attribute[] many) {
++        for (Attribute each : many)
++            this.getAttributes().add(each);
++    }
++    
++    public int numberOfAttributes() {
++        return getAttributes().size();
++    }
++
++    public boolean hasAttributes() {
++        return !getAttributes().isEmpty();
++    }
++    
++                
++    private Collection<Inheritance> subInheritances; 
++
++    @FameProperty(name = "subInheritances", opposite = "superclass", derived = true)
++    public Collection<Inheritance> getSubInheritances() {
++        if (subInheritances == null) {
++            subInheritances = new MultivalueSet<Inheritance>() {
++                @Override
++                protected void clearOpposite(Inheritance e) {
++                    e.setSuperclass(null);
++                }
++                @Override
++                protected void setOpposite(Inheritance e) {
++                    e.setSuperclass(Type.this);
++                }
++            };
++        }
++        return subInheritances;
++    }
++    
++    public void setSubInheritances(Collection<? extends Inheritance> subInheritances) {
++        this.getSubInheritances().clear();
++        this.getSubInheritances().addAll(subInheritances);
++    }                    
++    
++        
++    public void addSubInheritances(Inheritance one) {
++        this.getSubInheritances().add(one);
++    }   
++    
++    public void addSubInheritances(Inheritance one, Inheritance... many) {
++        this.getSubInheritances().add(one);
++        for (Inheritance each : many)
++            this.getSubInheritances().add(each);
++    }   
++    
++    public void addSubInheritances(Iterable<? extends Inheritance> many) {
++        for (Inheritance each : many)
++            this.getSubInheritances().add(each);
++    }   
++                
++    public void addSubInheritances(Inheritance[] many) {
++        for (Inheritance each : many)
++            this.getSubInheritances().add(each);
++    }
++    
++    public int numberOfSubInheritances() {
++        return getSubInheritances().size();
++    }
++
++    public boolean hasSubInheritances() {
++        return !getSubInheritances().isEmpty();
++    }
++    
++                
++
++
++}
++
+Index: branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/ClassGroup.java
+===================================================================
+--- branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/ClassGroup.java	(revision 0)
++++ branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/ClassGroup.java	(revision 95)
+@@ -0,0 +1,18 @@
++// Automagically generated code, please do not change
++package fr.inria.verveine.core.gen.famix;
++
++import ch.akuhn.fame.FameDescription;
++import ch.akuhn.fame.FamePackage;
++import fr.inria.verveine.core.gen.moose.Group;
++
++
++@FamePackage("FAMIX")
++@FameDescription("ClassGroup")
++public class ClassGroup extends Group {
++
++
++
++
++
++}
++
+Index: branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/ParameterType.java
+===================================================================
+--- branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/ParameterType.java	(revision 0)
++++ branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/ParameterType.java	(revision 95)
+@@ -0,0 +1,17 @@
++// Automagically generated code, please do not change
++package fr.inria.verveine.core.gen.famix;
++
++import ch.akuhn.fame.FameDescription;
++import ch.akuhn.fame.FamePackage;
++
++
++@FamePackage("FAMIX")
++@FameDescription("ParameterType")
++public class ParameterType extends Type {
++
++
++
++
++
++}
++
+Index: branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/UnknownSourceLanguage.java
+===================================================================
+--- branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/UnknownSourceLanguage.java	(revision 0)
++++ branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/UnknownSourceLanguage.java	(revision 95)
+@@ -0,0 +1,17 @@
++// Automagically generated code, please do not change
++package fr.inria.verveine.core.gen.famix;
++
++import ch.akuhn.fame.FameDescription;
++import ch.akuhn.fame.FamePackage;
++
++
++@FamePackage("FAMIX")
++@FameDescription("UnknownSourceLanguage")
++public class UnknownSourceLanguage extends SourceLanguage {
++
++
++
++
++
++}
++
+Index: branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/Function.java
+===================================================================
+--- branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/Function.java	(revision 0)
++++ branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/Function.java	(revision 95)
+@@ -0,0 +1,46 @@
++// Automagically generated code, please do not change
++package fr.inria.verveine.core.gen.famix;
++
++import ch.akuhn.fame.FameProperty;
++import ch.akuhn.fame.FameDescription;
++import ch.akuhn.fame.FamePackage;
++
++
++@FamePackage("FAMIX")
++@FameDescription("Function")
++public class Function extends BehaviouralEntity {
++
++
++
++    private ScopingEntity parentScope;
++    
++    @FameProperty(name = "parentScope")
++    public ScopingEntity getParentScope() {
++        return parentScope;
++    }
++
++    public void setParentScope(ScopingEntity parentScope) {
++        this.parentScope = parentScope;
++    }
++    
++    private Module parentModule;
++    
++    @FameProperty(name = "parentModule", opposite = "functions")
++    public Module getParentModule() {
++        return parentModule;
++    }
++
++    public void setParentModule(Module parentModule) {
++        if (this.parentModule != null) {
++            if (this.parentModule.equals(parentModule)) return;
++            this.parentModule.getFunctions().remove(this);
++        }
++        this.parentModule = parentModule;
++        if (parentModule == null) return;
++        parentModule.getFunctions().add(this);
++    }
++    
++
++
++}
++
+Index: branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/Inheritance.java
+===================================================================
+--- branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/Inheritance.java	(revision 0)
++++ branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/Inheritance.java	(revision 95)
+@@ -0,0 +1,64 @@
++// Automagically generated code, please do not change
++package fr.inria.verveine.core.gen.famix;
++
++import ch.akuhn.fame.FameProperty;
++import ch.akuhn.fame.FameDescription;
++import ch.akuhn.fame.FamePackage;
++
++
++@FamePackage("FAMIX")
++@FameDescription("Inheritance")
++public class Inheritance extends Association {
++
++
++
++    private Type superclass;
++    
++    @FameProperty(name = "superclass", opposite = "subInheritances")
++    public Type getSuperclass() {
++        return superclass;
++    }
++
++    public void setSuperclass(Type superclass) {
++        if (this.superclass != null) {
++            if (this.superclass.equals(superclass)) return;
++            this.superclass.getSubInheritances().remove(this);
++        }
++        this.superclass = superclass;
++        if (superclass == null) return;
++        superclass.getSubInheritances().add(this);
++    }
++    
++    private Type subclass;
++    
++    @FameProperty(name = "subclass", opposite = "superInheritances")
++    public Type getSubclass() {
++        return subclass;
++    }
++
++    public void setSubclass(Type subclass) {
++        if (this.subclass != null) {
++            if (this.subclass.equals(subclass)) return;
++            this.subclass.getSuperInheritances().remove(this);
++        }
++        this.subclass = subclass;
++        if (subclass == null) return;
++        subclass.getSuperInheritances().add(this);
++    }
++
++	@Override
++	public NamedEntity getFrom() {
++		return getSubclass();
++	}
++
++	@Override
++	public NamedEntity getTo() {
++		return getSuperclass();
++	}
++    
++    
++    
++
++
++}
++
+Index: branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/CaughtException.java
+===================================================================
+--- branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/CaughtException.java	(revision 0)
++++ branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/CaughtException.java	(revision 95)
+@@ -0,0 +1,35 @@
++// Automagically generated code, please do not change
++package fr.inria.verveine.core.gen.famix;
++
++import ch.akuhn.fame.FameProperty;
++import ch.akuhn.fame.FameDescription;
++import ch.akuhn.fame.FamePackage;
++
++
++@FamePackage("FAMIX")
++@FameDescription("CaughtException")
++public class CaughtException extends Exception {
++
++
++
++    private Method definingMethod;
++    
++    @FameProperty(name = "definingMethod", opposite = "caughtExceptions")
++    public Method getDefiningMethod() {
++        return definingMethod;
++    }
++
++    public void setDefiningMethod(Method definingMethod) {
++        if (this.definingMethod != null) {
++            if (this.definingMethod.equals(definingMethod)) return;
++            this.definingMethod.getCaughtExceptions().remove(this);
++        }
++        this.definingMethod = definingMethod;
++        if (definingMethod == null) return;
++        definingMethod.getCaughtExceptions().add(this);
++    }
++    
++
++
++}
++
+Index: branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/MethodGroup.java
+===================================================================
+--- branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/MethodGroup.java	(revision 0)
++++ branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/MethodGroup.java	(revision 95)
+@@ -0,0 +1,18 @@
++// Automagically generated code, please do not change
++package fr.inria.verveine.core.gen.famix;
++
++import ch.akuhn.fame.FameDescription;
++import ch.akuhn.fame.FamePackage;
++import fr.inria.verveine.core.gen.moose.Group;
++
++
++@FamePackage("FAMIX")
++@FameDescription("MethodGroup")
++public class MethodGroup extends Group {
++
++
++
++
++
++}
++
+Index: branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/ParameterizableClass.java
+===================================================================
+--- branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/ParameterizableClass.java	(revision 0)
++++ branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/ParameterizableClass.java	(revision 95)
+@@ -0,0 +1,33 @@
++// Automagically generated code, please do not change
++package fr.inria.verveine.core.gen.famix;
++
++import java.util.*;
++import ch.akuhn.fame.FameProperty;
++import ch.akuhn.fame.FameDescription;
++import ch.akuhn.fame.FamePackage;
++
++
++@FamePackage("FAMIX")
++@FameDescription("ParameterizableClass")
++public class ParameterizableClass extends Class {
++
++
++
++    @FameProperty(name = "parameters", derived = true)
++    public Collection<ParameterType> getParameters() {
++        // this is a derived property, implement this method manually.
++    	Collection<ParameterType> ret = new LinkedList<ParameterType>();
++    	
++        for (Type inner : getTypes()) {
++        	if (inner instanceof ParameterType) {
++        		ret.add((ParameterType) inner);
++        	}
++        }
++        
++        return ret;
++    }
++        
++
++
++}
++
+Index: branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/Reference.java
+===================================================================
+--- branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/Reference.java	(revision 0)
++++ branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/Reference.java	(revision 95)
+@@ -0,0 +1,62 @@
++// Automagically generated code, please do not change
++package fr.inria.verveine.core.gen.famix;
++
++import ch.akuhn.fame.FameProperty;
++import ch.akuhn.fame.FameDescription;
++import ch.akuhn.fame.FamePackage;
++
++
++@FamePackage("FAMIX")
++@FameDescription("Reference")
++public class Reference extends Association {
++
++
++
++    private ContainerEntity source;
++    
++    @FameProperty(name = "source", opposite = "outgoingReferences")
++    public ContainerEntity getSource() {
++        return source;
++    }
++
++    public void setSource(ContainerEntity source) {
++        if (this.source != null) {
++            if (this.source.equals(source)) return;
++            this.source.getOutgoingReferences().remove(this);
++        }
++        this.source = source;
++        if (source == null) return;
++        source.getOutgoingReferences().add(this);
++    }
++    
++    private ContainerEntity target;
++    
++    @FameProperty(name = "target", opposite = "incomingReferences")
++    public ContainerEntity getTarget() {
++        return target;
++    }
++
++    public void setTarget(ContainerEntity target) {
++        if (this.target != null) {
++            if (this.target.equals(target)) return;
++            this.target.getIncomingReferences().remove(this);
++        }
++        this.target = target;
++        if (target == null) return;
++        target.getIncomingReferences().add(this);
++    }
++
++	@Override
++	public NamedEntity getFrom() {
++		return getSource();
++	}
++
++	@Override
++	public NamedEntity getTo() {
++		return getTarget();
++	}
++    
++
++
++}
++
+Index: verveine.extractor.java/test_src/Dictionary/Dictionary.java
+===================================================================
+--- verveine.extractor.java/test_src/Dictionary/Dictionary.java	(revision 0)
++++ verveine.extractor.java/test_src/Dictionary/Dictionary.java	(revision 59)
+@@ -0,0 +1,675 @@
++package fr.inria.verveine.core;
++
++import java.util.Collection;
++import java.util.Hashtable;
++import java.util.LinkedList;
++import java.util.Map;
++
++import ch.akuhn.fame.Repository;
++
++import fr.inria.verveine.core.gen.famix.Access;
++import fr.inria.verveine.core.gen.famix.Association;
++import fr.inria.verveine.core.gen.famix.Attribute;
++import fr.inria.verveine.core.gen.famix.BehaviouralEntity;
++import fr.inria.verveine.core.gen.famix.CaughtException;
++import fr.inria.verveine.core.gen.famix.Comment;
++import fr.inria.verveine.core.gen.famix.ContainerEntity;
++import fr.inria.verveine.core.gen.famix.DeclaredException;
++import fr.inria.verveine.core.gen.famix.Entity;
++import fr.inria.verveine.core.gen.famix.ImplicitVariable;
++import fr.inria.verveine.core.gen.famix.Inheritance;
++import fr.inria.verveine.core.gen.famix.Invocation;
++import fr.inria.verveine.core.gen.famix.LocalVariable;
++import fr.inria.verveine.core.gen.famix.Method;
++import fr.inria.verveine.core.gen.famix.NamedEntity;
++import fr.inria.verveine.core.gen.famix.Namespace;
++import fr.inria.verveine.core.gen.famix.Parameter;
++import fr.inria.verveine.core.gen.famix.PrimitiveType;
++import fr.inria.verveine.core.gen.famix.Reference;
++import fr.inria.verveine.core.gen.famix.SourcedEntity;
++import fr.inria.verveine.core.gen.famix.StructuralEntity;
++import fr.inria.verveine.core.gen.famix.ThrownException;
++
++/**
++ * A dictionnary of Famix entities to help create them and find them back
++ * @author anquetil
++ *
++ * @param <B> The super class of all bindings. Different for JDT, PDT, ... bindings
++ */
++public class Dictionary<B> {
++
++	public static final String DEFAULT_PCKG_NAME = "<Default Package>";
++	public static final String STUB_METHOD_CONTAINER_NAME = "<StubMethodContainer>";
++	public static final String SELF_NAME = "self";
++	public static final String SUPER_NAME = "super";
++
++	/**
++	 * The FAMIX repository where all FAMIX entities are created and stored
++	 */
++	protected Repository famixRepo;
++
++	/**
++	 * A dictionary to map an IBinding to FAMIX Entity
++	 */
++	protected Map<B,NamedEntity> mapBind;
++
++	/**
++	 * Another dictionary to map a name to FAMIX Entities with this name
++	 */
++	protected Map<String,Collection<NamedEntity>> mapName;
++
++	/**
++	 * Yet another dictionary for implicit variables
++	 * 'self' and 'super' have the same binding than their associated class so they can't be kept easily in bindFmxDico
++	 */
++	protected Map<fr.inria.verveine.core.gen.famix.Class,ImplicitVars> mapImpVar;
++
++	/**
++	 * Used to keep the two possible ImplicitVariable for a given Class binding
++	 * @author anquetil
++	 */
++	protected class ImplicitVars {
++		public ImplicitVariable self_iv;
++		public ImplicitVariable super_iv;
++	}
++	
++	/** Constructor taking a FAMIX repository
++	 * @param famixRepo
++	 */
++	public Dictionary(Repository famixRepo) {
++		this.famixRepo = famixRepo;
++		
++		this.mapBind = new Hashtable<B,NamedEntity>();
++		this.mapName = new Hashtable<String,Collection<NamedEntity>>();
++		this.mapImpVar = new Hashtable<fr.inria.verveine.core.gen.famix.Class,ImplicitVars>();
++		
++		if (! this.famixRepo.isEmpty()) {
++			recoverExistingRepository();
++		}
++	}
++
++	protected void recoverExistingRepository() {
++		for (Object obj : famixRepo.getElements()) {
++			if (obj instanceof NamedEntity) {
++				mapEntityToName( ((NamedEntity)obj).getName(), (NamedEntity) obj);
++			}
++		}
++		
++		for (Access acc : famixRepo.all(Access.class)) {
++			try {
++				if (acc.getIsWrite()) { }
++			}
++			catch (NullPointerException e) {
++				acc.setIsWrite(Boolean.FALSE);
++			}
++		}
++
++		for (fr.inria.verveine.core.gen.famix.Class clazz : famixRepo.all(fr.inria.verveine.core.gen.famix.Class.class)) {
++			try { if (clazz.getIsAbstract()) { } }
++			catch (NullPointerException e) { clazz.setIsAbstract(Boolean.FALSE); }
++			try { if (clazz.getIsStub()) { } }
++			catch (NullPointerException e) { clazz.setIsStub(Boolean.FALSE); }
++			try { if (clazz.getIsPublic()) { } }
++			catch (NullPointerException e) { clazz.setIsPublic(Boolean.FALSE); }
++			try { if (clazz.getIsPrivate()) { } }
++			catch (NullPointerException e) { clazz.setIsPrivate(Boolean.FALSE); }
++			try { if (clazz.getIsProtected()) { } }
++			catch (NullPointerException e) { clazz.setIsProtected(Boolean.FALSE); }
++			try { if (clazz.getIsFinal()) { } }
++			catch (NullPointerException e) { clazz.setIsFinal(Boolean.FALSE); }
++		}
++
++		for (Method meth : famixRepo.all(Method.class)) {
++			try { if (meth.getIsAbstract()) { } }
++			catch (NullPointerException e) { meth.setIsAbstract(Boolean.FALSE); }
++			try { if (meth.getIsStub()) { } }
++			catch (NullPointerException e) { meth.setIsStub(Boolean.FALSE); }
++			try { if (meth.getIsPublic()) { } }
++			catch (NullPointerException e) { meth.setIsPublic(Boolean.FALSE); }
++			try { if (meth.getIsPrivate()) { } }
++			catch (NullPointerException e) { meth.setIsPrivate(Boolean.FALSE); }
++			try { if (meth.getIsProtected()) { } }
++			catch (NullPointerException e) { meth.setIsProtected(Boolean.FALSE); }
++			try { if (meth.getIsFinal()) { } }
++			catch (NullPointerException e) { meth.setIsFinal(Boolean.FALSE); }
++		}
++
++		for (Attribute att : famixRepo.all(Attribute.class)) {
++			try { if (att.getIsAbstract()) { } }
++			catch (NullPointerException e) { att.setIsAbstract(Boolean.FALSE); }
++			try { if (att.getIsStub()) { } }
++			catch (NullPointerException e) { att.setIsStub(Boolean.FALSE); }
++			try { if (att.getIsPublic()) { } }
++			catch (NullPointerException e) { att.setIsPublic(Boolean.FALSE); }
++			try { if (att.getIsPrivate()) { } }
++			catch (NullPointerException e) { att.setIsPrivate(Boolean.FALSE); }
++			try { if (att.getIsProtected()) { } }
++			catch (NullPointerException e) { att.setIsProtected(Boolean.FALSE); }
++			try { if (att.getIsFinal()) { } }
++			catch (NullPointerException e) { att.setIsFinal(Boolean.FALSE); }
++		}
++
++	}
++	
++	protected void mapEntityToName(String name, NamedEntity ent) {
++		Collection<NamedEntity> l_ent = mapName.get(name);
++		if (l_ent == null) {
++			l_ent = new LinkedList<NamedEntity>();
++		}
++		l_ent.add(ent);
++		mapName.put(name, l_ent);
++	}
++	
++	/**
++	 * Returns all the Famix Entity with the given name and class 
++	 * @param fmxClass -- the subtype of Famix Entity we are looking for
++	 * @param name -- the name of the entity
++	 * @return the Collection of Famix Entities with the given name and class (possibly empty)
++	 */
++	@SuppressWarnings("unchecked")
++	public <T extends NamedEntity> Collection<T> getEntityByName(Class<T> fmxClass, String name) {
++		Collection<T> ret = new LinkedList<T>();
++		Collection<NamedEntity> l_name = mapName.get(name);
++		
++		if (l_name != null ) {
++			for (NamedEntity obj : l_name) {
++				if (fmxClass.isInstance(obj)) {
++					ret.add((T) obj);
++				}
++			}
++		}
++
++		return ret;
++	}
++
++	/**
++	 * Returns the Famix Entity associated to the given binding.
++	 * <b>Note</b>: Be careful than ImplicitVariables share the same binding than their associated Class and cannot be retrieved with this method.
++	 * In such a case, this method will always retrieve the Class associated to the binding.
++	 * To get an ImplicitVariable from the binding, use {@link Dictionary#getImplicitVariableByBinding(Object, String)}
++	 * @param bnd -- the binding
++	 * @return the Famix Entity associated to the binding or null if not found
++	 */
++	public NamedEntity getEntityByBinding(B bnd) {
++		if (bnd == null) {
++			return null;
++		}
++		else {
++			return mapBind.get(bnd);
++		}
++	}
++
++	/**
++	 * Creates and returns a FAMIX Entity of the type <b>fmxClass</b>.
++	 * The Entity is always created (see {@link Dictionary#ensureFamixEntity(Class, Object, String)}).
++	 * @param fmxClass -- the FAMIX class of the instance to create
++	 * @param name -- the name of the new instance
++	 * @return the FAMIX Entity or null in case of a FAMIX error
++	 */
++	protected <T extends NamedEntity> T createFamixEntity(Class<T> fmxClass, String name) {
++		T fmx = null;
++
++		try {
++			fmx = fmxClass.newInstance();
++		} catch (Exception e) {
++			System.err.println("Unexpected error, could not create a FAMIX entity: "+e.getMessage());
++			e.printStackTrace();
++		}
++		
++		if (fmx != null) {
++			fmx.setName(name);
++			fmx.setIsStub(Boolean.TRUE);
++
++			mapEntityToName(name, fmx);
++			
++			// put new entity in Famix repository
++			this.famixRepo.add(fmx);
++		}
++
++		return fmx;
++	}
++	
++	/**
++	 * Returns a FAMIX Entity of the type <b>fmxClass</b> and maps it to its binding <b>bnd</b> (if not null).
++	 * The Entity is created if it did not exist.
++	 * <b>Note</b>: Should not be used to create ImplicitVariables and will silently fail if one tries. Use ensureFamixImplicitVariable instead.
++	 * @param fmxClass -- the FAMIX class of the instance to create
++	 * @param bnd -- the binding to map to the new instance
++	 * @param name -- the name of the new instance (used if <tt>bnd == null</tt>)
++	 * @return the FAMIX Entity or null if <b>bnd</b> was null or in case of a FAMIX error
++	 * 
++	 * TODO Make public and remove ensureFamixClass(name), ensureFamixAttribute(name), ... ????
++	 */
++	@SuppressWarnings("unchecked")
++	protected <T extends NamedEntity> T ensureFamixEntity(Class<T> fmxClass, B bnd, String name) {
++		T fmx = null;
++		
++		if (ImplicitVariable.class.isAssignableFrom(fmxClass)) {
++			return null;
++		}
++		
++		if (bnd != null) {
++			fmx = (T) getEntityByBinding(bnd);
++		}
++		else {
++			// Unfortunately different entities with the same name and same type may exist
++			// e.g. 2 parameters of 2 different methods but having the same name
++			// so we must recreate a new entity each time
++
++			//fmxEnt = getEntityByName(fmxClass, name);
++		}
++
++		if (fmx != null) {
++			return fmx;
++		}
++
++		fmx = createFamixEntity(fmxClass, name);
++		// put new entity in mappers
++		if (bnd != null) {
++			mapBind.put(bnd, fmx);
++		}
++		
++		return fmx;
++	}
++
++	/**
++	 * Adds an already created Entity to the FAMIX repository
++	 * Used mainly for non-NamedEntity, for example relationships
++	 * @param e -- the FAMIX entity to add to the repository
++	 */
++	public void famixRepoAdd(Entity e) {
++		this.famixRepo.add(e);
++	}
++
++	///// ensure Famix Entities /////
++	
++	/**
++	 * Returns a FAMIX Class with the given <b>name</b>, creating it if it does not exist yet
++	 * @param name -- the name of the FAMIX Class
++	 * @return the FAMIX Class or null in case of a FAMIX error
++	 */
++	public fr.inria.verveine.core.gen.famix.Class ensureFamixClass(String name) {
++		fr.inria.verveine.core.gen.famix.Class fmx = ensureFamixEntity(fr.inria.verveine.core.gen.famix.Class.class, null, name);
++		if (fmx != null) {
++			fmx.setIsAbstract(Boolean.FALSE);
++			fmx.setIsFinal(Boolean.FALSE);
++			fmx.setIsInterface(Boolean.FALSE);
++			fmx.setIsPrivate(Boolean.FALSE);
++			fmx.setIsProtected(Boolean.FALSE);
++			fmx.setIsPublic(Boolean.FALSE);
++		}
++
++		return fmx;
++	}
++
++	/**
++	 * Returns a FAMIX Method with the given <b>name</b>, creating it if it does not exist yet
++	 * @param name -- the name of the FAMIX Method
++	 * @return the FAMIX Method or null in case of a FAMIX error
++	 */
++	public Method ensureFamixMethod(String name) {
++		return (Method) ensureFamixEntity(Method.class, null, name);
++	}
++
++	/**
++	 * Returns a FAMIX Attribute with the given <b>name</b>, creating it if it does not exist yet
++	 * @param name -- the name of the FAMIX Attribute
++	 * @return the FAMIX Attribute or null in case of a FAMIX error
++	 */
++	public Attribute ensureFamixAttribute(String name) {
++		return (Attribute) ensureFamixEntity(Attribute.class, null, name);
++	}
++
++	/**
++	 * Returns a FAMIX LocalVariable with the given <b>name</b>, creating it if it does not exist yet
++	 * @param name -- the name of the FAMIX LocalVariable
++	 * @return the FAMIX LocalVariable or null in case of a FAMIX error
++	 */
++	public LocalVariable ensureFamixLocalVariable(String name) {
++		return (LocalVariable) ensureFamixEntity(LocalVariable.class, null, name);
++	}
++
++	/**
++	 * Creates and returns a FAMIX Comment
++	 * @param cmt -- the content (String) of the comment 
++	 * @return the FAMIX Comment
++	 */
++	public Comment createFamixComment(String cmt) {
++		Comment fmx = new Comment();
++		fmx.setContent(cmt);
++		this.famixRepo.add(fmx);
++		
++		return fmx;
++	}
++
++	/**
++	 * Creates and returns a FAMIX Comment and associates it with an Entity (ex: for Javadocs)
++	 * @param cmt -- the content (String) of the comment 
++	 * @param owner -- the entity concerned by this comment
++	 * @return the FAMIX Comment
++	 */
++	public Comment createFamixComment(String cmt, SourcedEntity owner) {
++		Comment fmx = new Comment();
++		fmx.setContent(cmt);
++		fmx.setContainer(owner);
++		this.famixRepo.add(fmx);
++		
++		return fmx;
++	}
++	
++	/**
++	 * Creates and returns a FAMIX Parameter and associates it with an BehaviouralEntity
++	 * @param identifier -- the name of the parameter
++	 * @param owner -- the entity concerned by this parameter
++	 * @param type -- the type of the parameter
++	 * @return the FAMIX parameter
++	 */
++	public Parameter createFamixParameter(String identifier, BehaviouralEntity owner, String type) {
++		Parameter fmx = new Parameter();
++		fmx.setName(identifier);
++		fmx.setParentBehaviouralEntity(owner);
++		fmx.setDeclaredType(ensureFamixUniqEntity(fr.inria.verveine.core.gen.famix.Class.class, null, type));
++		this.famixRepo.add(fmx);
++		
++		return fmx;
++	}
++	
++	///// ensure Famix Relationships /////
++
++	/**
++	 * Returns a Famix Inheritance relationship between two Famix Classes creating it if needed
++	 * @param sup -- the super class
++	 * @param sub -- the sub class
++	 * @return the Inheritance relationship
++	 */
++	public Inheritance ensureFamixInheritance(fr.inria.verveine.core.gen.famix.Class sup, fr.inria.verveine.core.gen.famix.Class sub) {
++		return ensureFamixInheritance(sup, sub, null);
++	}
++	
++	public Inheritance ensureFamixInheritance(fr.inria.verveine.core.gen.famix.Class sup, fr.inria.verveine.core.gen.famix.Class sub, Association prev) {
++		for (Inheritance i : sup.getSubInheritances()) {
++			if (i.getSubclass() == sub) {
++				return i;
++			}
++		}
++		Inheritance inh = new Inheritance();
++		inh.setSuperclass(sup);
++		inh.setSubclass(sub);
++		chainPrevNext(prev,inh);
++		famixRepoAdd(inh);
++		return inh;
++	}
++
++	/**
++	 * Returns a Famix Reference between two Famix Entities creating it if needed
++	 * @param src -- source of the reference
++	 * @param tgt -- target of the reference
++	 * @return the Reference
++	 */
++	public Reference ensureFamixReference(ContainerEntity src, ContainerEntity tgt) {
++		return ensureFamixReference(src, tgt, null);
++	}
++	
++	public Reference ensureFamixReference(ContainerEntity src, ContainerEntity tgt, Association prev) {
++		Reference ref = new Reference();
++		ref.setTarget(tgt);
++		ref.setSource(src);
++		chainPrevNext(prev,ref);
++		famixRepoAdd(ref);
++		
++		return ref;
++	}
++
++	/**
++	 * Returns a Famix Invocation between two Famix Entities creating it if needed
++	 * @param sender of the invocation
++	 * @param invoked -- method invoked
++	 * @param receiver of the invocation
++	 * @return the Invocation
++	 */
++	public Invocation ensureFamixInvocation(BehaviouralEntity sender, BehaviouralEntity invoked, NamedEntity receiver) {
++		return ensureFamixInvocation(sender, invoked, receiver, null);
++	}
++
++	public Invocation ensureFamixInvocation(BehaviouralEntity sender, BehaviouralEntity invoked, NamedEntity receiver, Association prev) {
++		Invocation invok = new Invocation();
++		invok.setReceiver(receiver);
++		invok.setSender(sender);
++		invok.setSignature(invoked.getSignature());
++		invok.addCandidates(invoked);
++		chainPrevNext(prev,invok);
++		famixRepoAdd(invok);
++		
++		return invok;
++	}
++
++	public Access ensureFamixAccess(BehaviouralEntity accessor, StructuralEntity var, boolean isWrite, Association prev) {
++		/* We keep multiple accesses from one method to a field */
++		Access acc = new Access();
++		acc.setAccessor(accessor);
++		acc.setVariable(var);
++		acc.setIsWrite(new Boolean(isWrite));
++		chainPrevNext(prev, acc);
++		famixRepoAdd(acc);
++		
++		return acc;
++	}
++
++	public Access ensureFamixAccess(BehaviouralEntity accessor, StructuralEntity var, boolean isWrite) {
++		return ensureFamixAccess(accessor, var, isWrite, null);
++	}
++	
++	public Access ensureFamixAccess(BehaviouralEntity accessor, StructuralEntity var) {
++		return ensureFamixAccess(accessor, var, false, null);  // must set some default for isWrite and this one seems safer than the opposite
++	}
++
++	private void chainPrevNext(Association prev, Association next) {
++		if (prev != null) {
++			next.setPrevious(prev);  // not yet implemented in importer
++		}
++	}
++	
++	/**
++	 * Returns a Famix DeclaredException between a method and an Exception that it declares to throw
++	 * @param meth -- the method throwing the exception
++	 * @param excep -- the exception declared to be thrown
++	 * @return the DeclaredException
++	 */
++	public DeclaredException ensureFamixDeclaredException(Method meth, fr.inria.verveine.core.gen.famix.Class excep) {
++		DeclaredException decl = new DeclaredException();
++		decl.setExceptionClass(excep);
++		decl.setDefiningMethod(meth);
++		famixRepoAdd(decl);
++		return decl;
++	}
++
++	/**
++	 * Returns a Famix CaughtException between a method and an Exception that is caught
++	 * @param meth -- the method catching the exception
++	 * @param excep -- the exception caught
++	 * @return the CaughtException
++	 */
++	public CaughtException ensureFamixCaughtException(Method meth, fr.inria.verveine.core.gen.famix.Class excep) {
++		CaughtException decl = new CaughtException();
++		decl.setExceptionClass(excep);
++		decl.setDefiningMethod(meth);
++		famixRepoAdd(decl);
++		return decl;
++	}
++
++	/**
++	 * Returns a Famix ThrownException between a method and an Exception that it (actually) throws.
++	 * Note: DeclaredException indicates that the method declares it can throw the exception,
++	 * here we state that the exception is actually thrown
++	 * @param meth -- the method throwing the exception
++	 * @param excep -- the exception thrown
++	 * @return the ThrownException
++	 */
++	public ThrownException ensureFamixThrownException(Method meth, fr.inria.verveine.core.gen.famix.Class excep) {
++		ThrownException decl = new ThrownException();
++		decl.setExceptionClass(excep);
++		decl.setDefiningMethod(meth);
++		famixRepoAdd(decl);
++		return decl;
++	}
++
++	///// Special Case: ImplicitVariables /////
++
++	/**
++	 * Returns the Famix ImplicitVariable associated to the given binding and name (self or super).
++	 * See also {@link Dictionary#getEntityByBinding(Object)}
++	 * @param bnd -- the binding
++	 * @return the Famix Entity associated to the binding or null if not found
++	 */
++	public ImplicitVariable getImplicitVariableByBinding(B bnd, String iv_name) {
++		return getImplicitVariableByClass((fr.inria.verveine.core.gen.famix.Class)getEntityByBinding(bnd), iv_name);
++	}
++	
++	/**
++	 * Returns the Famix ImplicitVariable associated to the given Famix Class.
++	 * @param clazz -- the FamixClass
++	 * @param name -- name of the ImplicitVariable (should be Dictionary.SELF_NAME or Dictionary.SUPER_NAME)
++	 * @return the Famix ImplicitVariable associated to the Class or null if not found
++	 */
++	public ImplicitVariable getImplicitVariableByClass(fr.inria.verveine.core.gen.famix.Class clazz, String name) {
++		ImplicitVars iv = mapImpVar.get(clazz);
++		ImplicitVariable ret = null;
++		
++		if (iv == null) {
++			iv = new ImplicitVars();
++		}
++		
++		if (name.equals(SELF_NAME)) {
++			ret = iv.self_iv;
++		}
++		else if (name.equals(SUPER_NAME)) {
++			ret = iv.super_iv;
++		}
++
++		return ret;
++	}
++
++	/**
++	 * Returns a FAMIX ImplicitVariable with the given <b>name</b> (self or super) and corresponding to the <b>clazz</b>.
++	 * If this ImplicitVariable does not exist yet, it is created
++	 * @param clazz -- the Famix Class for this ImplicitVariable (should not be null)
++	 * @param name -- the name of the FAMIX ImplicitVariable (should be Dictionary.SELF_NAME or Dictionary.SUPER_NAME)
++	 * @return the FAMIX ImplicitVariable or null in case of a FAMIX error
++	 */
++	public ImplicitVariable ensureFamixImplicitVariable(fr.inria.verveine.core.gen.famix.Class clazz, String name) {
++		ImplicitVariable fmx = getImplicitVariableByClass(clazz, name);
++		
++		if (fmx == null) {
++			fmx = (ImplicitVariable) createFamixEntity(ImplicitVariable.class, name);
++			if (fmx!=null) {
++				fmx.setContainer(clazz);
++				fmx.setIsStub(Boolean.FALSE);
++
++				ImplicitVars iv = mapImpVar.get(clazz);				
++				if (iv == null) {
++					iv = new ImplicitVars();
++				}
++
++				if (name.equals(SELF_NAME)) {
++					iv.self_iv = fmx;
++				}
++				else if (name.equals(SUPER_NAME)) {
++					iv.super_iv = fmx;
++				}
++				
++				mapImpVar.put(clazz, iv);
++			}
++		}
++
++		return fmx;
++	}
++
++	///// Special Case: "Uniq" Entities /////
++
++	/**
++	 * Creates or recovers a Famix Named Entity uniq for the given name.
++	 * For some specific entities we don't allow two of them with the same name.
++	 * This is the case e.g. for the default package, or the Java class "Object" and its package "java.lang".
++	 * @param fmxClass -- the FAMIX class of the instance to create
++	 * @param bnd -- a potential binding for the entity
++	 * @param name -- the name of the new instance (used if <tt>bnd == null</tt>)
++	 * @return the uniq Famix Entity for this binding and/or name
++	 */
++	@SuppressWarnings("unchecked")
++	public <T extends NamedEntity> T ensureFamixUniqEntity(Class<T> fmxClass, B bnd, String name) {
++		T fmx = null;
++		if (bnd != null) {
++			fmx = (T) getEntityByBinding(bnd);
++		}
++		
++		if (fmx == null) {
++			Collection<T> l = getEntityByName( fmxClass, name);
++			if (l.size() > 0) {
++				fmx = l.iterator().next();
++			}
++			else {
++				fmx = createFamixEntity(fmxClass, name);
++			}
++			
++			if (bnd != null) {
++				// may happen for example if the entity was first created without binding
++				// and we find a binding for it later
++				mapBind.put(bnd, fmx);
++			}
++		}
++
++		return fmx;
++	}
++
++	/**
++	 * Returns a FAMIX Namespace with the given <b>name</b>, creating it if it does not exist yet
++	 * We assume that Namespaces must be uniq for a given name
++	 * @param name -- the name of the FAMIX Namespace
++	 * @return the FAMIX Namespace or null in case of a FAMIX error
++	 */
++	public Namespace ensureFamixNamespace(String name) {
++		return  ensureFamixUniqEntity(Namespace.class, null, name);
++	}
++
++	/**
++	 * Creates or recovers a default Famix Namespace.
++	 * Because this package does not really exist, it has no binding.
++	 * @return a Famix Namespace
++	 */
++	public Namespace ensureFamixNamespaceDefault() {
++		Namespace fmx =  ensureFamixUniqEntity(Namespace.class, null, DEFAULT_PCKG_NAME);
++
++		return fmx;
++	}
++
++	/**
++	 * Returns a FAMIX PrimitiveType with the given <b>name</b>, creating it if it does not exist yet
++	 * We assume that PrimitiveType must be uniq for a given name
++	 * @param name -- the name of the FAMIX PrimitiveType
++	 * @return the FAMIX PrimitiveType or null in case of a FAMIX error
++	 */
++	public PrimitiveType ensureFamixPrimitiveType(String name) {
++		return  ensureFamixUniqEntity(PrimitiveType.class, null, name);
++	}
++	
++	/**
++	 * Creates or recovers a Famix Class to contain the methods stubs (for which we ignore the real owner).
++	 * Because this package does not really exist, it has no binding.
++	 * @return a Famix class
++	 */
++	public fr.inria.verveine.core.gen.famix.Class ensureFamixClassStubOwner() {
++		fr.inria.verveine.core.gen.famix.Class fmx =  ensureFamixUniqEntity(fr.inria.verveine.core.gen.famix.Class.class, null, STUB_METHOD_CONTAINER_NAME);
++		if (fmx != null) {
++			fmx.setContainer( ensureFamixNamespaceDefault());
++			fmx.setIsAbstract(Boolean.FALSE);
++			fmx.setIsFinal(Boolean.FALSE);
++			fmx.setIsInterface(Boolean.FALSE);
++			fmx.setIsPrivate(Boolean.FALSE);
++			fmx.setIsProtected(Boolean.FALSE);
++			fmx.setIsPublic(Boolean.FALSE);
++		}
++
++		return fmx;
++	}
++	
++}
+Index: verveine.core/lib/verveine.core.jar
+===================================================================
+Cannot display: file marked as a binary type.
+svn:mime-type = application/octet-stream

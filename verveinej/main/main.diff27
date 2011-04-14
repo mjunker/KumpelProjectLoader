@@ -1,0 +1,523 @@
+Index: verveine.extractor.java/lib/famix.jar
+===================================================================
+Cannot display: file marked as a binary type.
+svn:mime-type = application/octet-stream
+Index: verveine.extractor.java/src/fr/inria/verveine/extractor/java/JavaDictionary.java
+===================================================================
+--- verveine.extractor.java/src/fr/inria/verveine/extractor/java/JavaDictionary.java	(revision 45)
++++ verveine.extractor.java/src/fr/inria/verveine/extractor/java/JavaDictionary.java	(revision 46)
+@@ -5,6 +5,7 @@
+ 
+ import org.eclipse.jdt.core.dom.ASTNode;
+ import org.eclipse.jdt.core.dom.CompilationUnit;
++import org.eclipse.jdt.core.dom.IAnnotationBinding;
+ import org.eclipse.jdt.core.dom.IBinding;
+ import org.eclipse.jdt.core.dom.IMethodBinding;
+ import org.eclipse.jdt.core.dom.IPackageBinding;
+@@ -14,6 +15,8 @@
+ 
+ import ch.akuhn.fame.Repository;
+ import fr.inria.verveine.core.Dictionary;
++import fr.inria.verveine.core.gen.famix.AnnotationInstance;
++import fr.inria.verveine.core.gen.famix.AnnotationType;
+ import fr.inria.verveine.core.gen.famix.Attribute;
+ import fr.inria.verveine.core.gen.famix.ContainerEntity;
+ import fr.inria.verveine.core.gen.famix.FileAnchor;
+@@ -128,7 +131,7 @@
+ 			return ensureFamixClass(bnd);
+ 		}
+ 	}
+-
++	
+ 	public PrimitiveType ensureFamixPrimitiveType(ITypeBinding bnd) {
+ 
+ 		if (bnd == null) {
+@@ -141,6 +144,20 @@
+ 		mapBind.put(bnd, fmx);
+ 		return fmx;
+ 	}
++	
++	public AnnotationType ensureFamixAnnotationType(ITypeBinding bnd) {
++
++		if (bnd == null) {
++			System.err.println("Warning: Unexpected null binding, cannot create Famix Annotation Type");
++			return null;
++		}
++		
++		AnnotationType fmx = ensureFamixUniqEntity(AnnotationType.class, null, bnd.getName());
++		fmx.setIsStub(true);
++		fmx.setContainer(ensureFamixNamespace(bnd.getPackage()));
++		mapBind.put(bnd, fmx);
++		return fmx;
++	}
+ 
+ 	/**
+ 	 * Returns a Famix Class associated with the ITypeBinding. The Entity is created if it does not exist.
+@@ -578,6 +595,21 @@
+ 		}
+ 		return fmx;
+ 	}
++	
++	/**
++	 * Creates and returns a FAMIX AnnotationInstance and associates it with an Entity and an AnnotationType
++	 * @param name -- the name (String) of the annotation 
++	 * @param owner -- the entity concerned by this annotation
++	 * @return the FAMIX AnnotationInstance
++	 */
++	public AnnotationInstance createFamixAnnotationInstance(SourcedEntity owner, AnnotationType annType) {
++		AnnotationInstance fmx = new AnnotationInstance();
++		fmx.setAnnotatedEntity(owner);
++		fmx.setAnnotationType(annType);
++		this.famixRepo.add(fmx);
++		
++		return fmx;
++	}
+ 
+ 	/**
+ 	 * Adds location information to a Famix Entity.
+@@ -699,5 +731,4 @@
+ 
+ 		return fmx;
+ 	}
+-
+-}
++}
+\ No newline at end of file
+Index: verveine.extractor.java/lib/verveine.core.jar
+===================================================================
+Cannot display: file marked as a binary type.
+svn:mime-type = application/octet-stream
+Index: verveine.extractor.java/lib/verveine.extractor.java.jar
+===================================================================
+Cannot display: file marked as a binary type.
+svn:mime-type = application/octet-stream
+Index: verveine.extractor.java/src/tests/fr/inria/verveine/extractor/java/VerveineExtractorJavaTest.java
+===================================================================
+--- verveine.extractor.java/src/tests/fr/inria/verveine/extractor/java/VerveineExtractorJavaTest.java	(revision 7)
++++ verveine.extractor.java/src/tests/fr/inria/verveine/extractor/java/VerveineExtractorJavaTest.java	(revision 8)
+@@ -208,16 +208,21 @@
+ 		Namespace ns = TestVerveineUtils.detectElement(repo,Namespace.class, javaLangName);
+ 		assertNotNull(ns);
+ 		assertEquals(5, ns.getTypes().size());  // Object,String,StringBuffer,AbstractStringBuilder,System
+-		
++		assertTrue(ns.getIsStub());
++			
+ 		fr.inria.verveine.core.gen.famix.Class obj = TestVerveineUtils.detectElement(repo,fr.inria.verveine.core.gen.famix.Class.class, JavaDictionary.OBJECT_NAME);
+ 		assertNotNull(obj);
+-		assertFalse(ns.getIsStub());
++		assertTrue(ns.getIsStub());
+ 		assertSame(ns, obj.getContainer());
+ 		
+ 		fr.inria.verveine.core.gen.famix.Class str = TestVerveineUtils.detectElement(repo,fr.inria.verveine.core.gen.famix.Class.class, "String");
+ 		assertNotNull(str);
+-		assertFalse(str.getIsStub());
++		assertTrue(str.getIsStub());
+ 		assertSame(ns, str.getContainer());
++		
++		fr.inria.verveine.core.gen.famix.Class clazz = TestVerveineUtils.detectElement(repo,fr.inria.verveine.core.gen.famix.Class.class, "Node");
++		assertNotNull(clazz);
++		assertFalse(clazz.getIsStub());
+ 	}
+ 
+ 	@Test
+Index: verveine.extractor.java/src/fr/inria/verveine/extractor/java/VerveineDefVisitor.java
+===================================================================
+--- verveine.extractor.java/src/fr/inria/verveine/extractor/java/VerveineDefVisitor.java	(revision 7)
++++ verveine.extractor.java/src/fr/inria/verveine/extractor/java/VerveineDefVisitor.java	(revision 8)
+@@ -1,6 +1,5 @@
+ package fr.inria.verveine.extractor.java;
+ 
+-import java.util.Iterator;
+ import java.util.List;
+ 
+ import org.eclipse.jdt.core.dom.ASTNode;
+@@ -23,6 +22,7 @@
+ import fr.inria.verveine.core.gen.famix.LocalVariable;
+ import fr.inria.verveine.core.gen.famix.Method;
+ import fr.inria.verveine.core.gen.famix.Namespace;
++import fr.inria.verveine.core.gen.famix.Parameter;
+ 
+ /**
+  * AST Visitor that defines all the (Famix) entities of interest
+@@ -56,7 +56,10 @@
+ 		}
+ 		else {
+ 			fmx = dico.ensureFamixNamespace(pckg.resolveBinding());
+-			if (fmx == null) {
++			if (fmx != null) {
++				fmx.setIsStub(false);
++			}
++			else {
+ 				System.err.println("         Namespace="+pckg.getName().getFullyQualifiedName() + ",  fallback to creating a stub");
+ 				// try again without binding
+ 				fmx = dico.ensureFamixNamespace(pckg.getName().getFullyQualifiedName());
+@@ -75,7 +78,10 @@
+ 	public boolean visit(TypeDeclaration node) {
+ //		System.err.println("TRACE, DefVisiting TypeDeclaration: "+node.getName().getIdentifier());
+ 		fr.inria.verveine.core.gen.famix.Class fmx = dico.ensureFamixClass(node.resolveBinding());
+-		if (fmx == null) {
++		if (fmx != null) {
++			fmx.setIsStub(false);
++		}
++		else {
+ 			// TODO try to find a binded version corresponding to this stub?
+ 			System.err.println("         Class="+node.getName().getIdentifier() + ",  fallback to creating a stub");
+ 			fmx = dico.ensureFamixClass(node.getName().getIdentifier());
+@@ -97,7 +103,10 @@
+ 		AnonymousClassDeclaration decl = node.getAnonymousClassDeclaration(); 
+ 		if (decl != null) {
+ 			fr.inria.verveine.core.gen.famix.Class fmx = this.dico.ensureFamixClass(decl.resolveBinding());
+-			if (fmx == null) {
++			if (fmx != null) {
++				fmx.setIsStub(false);
++			}
++			else {
+ 				System.err.println("         Class="+"anonymous(??),  fallback to creating a stub");
+ 				fmx = dico.ensureFamixClass("anonymous(??)");
+ 				dico.ensureFamixInheritance(dico.ensureFamixClassObject(null), fmx);
+@@ -114,23 +123,28 @@
+ 		super.endVisit(node);
+ 	}
+ 
++	@SuppressWarnings("unchecked")
+ 	public boolean visit(MethodDeclaration node) {
+ //		System.err.println("TRACE, DefVisiting MethodDeclaration: "+node.getName().getIdentifier());
+ 		Method fmx = dico.ensureFamixMethod(node.resolveBinding());
+-		if (fmx == null) {
++		if (fmx != null) {
++			fmx.setIsStub(false);
++		}
++		else {
+ 			System.err.println("         Method="+node.getName().getIdentifier() + ",  fallback to creating a stub");
+ 			fmx = dico.ensureFamixMethod(node.getName().getIdentifier());
+ 			fmx.setParentType(context.topClass());
+ 			fmx.setSignature(fmx.getName()+" (???)");
+ 			fmx.setDeclaredType( dico.ensureFamixClassObject(null) );
+ 		}
+-		
++
++		// creating the method's parameters
+ 		if (fmx != null) {
+-			@SuppressWarnings("unchecked")
+-			Iterator<SingleVariableDeclaration> iter = node.parameters().iterator();
+-			while (iter.hasNext()) {
+-				SingleVariableDeclaration param = iter.next();
+-				dico.ensureFamixParameter(param.resolveBinding());
++			for (SingleVariableDeclaration param : (List<SingleVariableDeclaration>)node.parameters()) {
++				Parameter fmxParam = dico.ensureFamixParameter(param.resolveBinding());
++				if (fmxParam != null) {
++					fmxParam.setIsStub(false);
++				}
+ 			}
+ 			
+ 			dico.addSourceAnchor(fmx, node);
+@@ -150,7 +164,10 @@
+ 		for (VariableDeclarationFragment vd : (List<VariableDeclarationFragment>)node.fragments()) {
+ //			System.err.println("            Field: "+vd.getName().getIdentifier());
+ 			Attribute fmx = dico.ensureFamixAttribute(vd.resolveBinding());
+-			if (fmx == null) {
++			if (fmx != null) {
++				fmx.setIsStub(false);
++			}
++			else {
+ 				System.err.println("         Attribute="+vd.getName().getFullyQualifiedName() + ",  fallback to creating a stub");
+ 				fmx = dico.ensureFamixAttribute(vd.getName().getFullyQualifiedName());
+ 				fmx.setParentType(context.topClass());
+@@ -184,7 +201,10 @@
+ 
+ 		for (VariableDeclarationFragment vd : fragments) {
+ 			LocalVariable fmx = dico.ensureFamixLocalVariable(vd.resolveBinding());
+-			if (fmx == null) {
++			if (fmx != null) {
++				fmx.setIsStub(false);
++			}
++			else {
+ 				System.err.println("         Variable="+vd.getName().getFullyQualifiedName() + ",  fallback to creating a stub");
+ 				fmx = dico.ensureFamixLocalVariable(vd.getName().getFullyQualifiedName());
+ 				fmx.setParentBehaviouralEntity(context.topMethod());
+Index: verveine.extractor.java/src/fr/inria/verveine/extractor/java/JavaDictionary.java
+===================================================================
+--- verveine.extractor.java/src/fr/inria/verveine/extractor/java/JavaDictionary.java	(revision 7)
++++ verveine.extractor.java/src/fr/inria/verveine/extractor/java/JavaDictionary.java	(revision 8)
+@@ -63,20 +63,13 @@
+ 
+ 		Namespace fmx = ensureFamixNamespaceWithParentScope(bnd, null);
+ 
+-		if (fmx!=null) {
+-			fmx.setIsStub(Boolean.FALSE);			
+-		}
+ 		return fmx;
+ 	}
+ 
+ 	@Override
+ 	public Namespace ensureFamixNamespace(String name) {
+ 		Namespace fmx = ensureFamixNamespaceWithParentScope(null, name);
+-		
+-		if (fmx!=null) {
+-			fmx.setIsStub(Boolean.FALSE);			
+-		}
+-		
++
+ 		return fmx;
+ 	}
+ 
+@@ -130,6 +123,7 @@
+ 		ContainerEntity owner = null;
+ 		Collection<fr.inria.verveine.core.gen.famix.Class> sups = new LinkedList<fr.inria.verveine.core.gen.famix.Class>();
+ 		String identifier = null;
++		boolean wasBound = false;
+ 		
+ 		if (bnd == null) {
+ 			System.err.println("Warning: Unexpected null binding, cannot create Famix Class");
+@@ -212,7 +206,11 @@
+ 		// ... trying to recover from binding
+ 		fmx = (fr.inria.verveine.core.gen.famix.Class) getEntityByBinding(bnd);
+ 		
+-		if (fmx == null) {
++		if (fmx != null) {
++			wasBound = true;
++		}
++		else {
++			wasBound = false;
+ 			// trying to recover from name and other informations
+ 			for (fr.inria.verveine.core.gen.famix.Class candidate : getEntityByName(fr.inria.verveine.core.gen.famix.Class.class, identifier) ) {
+ 				if ( (! candidate.getIsStub()) &&
+@@ -244,11 +242,11 @@
+ 		
+ 		if (fmx == null) {
+ 			// could not recover it, creating a new entity
+-			fmx = (fr.inria.verveine.core.gen.famix.Class) ensureFamixStub(fr.inria.verveine.core.gen.famix.Class.class, bnd, bnd.getName());
++			fmx = (fr.inria.verveine.core.gen.famix.Class) ensureFamixEntity(fr.inria.verveine.core.gen.famix.Class.class, bnd, bnd.getName());
+ 		}
+ 		
+-		if ((fmx!=null) && fmx.getIsStub()) {
+-			// apparently we just created it or it already existed as a stub, so add information to it
++		if ((fmx!=null) && (! wasBound)) {
++			// apparently we just created it or it already existed but was not bound, so add information to it
+ 			fmx.setIsInterface(bnd.isInterface());
+ 			fmx.setContainer(owner);
+ 			if (sups.size() > 0) {
+@@ -263,7 +261,6 @@
+ 				fmx.addModifiers("abstract");
+ 			}
+ 			fmx.setName(identifier); // might be different from bnd.getName() in the case of anonymous class
+-			fmx.setIsStub(Boolean.FALSE);
+ 		}
+ 	
+ 		return fmx;
+@@ -280,6 +277,7 @@
+ 		fr.inria.verveine.core.gen.famix.Class parentClass = null;
+ 		fr.inria.verveine.core.gen.famix.Class rettyp = null;
+ 		String sig = null;
++		boolean wasBound = false;
+ 		
+ 		if (bnd == null) {
+ 			System.err.println("Warning: Unexpected null binding, cannot create Famix Method");
+@@ -316,13 +314,18 @@
+ 		// ... trying to recover from binding
+ 		fmx = (Method) getEntityByBinding(bnd);
+ 		
+-		if (fmx == null) {
++		if (fmx != null) {
++			wasBound = true;
++		}
++		else {
++			wasBound = false;
+ 			// trying to recover from name and other informations
+ 			for (Method candidate : getEntityByName(Method.class, bnd.getName()) ) {
+-				if ( (! candidate.getIsStub()) &&
+-					 (candidate.getParentType() == parentClass) &&
++				if ( (candidate.getParentType() == parentClass) &&
+ 					 (candidate.getDeclaredType() == rettyp) &&
+ 					 (candidate.getSignature().equals(sig)) ) {
++					// we could also test that this candidate is not bound yet (to another bnd)
++					// but it requires significant modifications and might not be that useful?
+ 					fmx = candidate;
+ 					mapBind.put(bnd, fmx);
+ 					break;
+@@ -332,17 +335,16 @@
+ 		
+ 		if (fmx == null) {
+ 			// could not recover it, creating a new entity
+-			fmx = (Method) ensureFamixStub(Method.class, bnd, bnd.getName());
++			fmx = (Method) ensureFamixEntity(Method.class, bnd, bnd.getName());
+ 		}
+ 		
+-		if ((fmx!=null) && fmx.getIsStub()) {
++		if ((fmx!=null) && (! wasBound) ) {
+ 			// apparently we just created it or it already existed as a stub, so add information to it
+ 			fmx.setParentType(parentClass);
+ 			fmx.setDeclaredType(rettyp);	
+ 			fmx.setName(bnd.getName());
+ 			fmx.setSignature(sig);
+ 			setNamedEntityModifiers(fmx, bnd.getModifiers());
+-			fmx.setIsStub(Boolean.FALSE);
+ 		}
+ 
+ 		return fmx;
+@@ -358,6 +360,7 @@
+ 	public Attribute ensureFamixAttribute(IVariableBinding bnd) {
+ 		fr.inria.verveine.core.gen.famix.Class parentClass = null;
+ 		fr.inria.verveine.core.gen.famix.Class typ = null;
++		boolean wasBound = false;
+ 
+ 		if (bnd == null) {
+ 			System.err.println("Warning: Unexpected null binding, cannot create Famix Attribute");
+@@ -372,7 +375,11 @@
+ 		// ... trying to recover from binding
+ 		fmx = (Attribute) getEntityByBinding(bnd);
+ 		
+-		if (fmx == null) {
++		if (fmx != null) {
++			wasBound = true;
++		}
++		else {
++			wasBound = false;
+ 			// trying to recover from name and other informationsparentBehaviouralEntity
+ 			for (Attribute candidate : getEntityByName(Attribute.class, bnd.getName()) ) {
+ 				if ( (! candidate.getIsStub()) &&
+@@ -387,16 +394,15 @@
+ 		
+ 		if (fmx == null) {
+ 			// could not recover it, creating a new entity
+-			fmx = ensureFamixStub(Attribute.class, bnd, bnd.getName());
++			fmx = ensureFamixEntity(Attribute.class, bnd, bnd.getName());
+ 		}
+ 		
+-		if ((fmx!=null) && fmx.getIsStub()) {
++		if ((fmx!=null) && (! wasBound) ) {
+ 			// apparently we just created it, so add information to it
+ 			setNamedEntityModifiers(fmx, bnd.getModifiers());
+ 			fmx.setParentType(parentClass);
+ 			fmx.setDeclaredType(typ);	
+ 			fmx.setName(bnd.getName());
+-			fmx.setIsStub(Boolean.FALSE);
+ 		}
+ 
+ 		return fmx;
+@@ -423,20 +429,30 @@
+ 	 * @return the Famix Entity found or created. May return null if "bnd" is null or in case of a Famix error
+ 	 */
+ 	public Parameter ensureFamixParameter(IVariableBinding bnd) {
++		boolean wasBound = false;
++		
+ 		if (bnd == null) {
+ 			System.err.println("Warning: Unexpected null binding, cannot create Famix Parameter");
+ 			return null;
+ 		}
+ 
+-		Parameter fmx = (Parameter) ensureFamixStub(Parameter.class, bnd, bnd.getName());
+-		if ( (fmx!=null) && fmx.getIsStub() ) {
++		// actually it seems to be very little chances that the aprameter alreasy exist.
++		// but who knows? Does not hurt to try
++		Parameter fmx = (Parameter) getEntityByBinding(bnd);
++		
++		if (fmx != null) {
++			wasBound = true;
++		}
++		else {
++			wasBound = false;
++			fmx = (Parameter) ensureFamixEntity(Parameter.class, bnd, bnd.getName());
++		}
++		
++		if ( (fmx!=null) && (! wasBound) ) {
+ 			// declaring method
+ 			fmx.setParentBehaviouralEntity(ensureFamixMethod(bnd.getDeclaringMethod()));
+-
+ 			// type of the attribute
+ 			fmx.setDeclaredType(this.ensureFamixClass(bnd.getType()));
+-
+-			fmx.setIsStub(Boolean.FALSE);
+ 		}
+ 		
+ 		return fmx;
+@@ -452,6 +468,7 @@
+ 	public LocalVariable ensureFamixLocalVariable(IVariableBinding bnd) {
+ 		Method parentMeth = null;
+ 		fr.inria.verveine.core.gen.famix.Class typ = null;
++		boolean wasBound = false;
+ 
+ 		if (bnd == null) {
+ 			System.err.println("Warning: Unexpected null binding, cannot create Famix LocalVariable");
+@@ -466,11 +483,14 @@
+ 		// ... trying to recover from binding
+ 		fmx = (LocalVariable) getEntityByBinding(bnd);
+ 
+-		if (fmx == null) {
++		if (fmx != null) {
++			wasBound = true;
++		}
++		else {
++			wasBound = false;
+ 			// trying to recover from name and other informationsparentBehaviouralEntity
+ 			for (LocalVariable candidate : getEntityByName(LocalVariable.class, bnd.getName()) ) {
+-				if ( (! candidate.getIsStub()) &&
+-					 (candidate.getParentBehaviouralEntity() == parentMeth) &&
++				if ( (candidate.getParentBehaviouralEntity() == parentMeth) &&
+ 					 (candidate.getDeclaredType() == typ) ) {
+ 					fmx = candidate;
+ 					mapBind.put(bnd, fmx);
+@@ -481,14 +501,13 @@
+ 		
+ 		if (fmx == null) {
+ 			// could not recover it, creating a new entity
+-			fmx = ensureFamixStub(LocalVariable.class, bnd, bnd.getName());
++			fmx = ensureFamixEntity(LocalVariable.class, bnd, bnd.getName());
+ 		}
+ 
+-		if ( (fmx!=null) && fmx.getIsStub() ) {
++		if ( (fmx!=null) && (! wasBound) ) {
+ 			// apparently we just created it, so add information to it
+ 			fmx.setParentBehaviouralEntity(parentMeth);
+ 			fmx.setDeclaredType(this.ensureFamixClass(bnd.getType()));
+-			fmx.setIsStub(Boolean.FALSE);
+ 		}
+ 		
+ 		return fmx;
+@@ -503,10 +522,9 @@
+ 	 */
+ 	public UnknownVariable createFamixUnknownVariable(fr.inria.verveine.core.gen.famix.Class ofType, String name) {
+ //		System.err.println("TRACE -- createFamixUnknownVariable: "+name);
+-		UnknownVariable fmx = (UnknownVariable) createFamixStub(UnknownVariable.class, name);
++		UnknownVariable fmx = (UnknownVariable) createFamixEntity(UnknownVariable.class, name);
+ 		if (fmx!=null) {
+ 			fmx.setDeclaredType(ofType);
+-			fmx.setIsStub(Boolean.FALSE);
+ 		}
+ 		return fmx;
+ 	}
+@@ -569,8 +587,6 @@
+ 	 */
+ 	public Namespace ensureFamixNamespaceJavaLang(IPackageBinding bnd) {
+ 		Namespace fmx = ensureFamixNamespaceWithParentScope(bnd, OBJECT_PACKAGE_NAME);
+-		
+-		fmx.setIsStub(false);
+ 
+ 		return fmx;
+ 	}
+@@ -582,22 +598,20 @@
+ 	 */
+ 	public Namespace ensureFamixNamespacePrimitives() {
+ 		Namespace fmx =  ensureFamixUniqEntity(Namespace.class, null, PRIMITIVE_PCKG_NAME);
+-		fmx.setIsStub(false);
+ 
+ 		return fmx;
+ 	}
+ 
+ 	/**
+-	 * Creates or recovers a Famix Class for the Java "Object".
+-	 * @param bnd -- a potential binding for the java "object" class
+-	 * @return a Famix class for Java "Object"
++	 * Creates or recovers the Famix Class for "Object".
++	 * @param bnd -- a potential binding for the java "Object" class
++	 * @return a Famix class for "Object"
+ 	 */
+ 	public fr.inria.verveine.core.gen.famix.Class ensureFamixClassObject(ITypeBinding bnd) {
+ 		fr.inria.verveine.core.gen.famix.Class fmx =  ensureFamixUniqEntity(fr.inria.verveine.core.gen.famix.Class.class, bnd, OBJECT_NAME);
+ 		
+ 		fmx.setContainer( ensureFamixNamespaceJavaLang(null));
+ 		// Note: "Object" has no superclass
+-		fmx.setIsStub(false);
+ 
+ 		return fmx;
+ 	}

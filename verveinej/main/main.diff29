@@ -1,0 +1,1969 @@
+Index: branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/GenerateFamix.java
+===================================================================
+--- branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/GenerateFamix.java	(revision 0)
++++ branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/GenerateFamix.java	(revision 94)
+@@ -0,0 +1,22 @@
++package fr.inria.verveine.core;
++
++import ch.akuhn.fame.Tower;
++import ch.akuhn.fame.codegen.CodeGeneration;
++import ch.akuhn.fame.parser.InputSource;
++
++
++public class GenerateFamix {
++	
++	public static void main(String[] args) {
++		generateCode();
++	}
++	
++	public static void generateCode() {
++		InputSource input = InputSource.fromFilename("mse/famix30_complete.mse");
++        Tower t = new Tower();
++        t.getMetamodel().importMSE(input);
++		CodeGeneration gen = new CodeGeneration("fr.inria.verveine.core.gen", "src", "");
++		gen.accept(t.getMetamodel());
++	}
++
++}
+Index: branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/VerveineParser.java
+===================================================================
+--- branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/VerveineParser.java	(revision 0)
++++ branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/VerveineParser.java	(revision 94)
+@@ -0,0 +1,95 @@
++package fr.inria.verveine.core;
++
++import java.io.File;
++import java.io.FileWriter;
++import java.io.IOException;
++import java.io.PrintWriter;
++import java.util.Collection;
++import java.util.Map;
++import java.util.Vector;
++
++import org.eclipse.jdt.core.compiler.CompilationProgress;
++import org.eclipse.jdt.internal.compiler.batch.Main;
++
++import ch.akuhn.fame.Repository;
++import fr.inria.verveine.core.gen.famix.Entity;
++import fr.inria.verveine.core.gen.famix.FAMIXModel;
++import fr.inria.verveine.core.gen.famix.SourceLanguage;
++
++public class VerveineParser extends Main {
++
++	public final static String OUTPUT_FILE = "output.mse";
++	
++	private Repository famixRepo;
++
++	SourceLanguage myLgge = null;
++
++	public VerveineParser() {
++		this(new PrintWriter(System.out),
++				new PrintWriter(System.err),
++				false/*systemExitWhenFinished*/,
++				null/*customDefaultOptions*/,
++				null/*compilationProgress*/);
++		
++	}
++
++	public VerveineParser(PrintWriter outWriter, PrintWriter errWriter,	boolean systemExitWhenFinished, @SuppressWarnings("rawtypes")Map customDefaultOptions, CompilationProgress compilationProgress) {
++		super(outWriter,
++				errWriter,
++				systemExitWhenFinished,
++				customDefaultOptions,
++				compilationProgress);
++		
++		Repository repo = new Repository(FAMIXModel.metamodel());
++		setFamixRepo(repo);
++		if (myLgge != null) {
++			repo.add( myLgge);
++		}
++	}
++
++	public boolean linkToExisting() {
++		File existingMSE = new File(OUTPUT_FILE);
++		if (existingMSE.exists()) {
++			this.getFamixRepo().importMSEFile(OUTPUT_FILE);
++			return true;
++		}
++		else {
++			return false;
++		}
++	}
++	
++	/**
++	 * Outputting repository to a file
++	 */
++	public void outputMSE() {
++		// * --- Outputting to a file -----------------------------------------------
++		try {
++			famixRepo.exportMSE(new FileWriter(OUTPUT_FILE));
++		} catch (IOException e) {
++			e.printStackTrace();
++		}
++	}
++
++	/**
++	 * Returns a Collection of all FAMIXEntities in the repository of the given fmxClass
++	 */
++	@SuppressWarnings("unchecked")
++	public <T extends Entity> Collection<T> listAll(Class<T> fmxClass) {
++		Collection<T> selection = new Vector<T>();
++		for (Object obj : getFamixRepo().getElements()) {
++			if (fmxClass.isInstance(obj)) {
++				selection.add((T) obj);
++			}
++		}
++		return selection;
++	}
++
++	public Repository getFamixRepo() {
++		return famixRepo;
++	}
++
++	public void setFamixRepo(Repository famixRepo) {
++		this.famixRepo = famixRepo;
++	}
++
++}
+\ No newline at end of file
+Index: branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/EntityStack.java
+===================================================================
+--- branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/EntityStack.java	(revision 0)
++++ branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/EntityStack.java	(revision 94)
+@@ -0,0 +1,448 @@
++package fr.inria.verveine.core;
++
++import java.util.Stack;
++
++import fr.inria.verveine.core.gen.famix.Access;
++import fr.inria.verveine.core.gen.famix.AnnotationType;
++import fr.inria.verveine.core.gen.famix.AnnotationTypeAttribute;
++import fr.inria.verveine.core.gen.famix.Class;
++import fr.inria.verveine.core.gen.famix.ContainerEntity;
++import fr.inria.verveine.core.gen.famix.Invocation;
++import fr.inria.verveine.core.gen.famix.Method;
++import fr.inria.verveine.core.gen.famix.NamedEntity;
++import fr.inria.verveine.core.gen.famix.Namespace;
++import fr.inria.verveine.core.gen.famix.Reference;
++
++/** A stack of FAMIX Entities so that we know in what container each new Entity is declared
++ * @author anquetil
++ */
++public class EntityStack {
++	public static final int EMPTY_CYCLO = 0;
++	public static final int EMPTY_NOS = 0;
++	
++	private Namespace fmxPckg;
++	private Stack<ClassStack> fmxType;
++
++	/**
++	 * A structure to hold a Famix class and its current method
++	 */
++	public class ClassStack {
++		private NamedEntity fmxType;  // can be a FamixClass or a FamixAnnotationType
++		private NamedEntity fmxMember; // can be a FamixMethod or a FamixAnnotationAttribute
++		private int metric_cyclo = EMPTY_CYCLO;  // Cyclomatic Complexity
++		private int metric_nos = EMPTY_NOS;      // Number Of Statements
++		
++		
++ 		public ClassStack(NamedEntity e) {
++			fmxType = e;
++			clearFmxMember();
++		}
++
++		public fr.inria.verveine.core.gen.famix.Class getFmxClass() {
++			if (fmxType instanceof fr.inria.verveine.core.gen.famix.Class) {
++				return (fr.inria.verveine.core.gen.famix.Class) fmxType;
++			}
++			else {
++				return null;
++			}
++		}
++
++		public AnnotationType getFmxAnnotationType() {
++			if (fmxType instanceof AnnotationType) {
++				return (AnnotationType) fmxType;
++			}
++			else {
++				return null;
++			}
++		}
++
++		/**
++		 * Returns the Famix  Method on top of the context stack
++		 */
++		public Method getFmxMethod() {
++			if (fmxMember instanceof Method) {
++				return (Method) fmxMember;
++			}
++			else {
++				return null;
++			}
++		}
++
++		public AnnotationTypeAttribute getFmxAnnotationAttribute() {
++			if (fmxMember instanceof AnnotationTypeAttribute) {
++				return (AnnotationTypeAttribute) fmxMember;
++			}
++			else {
++				return null;
++			}
++		}
++
++		/**
++		 * Returns the Cyclomatic complexity of the Famix Method on top of the context stack
++		 */
++		public int getFmxMethodCyclo() {
++			return metric_cyclo;
++		}
++
++		/**
++		 * Returns the Number of Statements of the Famix Method on top of the context stack
++		 */
++		public int getFmxMethodNOS() {
++			return metric_nos;
++		}
++		
++		/**
++		 * Reset the Famix Method on top of the context stack
++		 */
++		public void setFmxMethod(Method fmxMethod) {
++			clearFmxMember();
++			this.fmxMember = fmxMethod;
++		}
++
++		public void setFmxAnnotationAttribute(AnnotationTypeAttribute fmxAtt) {
++			clearFmxMember();
++			this.fmxMember = fmxAtt;
++		}
++
++		/**
++		 * Sets the Cyclomatic complexity of the Famix Method on top of the context stack
++		 */
++		public void setFmxMethodCyclo(int c) {
++			metric_cyclo = c;
++		}
++
++		/**
++		 * Sets to the Number of Statements of the Famix Method on top of the context stack
++		 */
++		public void setFmxMethodNOS(int n) {
++			metric_nos = n;
++		}
++		
++		/**
++		 * Adds to the Cyclomatic complexity of the Famix Method on top of the context stack
++		 */
++		public void addFmxMethodCyclo(int c) {
++			metric_cyclo += c;
++		}
++
++		/**
++		 * Adds to the Number of Statements of the Famix Method on top of the context stack
++		 */
++		public void addFmxMethodNOS(int n) {
++			metric_nos += n;
++		}
++		
++		/**
++		 * Empties the context stack of Famix classes
++		 */
++		public void clearFmxType() {
++			fmxType = null;
++			clearFmxMember();
++		}
++		
++		/**
++		 * Empties the Famix Method on top of the context stack
++		 */
++		public void clearFmxMember() {
++			fmxMember = null;
++			metric_cyclo = EMPTY_CYCLO;
++			metric_nos = EMPTY_NOS;
++			setLastInvocation(null);
++			setLastAccess(null);
++		}
++
++	}
++	
++	/**
++	 * last Invocation registered to set the previous/next
++	 */
++	Invocation lastInvocation = null;
++	
++	/**
++	 * last Access registered to set the previous/next
++	 */
++	Access lastAccess = null;
++	
++	/**
++	 * last Reference registered to set the previous/next
++	 */
++	Reference lastReference = null;
++	
++	public Access getLastAccess() {
++		return lastAccess;
++	}
++
++	public void setLastAccess(Access lastAccess) {
++		this.lastAccess = lastAccess;
++	}
++
++	public Reference getLastReference() {
++		return lastReference;
++	}
++
++	public void setLastReference(Reference lastReference) {
++		this.lastReference = lastReference;
++	}
++
++	public Invocation getLastInvocation() {
++		return lastInvocation;
++	}
++
++	public void setLastInvocation(Invocation lastInvocation) {
++		this.lastInvocation = lastInvocation;
++	}
++
++	public EntityStack() {
++		clearPckg();  // initializes (to empty) Pckgs, classes and methods
++	}
++
++	private ClassStack getTopType() {
++		if (fmxType.isEmpty()) {
++			return null;
++		}
++		else {
++			return fmxType.peek();
++		}
++	}
++
++	// WRITE ON THE STACK
++	
++	/**
++	 * Pushes an entity on top of the "context stack"
++	 * @param e -- the entity
++	 */
++	public void push(NamedEntity e) {
++		if (e instanceof Method) {
++			pushMethod((Method) e);
++		}
++		else if (e instanceof fr.inria.verveine.core.gen.famix.Class) {
++			pushClass((fr.inria.verveine.core.gen.famix.Class) e);
++		}
++		else if (e instanceof AnnotationTypeAttribute) {
++			pushAnnotationMember((AnnotationTypeAttribute) e);
++		}
++		else if (e instanceof AnnotationType) {
++			pushAnnotationType((AnnotationType) e);
++		}
++		else if (e instanceof Namespace) {
++			pushPckg((Namespace) e);
++		}
++	}
++
++	/**
++	 * Sets the Famix namespace on top of the "context stack"
++	 * Not really a push, but keep the same convention as the others
++	 * @param e -- the Famix method
++	 */
++	public void pushPckg(Namespace e) {
++		clearTypes();
++		fmxPckg = e;
++	}
++
++	/**
++	 * Pushes a Famix class on top of the "context class stack"
++	 * @param e -- the Famix class
++	 */
++	public void pushClass(fr.inria.verveine.core.gen.famix.Class e) {
++		fmxType.push(new ClassStack(e));
++	}
++
++	public void pushAnnotationType(AnnotationType e) {
++		fmxType.push(new ClassStack(e));
++	}
++
++	/**
++	 * Pushes a Famix method on top of the "context stack" for the current Famix class
++	 * @param e -- the Famix method
++	 */
++	public void pushMethod(Method e) {
++		getTopType().setFmxMethod(e);
++	}
++
++	public void pushAnnotationMember(AnnotationTypeAttribute fmx) {
++		getTopType().setFmxAnnotationAttribute(fmx);	
++	}
++	
++	/**
++	 * Empties the context stack of package and associated classes
++	 */
++	public void clearPckg() {
++		clearTypes();
++		fmxPckg = null;
++	}
++
++	/**
++	 * Empties the context stack of Famix classes
++	 */
++	public void clearTypes() {
++		fmxType = new Stack<ClassStack>();
++	}
++	
++	// READ FROM THE STACK
++
++	/**
++	 * Removes and returns the Famix package from the "context stack"
++	 * Also empties the class stack (which was presumably associated to this package)
++	 * Note: does not check that there is such a namespace
++	 * @return the Famix method
++	 */
++	public Namespace popPckg() {
++		Namespace ret = fmxPckg;
++		clearPckg();
++		return ret;
++	}
++
++	/**
++	 * Pops the top Famix class from the "context stack"
++	 * Note: does not check that there is such a class, so could possibly throw an EmptyStackException
++	 * @return the Famix class
++	 */
++	public fr.inria.verveine.core.gen.famix.Class popClass() {
++		ClassStack tmp = fmxType.pop();
++		return tmp.getFmxClass();
++	}
++	
++	public AnnotationType popAnnotationType() {
++		ClassStack tmp = fmxType.pop();
++		return tmp.getFmxAnnotationType();
++	}
++
++	/**
++	 * Pops the top Famix method of the current class on top of the "context stack"
++	 * Note: does not check that there is such a class or method, so could possibly throw an Exception
++	 * @return the Famix method
++	 */
++	public Method popMethod() {
++		ClassStack tmp = getTopType();
++		Method ret = tmp.getFmxMethod();
++		tmp.clearFmxMember();
++		return ret;
++	}
++	
++	public AnnotationTypeAttribute popAnnotationMember() {
++		ClassStack tmp = getTopType();
++		AnnotationTypeAttribute ret = tmp.getFmxAnnotationAttribute();
++		tmp.clearFmxMember();
++		return ret;
++	}
++
++	/**
++	 * Returns the Famix entity on top of the "context stack"
++	 * Note: does not check that there is such an entity
++	 * @return the Famix entity
++	 */
++	public ContainerEntity top() {
++		ContainerEntity ret = null;
++		ClassStack topc = getTopType();
++		if (topc != null) {
++			ret = topc.getFmxMethod();
++			if (ret == null) {
++				ret = topc.getFmxClass();
++			}
++		}
++		else {
++			ret = topPckg();
++		}
++
++		return ret;
++	}
++
++	/**
++	 * Returns the Famix package on top of the "context stack"
++	 * Note: does not check that there is such a package
++	 * @return the Famix namespace
++	 */
++	public Namespace topPckg() {
++		return fmxPckg;
++	}
++
++	/**
++	 * Returns the Famix class on top of the "context stack"
++	 * Note: does not check that there is such a class, so could possibly throw an EmptyStackException
++	 * @return the Famix class
++	 */
++	public fr.inria.verveine.core.gen.famix.Class topClass() {
++		return getTopType().getFmxClass();
++	}
++
++	public AnnotationType topAnnotationType() {
++		return getTopType().getFmxAnnotationType();
++	}
++	
++	/**
++	 * Returns the Famix method  of the Famix class on top of the "context stack"
++	 * Note: does not check that there is such a class or method, so could possibly throw an EmptyStackException
++	 * @return the Famix method
++	 */
++	public Method topMethod() {
++		return getTopType().getFmxMethod();
++	}
++
++	public AnnotationTypeAttribute topAnnotationMember() {
++		return getTopType().getFmxAnnotationAttribute();
++	}
++
++	// PROPERTIES OF THE TOP METHOD
++
++	/**
++	 * Returns the Cyclomatic complexity of the Famix Method on top of the context stack
++	 */
++	public int getTopMethodCyclo() {
++		if (getTopType() != null) {
++			return getTopType().getFmxMethodCyclo();
++		}
++		else {
++			return EMPTY_CYCLO;
++		}
++	}
++
++	/**
++	 * Returns the Number of Statements of the Famix Method on top of the context stack
++	 */
++	public int getTopMethodNOS() {
++		if (getTopType() != null) {
++			return getTopType().getFmxMethodNOS();
++		}
++		else {
++			return EMPTY_NOS;
++		}
++	}
++
++	/**
++	 * Sets the Cyclomatic complexity of the Famix Method on top of the context stack
++	 */
++	public void setTopMethodCyclo(int c) {
++		if (getTopType() != null) {
++			getTopType().setFmxMethodCyclo(c);
++		}
++	}
++
++	/**
++	 * Sets to the Number of Statements of the Famix Method on top of the context stack
++	 */
++	public void setTopMethodNOS(int n) {
++		if (getTopType() != null) {
++			getTopType().setFmxMethodNOS(n);
++		}
++	}
++	
++	/**
++	 * Adds to the Cyclomatic complexity of the Famix Method on top of the context stack
++	 */
++	public void addTopMethodCyclo(int c) {
++		if (getTopType() != null) {
++			getTopType().addFmxMethodCyclo(c);
++		}
++	}
++
++	/**
++	 * Adds to the Number of Statements of the Famix Method on top of the context stack
++	 */
++	public void addTopMethodNOS(int n) {
++		if (getTopType() != null) {
++			getTopType().addFmxMethodNOS(n);
++		}
++	}
++
++}
++
+Index: branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/file/File.java
+===================================================================
+--- branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/file/File.java	(revision 0)
++++ branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/file/File.java	(revision 94)
+@@ -0,0 +1,17 @@
++// Automagically generated code, please do not change
++package fr.inria.verveine.core.gen.file;
++
++import ch.akuhn.fame.FameDescription;
++import ch.akuhn.fame.FamePackage;
++
++
++@FamePackage("FILE")
++@FameDescription("File")
++public class File extends AbstractFile {
++
++
++
++
++
++}
++
+Index: branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/file/AbstractFile.java
+===================================================================
+--- branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/file/AbstractFile.java	(revision 0)
++++ branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/file/AbstractFile.java	(revision 94)
+@@ -0,0 +1,30 @@
++// Automagically generated code, please do not change
++package fr.inria.verveine.core.gen.file;
++
++import ch.akuhn.fame.FameProperty;
++import ch.akuhn.fame.FameDescription;
++import fr.inria.verveine.core.gen.famix.Entity;
++import ch.akuhn.fame.FamePackage;
++
++
++@FamePackage("FILE")
++@FameDescription("AbstractFile")
++public class AbstractFile extends Entity {
++
++
++
++    private String name;
++    
++    @FameProperty(name = "name")
++    public String getName() {
++        return name;
++    }
++
++    public void setName(String name) {
++        this.name = name;
++    }
++    
++
++
++}
++
+Index: branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/file/FolderGroup.java
+===================================================================
+--- branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/file/FolderGroup.java	(revision 0)
++++ branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/file/FolderGroup.java	(revision 94)
+@@ -0,0 +1,18 @@
++// Automagically generated code, please do not change
++package fr.inria.verveine.core.gen.file;
++
++import ch.akuhn.fame.FameDescription;
++import ch.akuhn.fame.FamePackage;
++import fr.inria.verveine.core.gen.moose.Group;
++
++
++@FamePackage("FILE")
++@FameDescription("FolderGroup")
++public class FolderGroup extends Group {
++
++
++
++
++
++}
++
+Index: branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/file/Folder.java
+===================================================================
+--- branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/file/Folder.java	(revision 0)
++++ branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/file/Folder.java	(revision 94)
+@@ -0,0 +1,17 @@
++// Automagically generated code, please do not change
++package fr.inria.verveine.core.gen.file;
++
++import ch.akuhn.fame.FameDescription;
++import ch.akuhn.fame.FamePackage;
++
++
++@FamePackage("FILE")
++@FameDescription("Folder")
++public class Folder extends AbstractFile {
++
++
++
++
++
++}
++
+Index: branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/file/FileGroup.java
+===================================================================
+--- branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/file/FileGroup.java	(revision 0)
++++ branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/file/FileGroup.java	(revision 94)
+@@ -0,0 +1,18 @@
++// Automagically generated code, please do not change
++package fr.inria.verveine.core.gen.file;
++
++import ch.akuhn.fame.FameDescription;
++import ch.akuhn.fame.FamePackage;
++import fr.inria.verveine.core.gen.moose.Group;
++
++
++@FamePackage("FILE")
++@FameDescription("FileGroup")
++public class FileGroup extends Group {
++
++
++
++
++
++}
++
+Index: branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/hismo/HismoFileHistory.java
+===================================================================
+--- branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/hismo/HismoFileHistory.java	(revision 0)
++++ branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/hismo/HismoFileHistory.java	(revision 94)
+@@ -0,0 +1,17 @@
++// Automagically generated code, please do not change
++package fr.inria.verveine.core.gen.hismo;
++
++import ch.akuhn.fame.FameDescription;
++import ch.akuhn.fame.FamePackage;
++
++
++@FamePackage("Hismo")
++@FameDescription("HismoFileHistory")
++public class HismoFileHistory extends HismoAbstractHistory {
++
++
++
++
++
++}
++
+Index: branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/hismo/HismoNamespaceVersion.java
+===================================================================
+--- branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/hismo/HismoNamespaceVersion.java	(revision 0)
++++ branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/hismo/HismoNamespaceVersion.java	(revision 94)
+@@ -0,0 +1,17 @@
++// Automagically generated code, please do not change
++package fr.inria.verveine.core.gen.hismo;
++
++import ch.akuhn.fame.FameDescription;
++import ch.akuhn.fame.FamePackage;
++
++
++@FamePackage("Hismo")
++@FameDescription("HismoNamespaceVersion")
++public class HismoNamespaceVersion extends HismoEntityVersion {
++
++
++
++
++
++}
++
+Index: branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/hismo/HismoMethodHistory.java
+===================================================================
+--- branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/hismo/HismoMethodHistory.java	(revision 0)
++++ branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/hismo/HismoMethodHistory.java	(revision 94)
+@@ -0,0 +1,17 @@
++// Automagically generated code, please do not change
++package fr.inria.verveine.core.gen.hismo;
++
++import ch.akuhn.fame.FameDescription;
++import ch.akuhn.fame.FamePackage;
++
++
++@FamePackage("Hismo")
++@FameDescription("HismoMethodHistory")
++public class HismoMethodHistory extends HismoAbstractHistory {
++
++
++
++
++
++}
++
+Index: branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/hismo/HismoClassHierarchy.java
+===================================================================
+--- branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/hismo/HismoClassHierarchy.java	(revision 0)
++++ branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/hismo/HismoClassHierarchy.java	(revision 94)
+@@ -0,0 +1,17 @@
++// Automagically generated code, please do not change
++package fr.inria.verveine.core.gen.hismo;
++
++import ch.akuhn.fame.FameDescription;
++import ch.akuhn.fame.FamePackage;
++
++
++@FamePackage("Hismo")
++@FameDescription("HismoClassHierarchy")
++public class HismoClassHierarchy extends HismoAbstractHistory {
++
++
++
++
++
++}
++
+Index: branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/hismo/HismoClassHistoryGroup.java
+===================================================================
+--- branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/hismo/HismoClassHistoryGroup.java	(revision 0)
++++ branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/hismo/HismoClassHistoryGroup.java	(revision 94)
+@@ -0,0 +1,17 @@
++// Automagically generated code, please do not change
++package fr.inria.verveine.core.gen.hismo;
++
++import ch.akuhn.fame.FameDescription;
++import ch.akuhn.fame.FamePackage;
++
++
++@FamePackage("Hismo")
++@FameDescription("HismoClassHistoryGroup")
++public class HismoClassHistoryGroup extends HismoHistoryGroup {
++
++
++
++
++
++}
++
+Index: branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/hismo/HismoCoChangePattern.java
+===================================================================
+--- branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/hismo/HismoCoChangePattern.java	(revision 0)
++++ branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/hismo/HismoCoChangePattern.java	(revision 94)
+@@ -0,0 +1,18 @@
++// Automagically generated code, please do not change
++package fr.inria.verveine.core.gen.hismo;
++
++import ch.akuhn.fame.FameDescription;
++import ch.akuhn.fame.FamePackage;
++import fr.inria.verveine.core.gen.moose.Group;
++
++
++@FamePackage("Hismo")
++@FameDescription("HismoCoChangePattern")
++public class HismoCoChangePattern extends Group {
++
++
++
++
++
++}
++
+Index: branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/hismo/HismoAbstractVersion.java
+===================================================================
+--- branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/hismo/HismoAbstractVersion.java	(revision 0)
++++ branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/hismo/HismoAbstractVersion.java	(revision 94)
+@@ -0,0 +1,18 @@
++// Automagically generated code, please do not change
++package fr.inria.verveine.core.gen.hismo;
++
++import ch.akuhn.fame.FameDescription;
++import fr.inria.verveine.core.gen.famix.Entity;
++import ch.akuhn.fame.FamePackage;
++
++
++@FamePackage("Hismo")
++@FameDescription("HismoAbstractVersion")
++public class HismoAbstractVersion extends Entity {
++
++
++
++
++
++}
++
+Index: branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/hismo/HismoClassVersion.java
+===================================================================
+--- branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/hismo/HismoClassVersion.java	(revision 0)
++++ branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/hismo/HismoClassVersion.java	(revision 94)
+@@ -0,0 +1,17 @@
++// Automagically generated code, please do not change
++package fr.inria.verveine.core.gen.hismo;
++
++import ch.akuhn.fame.FameDescription;
++import ch.akuhn.fame.FamePackage;
++
++
++@FamePackage("Hismo")
++@FameDescription("HismoClassVersion")
++public class HismoClassVersion extends HismoEntityVersion {
++
++
++
++
++
++}
++
+Index: branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/hismo/HismoPackageHistory.java
+===================================================================
+--- branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/hismo/HismoPackageHistory.java	(revision 0)
++++ branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/hismo/HismoPackageHistory.java	(revision 94)
+@@ -0,0 +1,17 @@
++// Automagically generated code, please do not change
++package fr.inria.verveine.core.gen.hismo;
++
++import ch.akuhn.fame.FameDescription;
++import ch.akuhn.fame.FamePackage;
++
++
++@FamePackage("Hismo")
++@FameDescription("HismoPackageHistory")
++public class HismoPackageHistory extends HismoAbstractHistory {
++
++
++
++
++
++}
++
+Index: branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/hismo/HismoCoChangeVersion.java
+===================================================================
+--- branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/hismo/HismoCoChangeVersion.java	(revision 0)
++++ branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/hismo/HismoCoChangeVersion.java	(revision 94)
+@@ -0,0 +1,17 @@
++// Automagically generated code, please do not change
++package fr.inria.verveine.core.gen.hismo;
++
++import ch.akuhn.fame.FameDescription;
++import ch.akuhn.fame.FamePackage;
++
++
++@FamePackage("Hismo")
++@FameDescription("HismoCoChangeVersion")
++public class HismoCoChangeVersion extends HismoAbstractVersion {
++
++
++
++
++
++}
++
+Index: branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/hismo/HismoNamespaceHistory.java
+===================================================================
+--- branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/hismo/HismoNamespaceHistory.java	(revision 0)
++++ branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/hismo/HismoNamespaceHistory.java	(revision 94)
+@@ -0,0 +1,17 @@
++// Automagically generated code, please do not change
++package fr.inria.verveine.core.gen.hismo;
++
++import ch.akuhn.fame.FameDescription;
++import ch.akuhn.fame.FamePackage;
++
++
++@FamePackage("Hismo")
++@FameDescription("HismoNamespaceHistory")
++public class HismoNamespaceHistory extends HismoAbstractHistory {
++
++
++
++
++
++}
++
+Index: branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/hismo/HismoHistoryGroup.java
+===================================================================
+--- branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/hismo/HismoHistoryGroup.java	(revision 0)
++++ branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/hismo/HismoHistoryGroup.java	(revision 94)
+@@ -0,0 +1,18 @@
++// Automagically generated code, please do not change
++package fr.inria.verveine.core.gen.hismo;
++
++import ch.akuhn.fame.FameDescription;
++import ch.akuhn.fame.FamePackage;
++import fr.inria.verveine.core.gen.moose.Group;
++
++
++@FamePackage("Hismo")
++@FameDescription("HismoHistoryGroup")
++public class HismoHistoryGroup extends Group {
++
++
++
++
++
++}
++
+Index: branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/hismo/HismoMethodHistoryGroup.java
+===================================================================
+--- branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/hismo/HismoMethodHistoryGroup.java	(revision 0)
++++ branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/hismo/HismoMethodHistoryGroup.java	(revision 94)
+@@ -0,0 +1,17 @@
++// Automagically generated code, please do not change
++package fr.inria.verveine.core.gen.hismo;
++
++import ch.akuhn.fame.FameDescription;
++import ch.akuhn.fame.FamePackage;
++
++
++@FamePackage("Hismo")
++@FameDescription("HismoMethodHistoryGroup")
++public class HismoMethodHistoryGroup extends HismoHistoryGroup {
++
++
++
++
++
++}
++
+Index: branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/hismo/HismoModelHistory.java
+===================================================================
+--- branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/hismo/HismoModelHistory.java	(revision 0)
++++ branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/hismo/HismoModelHistory.java	(revision 94)
+@@ -0,0 +1,17 @@
++// Automagically generated code, please do not change
++package fr.inria.verveine.core.gen.hismo;
++
++import ch.akuhn.fame.FameDescription;
++import ch.akuhn.fame.FamePackage;
++
++
++@FamePackage("Hismo")
++@FameDescription("HismoModelHistory")
++public class HismoModelHistory extends HismoAbstractHistory {
++
++
++
++
++
++}
++
+Index: branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/hismo/HismoEntityVersion.java
+===================================================================
+--- branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/hismo/HismoEntityVersion.java	(revision 0)
++++ branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/hismo/HismoEntityVersion.java	(revision 94)
+@@ -0,0 +1,17 @@
++// Automagically generated code, please do not change
++package fr.inria.verveine.core.gen.hismo;
++
++import ch.akuhn.fame.FameDescription;
++import ch.akuhn.fame.FamePackage;
++
++
++@FamePackage("Hismo")
++@FameDescription("HismoEntityVersion")
++public class HismoEntityVersion extends HismoAbstractVersion {
++
++
++
++
++
++}
++
+Index: branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/hismo/HismoAccessHistory.java
+===================================================================
+--- branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/hismo/HismoAccessHistory.java	(revision 0)
++++ branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/hismo/HismoAccessHistory.java	(revision 94)
+@@ -0,0 +1,17 @@
++// Automagically generated code, please do not change
++package fr.inria.verveine.core.gen.hismo;
++
++import ch.akuhn.fame.FameDescription;
++import ch.akuhn.fame.FamePackage;
++
++
++@FamePackage("Hismo")
++@FameDescription("HismoAccessHistory")
++public class HismoAccessHistory extends HismoAbstractHistory {
++
++
++
++
++
++}
++
+Index: branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/hismo/HismoInheritanceDefinitionHistory.java
+===================================================================
+--- branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/hismo/HismoInheritanceDefinitionHistory.java	(revision 0)
++++ branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/hismo/HismoInheritanceDefinitionHistory.java	(revision 94)
+@@ -0,0 +1,17 @@
++// Automagically generated code, please do not change
++package fr.inria.verveine.core.gen.hismo;
++
++import ch.akuhn.fame.FameDescription;
++import ch.akuhn.fame.FamePackage;
++
++
++@FamePackage("Hismo")
++@FameDescription("HismoInheritanceDefinitionHistory")
++public class HismoInheritanceDefinitionHistory extends HismoAbstractHistory {
++
++
++
++
++
++}
++
+Index: branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/hismo/HismoAttributeHistory.java
+===================================================================
+--- branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/hismo/HismoAttributeHistory.java	(revision 0)
++++ branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/hismo/HismoAttributeHistory.java	(revision 94)
+@@ -0,0 +1,17 @@
++// Automagically generated code, please do not change
++package fr.inria.verveine.core.gen.hismo;
++
++import ch.akuhn.fame.FameDescription;
++import ch.akuhn.fame.FamePackage;
++
++
++@FamePackage("Hismo")
++@FameDescription("HismoAttributeHistory")
++public class HismoAttributeHistory extends HismoAbstractHistory {
++
++
++
++
++
++}
++
+Index: branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/hismo/HismoAbstractHistory.java
+===================================================================
+--- branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/hismo/HismoAbstractHistory.java	(revision 0)
++++ branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/hismo/HismoAbstractHistory.java	(revision 94)
+@@ -0,0 +1,18 @@
++// Automagically generated code, please do not change
++package fr.inria.verveine.core.gen.hismo;
++
++import ch.akuhn.fame.FameDescription;
++import fr.inria.verveine.core.gen.famix.Entity;
++import ch.akuhn.fame.FamePackage;
++
++
++@FamePackage("Hismo")
++@FameDescription("HismoAbstractHistory")
++public class HismoAbstractHistory extends Entity {
++
++
++
++
++
++}
++
+Index: branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/hismo/HismoMethodVersion.java
+===================================================================
+--- branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/hismo/HismoMethodVersion.java	(revision 0)
++++ branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/hismo/HismoMethodVersion.java	(revision 94)
+@@ -0,0 +1,17 @@
++// Automagically generated code, please do not change
++package fr.inria.verveine.core.gen.hismo;
++
++import ch.akuhn.fame.FameDescription;
++import ch.akuhn.fame.FamePackage;
++
++
++@FamePackage("Hismo")
++@FameDescription("HismoMethodVersion")
++public class HismoMethodVersion extends HismoEntityVersion {
++
++
++
++
++
++}
++
+Index: branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/hismo/HismoClassHistory.java
+===================================================================
+--- branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/hismo/HismoClassHistory.java	(revision 0)
++++ branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/hismo/HismoClassHistory.java	(revision 94)
+@@ -0,0 +1,17 @@
++// Automagically generated code, please do not change
++package fr.inria.verveine.core.gen.hismo;
++
++import ch.akuhn.fame.FameDescription;
++import ch.akuhn.fame.FamePackage;
++
++
++@FamePackage("Hismo")
++@FameDescription("HismoClassHistory")
++public class HismoClassHistory extends HismoAbstractHistory {
++
++
++
++
++
++}
++
+Index: branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/hismo/HismoCoChangeHistory.java
+===================================================================
+--- branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/hismo/HismoCoChangeHistory.java	(revision 0)
++++ branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/hismo/HismoCoChangeHistory.java	(revision 94)
+@@ -0,0 +1,17 @@
++// Automagically generated code, please do not change
++package fr.inria.verveine.core.gen.hismo;
++
++import ch.akuhn.fame.FameDescription;
++import ch.akuhn.fame.FamePackage;
++
++
++@FamePackage("Hismo")
++@FameDescription("HismoCoChangeHistory")
++public class HismoCoChangeHistory extends HismoAbstractHistory {
++
++
++
++
++
++}
++
+Index: branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/hismo/HismoInvocationHistory.java
+===================================================================
+--- branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/hismo/HismoInvocationHistory.java	(revision 0)
++++ branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/hismo/HismoInvocationHistory.java	(revision 94)
+@@ -0,0 +1,17 @@
++// Automagically generated code, please do not change
++package fr.inria.verveine.core.gen.hismo;
++
++import ch.akuhn.fame.FameDescription;
++import ch.akuhn.fame.FamePackage;
++
++
++@FamePackage("Hismo")
++@FameDescription("HismoInvocationHistory")
++public class HismoInvocationHistory extends HismoAbstractHistory {
++
++
++
++
++
++}
++
+Index: branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/hismo/HismoNamespaceHistoryGroup.java
+===================================================================
+--- branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/hismo/HismoNamespaceHistoryGroup.java	(revision 0)
++++ branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/hismo/HismoNamespaceHistoryGroup.java	(revision 94)
+@@ -0,0 +1,17 @@
++// Automagically generated code, please do not change
++package fr.inria.verveine.core.gen.hismo;
++
++import ch.akuhn.fame.FameDescription;
++import ch.akuhn.fame.FamePackage;
++
++
++@FamePackage("Hismo")
++@FameDescription("HismoNamespaceHistoryGroup")
++public class HismoNamespaceHistoryGroup extends HismoHistoryGroup {
++
++
++
++
++
++}
++
+Index: branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/hismo/HismoFolderHistory.java
+===================================================================
+--- branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/hismo/HismoFolderHistory.java	(revision 0)
++++ branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/hismo/HismoFolderHistory.java	(revision 94)
+@@ -0,0 +1,17 @@
++// Automagically generated code, please do not change
++package fr.inria.verveine.core.gen.hismo;
++
++import ch.akuhn.fame.FameDescription;
++import ch.akuhn.fame.FamePackage;
++
++
++@FamePackage("Hismo")
++@FameDescription("HismoFolderHistory")
++public class HismoFolderHistory extends HismoAbstractHistory {
++
++
++
++
++
++}
++
+Index: branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/dude/CodeLine.java
+===================================================================
+--- branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/dude/CodeLine.java	(revision 0)
++++ branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/dude/CodeLine.java	(revision 94)
+@@ -0,0 +1,18 @@
++// Automagically generated code, please do not change
++package fr.inria.verveine.core.gen.dude;
++
++import ch.akuhn.fame.FameDescription;
++import fr.inria.verveine.core.gen.famix.Entity;
++import ch.akuhn.fame.FamePackage;
++
++
++@FamePackage("Dude")
++@FameDescription("CodeLine")
++public class CodeLine extends Entity {
++
++
++
++
++
++}
++
+Index: branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/dude/DuplicationGroup.java
+===================================================================
+--- branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/dude/DuplicationGroup.java	(revision 0)
++++ branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/dude/DuplicationGroup.java	(revision 94)
+@@ -0,0 +1,18 @@
++// Automagically generated code, please do not change
++package fr.inria.verveine.core.gen.dude;
++
++import ch.akuhn.fame.FameDescription;
++import ch.akuhn.fame.FamePackage;
++import fr.inria.verveine.core.gen.moose.Group;
++
++
++@FamePackage("Dude")
++@FameDescription("DuplicationGroup")
++public class DuplicationGroup extends Group {
++
++
++
++
++
++}
++
+Index: branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/dude/MultiplicationGroup.java
+===================================================================
+--- branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/dude/MultiplicationGroup.java	(revision 0)
++++ branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/dude/MultiplicationGroup.java	(revision 94)
+@@ -0,0 +1,18 @@
++// Automagically generated code, please do not change
++package fr.inria.verveine.core.gen.dude;
++
++import ch.akuhn.fame.FameDescription;
++import ch.akuhn.fame.FamePackage;
++import fr.inria.verveine.core.gen.moose.Group;
++
++
++@FamePackage("Dude")
++@FameDescription("MultiplicationGroup")
++public class MultiplicationGroup extends Group {
++
++
++
++
++
++}
++
+Index: branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/dude/Duplication.java
+===================================================================
+--- branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/dude/Duplication.java	(revision 0)
++++ branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/dude/Duplication.java	(revision 94)
+@@ -0,0 +1,36 @@
++// Automagically generated code, please do not change
++package fr.inria.verveine.core.gen.dude;
++
++import ch.akuhn.fame.FameProperty;
++import ch.akuhn.fame.FameDescription;
++import fr.inria.verveine.core.gen.famix.Entity;
++import ch.akuhn.fame.FamePackage;
++
++
++@FamePackage("Dude")
++@FameDescription("Duplication")
++public class Duplication extends Entity {
++
++
++
++    private Multiplication multiplicationInvolved;
++    
++    @FameProperty(name = "multiplicationInvolved", opposite = "duplications")
++    public Multiplication getMultiplicationInvolved() {
++        return multiplicationInvolved;
++    }
++
++    public void setMultiplicationInvolved(Multiplication multiplicationInvolved) {
++        if (this.multiplicationInvolved != null) {
++            if (this.multiplicationInvolved.equals(multiplicationInvolved)) return;
++            this.multiplicationInvolved.getDuplications().remove(this);
++        }
++        this.multiplicationInvolved = multiplicationInvolved;
++        if (multiplicationInvolved == null) return;
++        multiplicationInvolved.getDuplications().add(this);
++    }
++    
++
++
++}
++
+Index: branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/dude/Multiplication.java
+===================================================================
+--- branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/dude/Multiplication.java	(revision 0)
++++ branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/dude/Multiplication.java	(revision 94)
+@@ -0,0 +1,75 @@
++// Automagically generated code, please do not change
++package fr.inria.verveine.core.gen.dude;
++
++import ch.akuhn.fame.internal.MultivalueSet;
++import java.util.*;
++import ch.akuhn.fame.FameProperty;
++import ch.akuhn.fame.FameDescription;
++import fr.inria.verveine.core.gen.famix.Entity;
++import ch.akuhn.fame.FamePackage;
++
++
++@FamePackage("Dude")
++@FameDescription("Multiplication")
++public class Multiplication extends Entity {
++
++
++
++    private Collection<Duplication> duplications; 
++
++    @FameProperty(name = "duplications", opposite = "multiplicationInvolved", derived = true)
++    public Collection<Duplication> getDuplications() {
++        if (duplications == null) {
++            duplications = new MultivalueSet<Duplication>() {
++                @Override
++                protected void clearOpposite(Duplication e) {
++                    e.setMultiplicationInvolved(null);
++                }
++                @Override
++                protected void setOpposite(Duplication e) {
++                    e.setMultiplicationInvolved(Multiplication.this);
++                }
++            };
++        }
++        return duplications;
++    }
++    
++    public void setDuplications(Collection<? extends Duplication> duplications) {
++        this.getDuplications().clear();
++        this.getDuplications().addAll(duplications);
++    }                    
++    
++        
++    public void addDuplications(Duplication one) {
++        this.getDuplications().add(one);
++    }   
++    
++    public void addDuplications(Duplication one, Duplication... many) {
++        this.getDuplications().add(one);
++        for (Duplication each : many)
++            this.getDuplications().add(each);
++    }   
++    
++    public void addDuplications(Iterable<? extends Duplication> many) {
++        for (Duplication each : many)
++            this.getDuplications().add(each);
++    }   
++                
++    public void addDuplications(Duplication[] many) {
++        for (Duplication each : many)
++            this.getDuplications().add(each);
++    }
++    
++    public int numberOfDuplications() {
++        return getDuplications().size();
++    }
++
++    public boolean hasDuplications() {
++        return !getDuplications().isEmpty();
++    }
++    
++                
++
++
++}
++
+Index: branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/dude/CodeFragment.java
+===================================================================
+--- branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/dude/CodeFragment.java	(revision 0)
++++ branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/dude/CodeFragment.java	(revision 94)
+@@ -0,0 +1,18 @@
++// Automagically generated code, please do not change
++package fr.inria.verveine.core.gen.dude;
++
++import ch.akuhn.fame.FameDescription;
++import fr.inria.verveine.core.gen.famix.Entity;
++import ch.akuhn.fame.FamePackage;
++
++
++@FamePackage("Dude")
++@FameDescription("CodeFragment")
++public class CodeFragment extends Entity {
++
++
++
++
++
++}
++
+Index: branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/moose/Model.java
+===================================================================
+--- branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/moose/Model.java	(revision 0)
++++ branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/moose/Model.java	(revision 94)
+@@ -0,0 +1,29 @@
++// Automagically generated code, please do not change
++package fr.inria.verveine.core.gen.moose;
++
++import ch.akuhn.fame.FameProperty;
++import ch.akuhn.fame.FameDescription;
++import ch.akuhn.fame.FamePackage;
++
++
++@FamePackage("Moose")
++@FameDescription("Model")
++public class Model extends AbsractGroup {
++
++
++
++    private String sourceLanguage;
++    
++    @FameProperty(name = "sourceLanguage")
++    public String getSourceLanguage() {
++        return sourceLanguage;
++    }
++
++    public void setSourceLanguage(String sourceLanguage) {
++        this.sourceLanguage = sourceLanguage;
++    }
++    
++
++
++}
++
+Index: branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/moose/AbsractGroup.java
+===================================================================
+--- branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/moose/AbsractGroup.java	(revision 0)
++++ branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/moose/AbsractGroup.java	(revision 94)
+@@ -0,0 +1,17 @@
++// Automagically generated code, please do not change
++package fr.inria.verveine.core.gen.moose;
++
++import ch.akuhn.fame.FameDescription;
++import ch.akuhn.fame.FamePackage;
++
++
++@FamePackage("Moose")
++@FameDescription("AbsractGroup")
++public class AbsractGroup extends Entity {
++
++
++
++
++
++}
++
+Index: branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/moose/Entity.java
+===================================================================
+--- branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/moose/Entity.java	(revision 0)
++++ branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/moose/Entity.java	(revision 94)
+@@ -0,0 +1,17 @@
++// Automagically generated code, please do not change
++package fr.inria.verveine.core.gen.moose;
++
++import ch.akuhn.fame.FameDescription;
++import ch.akuhn.fame.FamePackage;
++
++
++@FamePackage("Moose")
++@FameDescription("Entity")
++public class Entity  {
++
++
++
++
++
++}
++
+Index: branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/moose/Group.java
+===================================================================
+--- branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/moose/Group.java	(revision 0)
++++ branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/moose/Group.java	(revision 94)
+@@ -0,0 +1,17 @@
++// Automagically generated code, please do not change
++package fr.inria.verveine.core.gen.moose;
++
++import ch.akuhn.fame.FameDescription;
++import ch.akuhn.fame.FamePackage;
++
++
++@FamePackage("Moose")
++@FameDescription("Group")
++public class Group extends AbsractGroup {
++
++
++
++
++
++}
++
+Index: branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/NonCloseablePrintStream.java
+===================================================================
+--- branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/NonCloseablePrintStream.java	(revision 0)
++++ branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/NonCloseablePrintStream.java	(revision 94)
+@@ -0,0 +1,21 @@
++package fr.inria.verveine.core;
++
++import java.io.OutputStream;
++import java.io.PrintStream;
++
++/**
++ * A non-closeable output stream
++ * Exists solely to redefine an empty close()
++ */
++public class NonCloseablePrintStream extends PrintStream {
++
++	
++	public NonCloseablePrintStream(OutputStream underlying) {
++		super(underlying);
++	}
++
++	public void close() {
++		// Aah aaaah! NOT closing :-)
++	}
++	
++}
+Index: verveine.extractor.java/src/tests/fr/inria/verveine/extractor/java/VerveineJTest_Dictionary.java
+===================================================================
+--- verveine.extractor.java/src/tests/fr/inria/verveine/extractor/java/VerveineJTest_Dictionary.java	(revision 0)
++++ verveine.extractor.java/src/tests/fr/inria/verveine/extractor/java/VerveineJTest_Dictionary.java	(revision 62)
+@@ -0,0 +1,245 @@
++/**
++ * Copyright (c) 2010 Nicolas Anquetil
++ */
++package tests.fr.inria.verveine.extractor.java;
++
++
++import static org.junit.Assert.assertEquals;
++import static org.junit.Assert.assertFalse;
++import static org.junit.Assert.assertNotNull;
++import static org.junit.Assert.assertNull;
++import static org.junit.Assert.assertSame;
++import static org.junit.Assert.assertTrue;
++
++import java.io.File;
++import java.util.Collection;
++import java.util.Iterator;
++
++import org.junit.After;
++import org.junit.Before;
++import org.junit.Test;
++
++import test.fr.inria.verveine.core.TestVerveineUtils;
++import ch.akuhn.fame.Repository;
++import fr.inria.verveine.core.gen.famix.Attribute;
++import fr.inria.verveine.core.gen.famix.LocalVariable;
++import fr.inria.verveine.core.gen.famix.Method;
++import fr.inria.verveine.core.gen.famix.Namespace;
++import fr.inria.verveine.core.gen.famix.Parameter;
++import fr.inria.verveine.core.gen.famix.Type;
++import fr.inria.verveine.extractor.java.JavaDictionary;
++import fr.inria.verveine.extractor.java.VerveineJParser;
++
++/**
++ * @author Andre Hora
++ * @since January 17, 2011
++ *
++ */
++public class VerveineJTest_Dictionary {
++
++	private Repository repo;
++
++	public VerveineJTest_Dictionary() {
++		new File(VerveineJParser.OUTPUT_FILE).delete();
++	}
++	
++	/**
++	 * @throws java.lang.Exception
++	 */
++	@Before
++	public void setUp() throws Exception {
++		VerveineJParser parser = new VerveineJParser();
++		parser.compile(new String[] {"test_src/Dictionary"});
++		repo = parser.getFamixRepo();
++	}
++
++	@After
++	public void tearDown() {
++		new File(VerveineJParser.OUTPUT_FILE).delete();
++	}
++
++	@Test
++	public void testClassParameterTypes() {
++		fr.inria.verveine.core.gen.famix.Class nodeClass = TestVerveineUtils.detectElement(repo, fr.inria.verveine.core.gen.famix.Class.class, "Dictionary");
++		assertNotNull(nodeClass);
++		assertEquals("Dictionary", nodeClass.getName());
++		assertFalse(nodeClass.getIsInterface());
++		assertEquals(1, nodeClass.getParameterTypes().size());
++		assertSame(TestVerveineUtils.detectElement(repo, Type.class, "B"), nodeClass.getParameterTypes().iterator().next());
++	}
++
++	@Test
++	public void testFieldArgumentTypes() {
++		Attribute famixAtt = TestVerveineUtils.detectElement(repo, Attribute.class, "DEFAULT_PCKG_NAME");
++		assertNotNull(famixAtt);
++		assertEquals("DEFAULT_PCKG_NAME", famixAtt.getName());
++		assertNull(famixAtt.getDeclaredArgumentTypes());
++		
++		famixAtt = TestVerveineUtils.detectElement(repo, Attribute.class, "STUB_METHOD_CONTAINER_NAME");
++		assertNotNull(famixAtt);
++		assertEquals("STUB_METHOD_CONTAINER_NAME", famixAtt.getName());
++		assertNull(famixAtt.getDeclaredArgumentTypes());
++		
++		famixAtt = TestVerveineUtils.detectElement(repo, Attribute.class, "SELF_NAME");
++		assertNotNull(famixAtt);
++		assertEquals("SELF_NAME", famixAtt.getName());
++		assertNull(famixAtt.getDeclaredArgumentTypes());
++		
++		famixAtt = TestVerveineUtils.detectElement(repo, Attribute.class, "SUPER_NAME");
++		assertNotNull(famixAtt);
++		assertEquals("SUPER_NAME", famixAtt.getName());
++		assertNull(famixAtt.getDeclaredArgumentTypes());
++		
++		famixAtt = TestVerveineUtils.detectElement(repo, Attribute.class, "famixRepo");
++		assertNotNull(famixAtt);
++		assertEquals("famixRepo", famixAtt.getName());
++		assertNull(famixAtt.getDeclaredArgumentTypes());
++
++		famixAtt = TestVerveineUtils.detectElement(repo, Attribute.class, "mapBind");
++		assertNotNull(famixAtt);
++		assertEquals("mapBind", famixAtt.getName());
++		assertEquals(2, famixAtt.getDeclaredArgumentTypes().size());
++		Iterator<Type> it = famixAtt.getDeclaredArgumentTypes().iterator();
++		assertSame(TestVerveineUtils.detectElement(repo, Type.class, "B"), it.next());
++		assertSame(TestVerveineUtils.detectElement(repo, Type.class, "NamedEntity"), it.next());
++		
++		famixAtt = TestVerveineUtils.detectElement(repo, Attribute.class, "mapName");
++		assertNotNull(famixAtt);
++		assertEquals("mapName", famixAtt.getName());
++		assertEquals(2, famixAtt.getDeclaredArgumentTypes().size());
++		it = famixAtt.getDeclaredArgumentTypes().iterator();
++		assertSame(TestVerveineUtils.detectElement(repo, Type.class, "String"), it.next());
++		assertSame(TestVerveineUtils.detectElement(repo, Type.class, "Collection"), it.next());
++		
++		famixAtt = TestVerveineUtils.detectElement(repo, Attribute.class, "mapImpVar");
++		assertNotNull(famixAtt);
++		assertEquals("mapImpVar", famixAtt.getName());
++		assertEquals(2, famixAtt.getDeclaredArgumentTypes().size());
++		it = famixAtt.getDeclaredArgumentTypes().iterator();
++		Collection<Type> fmxClasses = TestVerveineUtils.listElements(repo, Type.class, "Class");
++		String javaLangNamespace = JavaDictionary.OBJECT_PACKAGE_NAME.substring(JavaDictionary.OBJECT_PACKAGE_NAME.lastIndexOf('.')+1);
++		Namespace ns = TestVerveineUtils.detectElement(repo, Namespace.class, javaLangNamespace);
++		//There are two classes with the name Class (java.lang and famix namespaces). Ensure to get the correct one.
++		for (Type fmxClass : fmxClasses) {
++			if (ns != fmxClass.getContainer()) {
++				assertSame(fmxClass, it.next());
++			}
++		}
++		assertSame(TestVerveineUtils.detectElement(repo, Type.class, "ImplicitVars"), it.next());
++	}
++
++
++	@Test
++	public void testMethodParameterArgumentTypes() {
++		Method fmxMethod = TestVerveineUtils.detectElement(repo, Method.class, "getEntityByName");
++		assertNotNull(fmxMethod);
++		assertEquals(2, fmxMethod.getParameters().size());
++		for (Parameter fmxParameter : fmxMethod.getParameters()) {
++			assertTrue(fmxParameter.getName().equals("fmxClass") || fmxParameter.getName().equals("name"));
++			if (fmxParameter.getName().equals("fmxClass")) {
++				assertEquals(1, fmxParameter.getDeclaredArgumentTypes().size());
++				assertSame(TestVerveineUtils.detectElement(repo, Type.class, "T"), fmxParameter.getDeclaredArgumentTypes().iterator().next());
++			}
++			if (fmxParameter.getName().equals("name")) {
++				assertNull(fmxParameter.getDeclaredArgumentTypes());
++			}
++		}
++		
++		fmxMethod = TestVerveineUtils.detectElement(repo, Method.class, "createFamixEntity");
++		assertNotNull(fmxMethod);
++		assertEquals(2, fmxMethod.getParameters().size());
++		for (Parameter fmxParameter : fmxMethod.getParameters()) {
++			assertTrue(fmxParameter.getName().equals("fmxClass") || fmxParameter.getName().equals("name"));
++			if (fmxParameter.getName().equals("fmxClass")) {
++				assertEquals(1, fmxParameter.getDeclaredArgumentTypes().size());
++				assertSame(TestVerveineUtils.detectElement(repo, Type.class, "T"), fmxParameter.getDeclaredArgumentTypes().iterator().next());
++			}
++			if (fmxParameter.getName().equals("name")) {
++				assertNull(fmxParameter.getDeclaredArgumentTypes());
++			}
++		}
++		
++		fmxMethod = TestVerveineUtils.detectElement(repo, Method.class, "ensureFamixEntity");
++		assertNotNull(fmxMethod);
++		assertEquals(3, fmxMethod.getParameters().size());
++		for (Parameter fmxParameter : fmxMethod.getParameters()) {
++			assertTrue(fmxParameter.getName().equals("fmxClass") || fmxParameter.getName().equals("bnd") || fmxParameter.getName().equals("name"));
++			if (fmxParameter.getName().equals("fmxClass")) {
++				assertEquals(1, fmxParameter.getDeclaredArgumentTypes().size());
++				assertSame(TestVerveineUtils.detectElement(repo, Type.class, "T"), fmxParameter.getDeclaredArgumentTypes().iterator().next());
++			}
++			if (fmxParameter.getName().equals("bnd")) {
++				assertNull(fmxParameter.getDeclaredArgumentTypes());
++			}
++			if (fmxParameter.getName().equals("name")) {
++				assertNull(fmxParameter.getDeclaredArgumentTypes());
++			}
++		}
++		
++		fmxMethod = TestVerveineUtils.detectElement(repo, Method.class, "ensureFamixUniqEntity");
++		assertNotNull(fmxMethod);
++		assertEquals(3, fmxMethod.getParameters().size());
++		for (Parameter fmxParameter : fmxMethod.getParameters()) {
++			assertTrue(fmxParameter.getName().equals("fmxClass") || fmxParameter.getName().equals("bnd") || fmxParameter.getName().equals("name"));
++			if (fmxParameter.getName().equals("fmxClass")) {
++				assertEquals(1, fmxParameter.getDeclaredArgumentTypes().size());
++				assertSame(TestVerveineUtils.detectElement(repo, Type.class, "T"), fmxParameter.getDeclaredArgumentTypes().iterator().next());
++			}
++			if (fmxParameter.getName().equals("bnd")) {
++				assertNull(fmxParameter.getDeclaredArgumentTypes());
++			}
++			if (fmxParameter.getName().equals("name")) {
++				assertNull(fmxParameter.getDeclaredArgumentTypes());
++			}
++		}
++	}
++	
++	@Test
++	public void testMethodLocalVariableArgumentTypes() {
++		Method fmxMethod = TestVerveineUtils.detectElement(repo, Method.class, "mapEntityToName");
++		assertNotNull(fmxMethod);
++		assertEquals(1, fmxMethod.getLocalVariables().size());
++		for (LocalVariable fmxLocalVariable : fmxMethod.getLocalVariables()) {
++			assertTrue(fmxLocalVariable.getName().equals("l_ent"));
++			assertEquals(1, fmxLocalVariable.getDeclaredArgumentTypes().size());
++			assertSame(TestVerveineUtils.detectElement(repo, Type.class, "NamedEntity"), fmxLocalVariable.getDeclaredArgumentTypes().iterator().next());
++		}
++		
++		fmxMethod = TestVerveineUtils.detectElement(repo, Method.class, "getEntityByName");
++		assertNotNull(fmxMethod);
++		assertEquals(2, fmxMethod.getLocalVariables().size());
++		for (LocalVariable fmxLocalVariable : fmxMethod.getLocalVariables()) {
++			assertTrue(fmxLocalVariable.getName().equals("ret") || fmxLocalVariable.getName().equals("l_name"));
++			if (fmxLocalVariable.getName().equals("ret")) {
++				assertEquals(1, fmxLocalVariable.getDeclaredArgumentTypes().size());
++				assertSame(TestVerveineUtils.detectElement(repo, Type.class, "T"), fmxLocalVariable.getDeclaredArgumentTypes().iterator().next());
++			}
++			if (fmxLocalVariable.getName().equals("l_name")) {
++				assertEquals(1, fmxLocalVariable.getDeclaredArgumentTypes().size());
++				assertSame(TestVerveineUtils.detectElement(repo, Type.class, "NamedEntity"), fmxLocalVariable.getDeclaredArgumentTypes().iterator().next());
++			}
++		}
++		
++		fmxMethod = TestVerveineUtils.detectElement(repo, Method.class, "ensureFamixUniqEntity");
++		assertNotNull(fmxMethod);
++		assertEquals(2, fmxMethod.getLocalVariables().size());
++		for (LocalVariable fmxLocalVariable : fmxMethod.getLocalVariables()) {
++			assertTrue(fmxLocalVariable.getName().equals("fmx") || fmxLocalVariable.getName().equals("l"));
++			if (fmxLocalVariable.getName().equals("fmx")) {
++				assertNull(fmxLocalVariable.getDeclaredArgumentTypes());
++			}
++			if (fmxLocalVariable.getName().equals("l")) {
++				assertEquals(1, fmxLocalVariable.getDeclaredArgumentTypes().size());
++				assertSame(TestVerveineUtils.detectElement(repo, Type.class, "T"), fmxLocalVariable.getDeclaredArgumentTypes().iterator().next());
++			}
++		}
++	}
++	
++	@Test
++	public void testMethodReturnArgumentTypes() {
++		Method fmxMethod = TestVerveineUtils.detectElement(repo, Method.class, "getEntityByName");
++		assertNotNull(fmxMethod);
++		assertEquals(1, fmxMethod.getDeclaredArgumentTypes().size());
++		assertSame(TestVerveineUtils.detectElement(repo, Type.class, "T"), fmxMethod.getDeclaredArgumentTypes().iterator().next());
++	}
++}
+\ No newline at end of file
+Index: verveine.extractor.java/lib/verveine.core.jar
+===================================================================
+Cannot display: file marked as a binary type.
+svn:mime-type = application/octet-stream
+Index: verveine.extractor.java/lib/verveine.extractor.java.jar
+===================================================================
+Cannot display: file marked as a binary type.
+svn:mime-type = application/octet-stream
+Index: verveine.extractor.java/src/tests/fr/inria/verveine/extractor/java/VerveineExtractorJavaTest.java
+===================================================================
+--- verveine.extractor.java/src/tests/fr/inria/verveine/extractor/java/VerveineExtractorJavaTest.java	(revision 3)
++++ verveine.extractor.java/src/tests/fr/inria/verveine/extractor/java/VerveineExtractorJavaTest.java	(revision 4)
+@@ -80,6 +80,15 @@
+ 		assertEquals(11, nodeClass.getMethods().size());
+ 		assertEquals(2, nodeClass.getAttributes().size());
+ 		assertSame(TestVerveineUtils.detectElement(repo, Namespace.class, "lan"), nodeClass.getContainer());
++		assertFalse(nodeClass.getIsInterface());
++
++		fr.inria.verveine.core.gen.famix.Class interfce = TestVerveineUtils.detectElement(repo,fr.inria.verveine.core.gen.famix.Class.class, "IPrinter");
++		assertNotNull(interfce);
++		assertEquals("IPrinter", interfce.getName());
++		assertEquals(1, interfce.getMethods().size());
++		assertEquals(0, interfce.getAttributes().size());
++		assertSame(TestVerveineUtils.detectElement(repo, Namespace.class, "server"), interfce.getContainer());
++		assertTrue(interfce.getIsInterface());
+ 		
+ 		fr.inria.verveine.core.gen.famix.Class innerClass = TestVerveineUtils.detectElement(repo,fr.inria.verveine.core.gen.famix.Class.class, "XPrinter");
+ 		assertNotNull(innerClass);
+@@ -87,13 +96,15 @@
+ 		assertEquals(2, innerClass.getMethods().size());
+ 		assertEquals(1, innerClass.getAttributes().size());
+ 		assertSame(TestVerveineUtils.detectElement(repo,fr.inria.verveine.core.gen.famix.Class.class, "PrintServer"), innerClass.getContainer());
+-		
++		assertFalse(innerClass.getIsInterface());
++
+ 		fr.inria.verveine.core.gen.famix.Class anonClass = TestVerveineUtils.detectElement(repo,fr.inria.verveine.core.gen.famix.Class.class, "anonymous(IPrinter)");
+ 		assertNotNull(anonClass);
+ 		assertEquals("anonymous(IPrinter)", anonClass.getName());
+ 		assertEquals(1, anonClass.getMethods().size());
+ 		assertEquals(0, anonClass.getAttributes().size());
+ 		assertSame(TestVerveineUtils.detectElement(repo,Method.class, "PrintServer"), anonClass.getContainer());
++		assertFalse(anonClass.getIsInterface());
+ 	}
+ 
+ 	@Test
+Index: verveine.extractor.java/src/fr/inria/verveine/extractor/java/JavaDictionary.java
+===================================================================
+--- verveine.extractor.java/src/fr/inria/verveine/extractor/java/JavaDictionary.java	(revision 3)
++++ verveine.extractor.java/src/fr/inria/verveine/extractor/java/JavaDictionary.java	(revision 4)
+@@ -1,5 +1,8 @@
+ package fr.inria.verveine.extractor.java;
+ 
++import java.util.Collection;
++import java.util.LinkedList;
++
+ import org.eclipse.jdt.core.dom.ASTNode;
+ import org.eclipse.jdt.core.dom.CompilationUnit;
+ import org.eclipse.jdt.core.dom.IBinding;
+@@ -123,7 +126,7 @@
+ 	 */
+ 	public fr.inria.verveine.core.gen.famix.Class ensureFamixClass(ITypeBinding bnd) {
+ 		ContainerEntity owner = null;
+-		fr.inria.verveine.core.gen.famix.Class sup = null;
++		Collection<fr.inria.verveine.core.gen.famix.Class> sups = new LinkedList<fr.inria.verveine.core.gen.famix.Class>();
+ 		String identifier = null;
+ 		
+ 		if (bnd == null) {
+@@ -181,18 +184,24 @@
+ 			identifier = bnd.getName();
+ 		}
+ 
+-		// superclass
+-		if (bnd.isInterface()) {
+-			// TODO interface don't have superclass
+-		}
+-		else if ( (! bnd.isPrimitive()) && (! bnd.getName().equals(OBJECT_NAME)) ) {
++		// superclass and/or implemented interfaces
++		if ( (! bnd.isPrimitive()) && (! bnd.getName().equals(OBJECT_NAME)) ) {
+ 			// "Object" and primitive types don't have a superclass
+-			ITypeBinding supbnd = bnd.getSuperclass();
+-			if (supbnd == null) {
+-				sup = ensureFamixClassObject(null);
++			
++			// superclass
++			if (! bnd.isInterface()) {
++				ITypeBinding supbnd = bnd.getSuperclass();
++				if (supbnd == null) {
++					sups.add( ensureFamixClassObject(null));
++				}
++				else {
++					sups.add( ensureFamixClass(supbnd));
++				}
+ 			}
+ 			else {
+-				sup = ensureFamixClass(supbnd);
++				for (ITypeBinding supbnd : bnd.getInterfaces()) {
++					sups.add( ensureFamixClass(supbnd));
++				}
+ 			}
+ 		}
+ 
+@@ -237,11 +246,14 @@
+ 		}
+ 		
+ 		if ((fmx!=null) && fmx.getIsStub()) {
+-			// apparently we just created it, so add information to it
++			// apparently we just created it or it already existed as a stub), so add information to it
++			fmx.setIsInterface(bnd.isInterface());
+ 			fmx.setContainer(owner);
+-			if (sup != null) {
++			if (sups.size() > 0) {
+ 				// some types don't have superclass
+-				ensureFamixInheritance(sup, fmx);
++				for (fr.inria.verveine.core.gen.famix.Class sup : sups) {
++					ensureFamixInheritance(sup, fmx);
++				}
+ 			}
+ 			fmx.setName(identifier); // might be different from bnd.getName() in the case of anonymous class
+ 			fmx.setIsStub(Boolean.FALSE);

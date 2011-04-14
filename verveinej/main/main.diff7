@@ -1,0 +1,437 @@
+Index: verveine.core/src/fr/inria/verveine/core/Dictionary.java
+===================================================================
+--- verveine.core/src/fr/inria/verveine/core/Dictionary.java	(revision 115)
++++ verveine.core/src/fr/inria/verveine/core/Dictionary.java	(revision 116)
+@@ -178,6 +178,11 @@
+ 	 */
+ 	protected <T extends NamedEntity> T createFamixEntity(Class<T> fmxClass, String name) {
+ 		T fmx = null;
++
++		if (name == null) {
++			return null;
++		}
++		
+ 		try {
+ 			fmx = fmxClass.newInstance();
+ 		} catch (Exception e) {
+@@ -227,7 +232,7 @@
+ 		// so we cannot recover just from the name
+ 
+ 		fmx = createFamixEntity(fmxClass, name);
+-		if (bnd != null) {
++		if ( (bnd != null) && (fmx != null) ) {
+ 			mapToKey.put(bnd, fmx);
+ 		}
+ 		
+@@ -326,19 +331,25 @@
+ 	}
+ 
+ 	public AnnotationInstanceAttribute createFamixAnnotationInstanceAttribute(AnnotationTypeAttribute att, String value) {
+-		AnnotationInstanceAttribute fmx = new AnnotationInstanceAttribute();
+-		fmx.setAnnotationTypeAttribute(att);
+-		fmx.setValue(value);
+-		this.famixRepo.add(fmx);
++		AnnotationInstanceAttribute fmx = null;
++		if ( (att != null) && (value != null) ) {
++			fmx = new AnnotationInstanceAttribute();
++			fmx.setAnnotationTypeAttribute(att);
++			fmx.setValue(value);
++			this.famixRepo.add(fmx);
++		}
+ 		return fmx;
+ 	}
+ 
+ 	public AnnotationInstance addFamixAnnotationInstance(NamedEntity fmx, AnnotationType annType, Collection<AnnotationInstanceAttribute> annAtts) {
+-		AnnotationInstance inst = new AnnotationInstance();
+-		inst.setAnnotationType(annType);
+-		inst.setAnnotatedEntity(fmx);
+-		inst.addAttributes(annAtts);
+-		this.famixRepo.add(inst);
++		AnnotationInstance inst = null;
++		if ( (fmx != null) && (annType != null) ) {
++			inst = new AnnotationInstance();
++			inst.setAnnotationType(annType);
++			inst.setAnnotatedEntity(fmx);
++			inst.addAttributes(annAtts);
++			this.famixRepo.add(inst);
++		}
+ 		return inst;
+ 	}
+ 
+@@ -403,11 +414,14 @@
+ 	 * @return the FAMIX Comment
+ 	 */
+ 	public Comment createFamixComment(String cmt, SourcedEntity owner) {
+-		Comment fmx = new Comment();
+-		fmx.setContent(cmt);
+-		fmx.setContainer(owner);
+-		this.famixRepo.add(fmx);
++		Comment fmx = null;
+ 		
++		if ( (cmt != null) && (owner != null) ) {
++			fmx = new Comment();
++			fmx.setContent(cmt);
++			fmx.setContainer(owner);
++			this.famixRepo.add(fmx);
++		}
+ 		return fmx;
+ 	}
+ 	
+@@ -436,6 +450,10 @@
+ 	 * @return the Inheritance relationship
+ 	 */
+ 	public Inheritance ensureFamixInheritance(Type sup, Type sub, Association prev) {
++		if ( (sup == null) || (sub == null) ) {
++			return null;
++		}
++			
+ 		for (Inheritance i : sup.getSubInheritances()) {
+ 			if (i.getSubclass() == sub) {
+ 				return i;
+@@ -457,6 +475,9 @@
+ 	 * @return the Reference
+ 	 */
+ 	public Reference addFamixReference(ContainerEntity src, ContainerEntity tgt, Association prev) {
++		if ( (src == null) || (tgt == null) ) {
++			return null;
++		}
+ 		Reference ref = new Reference();
+ 		ref.setTarget(tgt);
+ 		ref.setSource(src);
+@@ -475,6 +496,9 @@
+ 	 * @return the Invocation
+ 	 */
+ 	public Invocation addFamixInvocation(BehaviouralEntity sender, BehaviouralEntity invoked, NamedEntity receiver, Association prev) {
++		if ( (sender == null) || (invoked == null) || (receiver == null) ) {
++			return null;
++		}
+ 		Invocation invok = new Invocation();
+ 		invok.setReceiver(receiver);
+ 		invok.setSender(sender);
+@@ -495,7 +519,9 @@
+ 	 * @return the Invocation
+ 	 */
+ 	public Access addFamixAccess(BehaviouralEntity accessor, StructuralEntity var, boolean isWrite, Association prev) {
+-		/* We keep multiple accesses from one method to a field */
++		if ( (accessor == null) || (var == null) ) {
++			return null;
++		}
+ 		Access acc = new Access();
+ 		acc.setAccessor(accessor);
+ 		acc.setVariable(var);
+@@ -518,7 +544,10 @@
+ 	 * @param excep -- the exception declared to be thrown
+ 	 * @return the DeclaredException
+ 	 */
+-	public DeclaredException ensureFamixDeclaredException(Method meth, fr.inria.verveine.core.gen.famix.Class excep) {
++	public DeclaredException createFamixDeclaredException(Method meth, fr.inria.verveine.core.gen.famix.Class excep) {
++		if ( (meth == null) || (excep == null) ) {
++			return null;
++		}
+ 		DeclaredException decl = new DeclaredException();
+ 		decl.setExceptionClass(excep);
+ 		decl.setDefiningMethod(meth);
+@@ -532,7 +561,10 @@
+ 	 * @param excep -- the exception caught
+ 	 * @return the CaughtException
+ 	 */
+-	public CaughtException ensureFamixCaughtException(Method meth, fr.inria.verveine.core.gen.famix.Class excep) {
++	public CaughtException createFamixCaughtException(Method meth, fr.inria.verveine.core.gen.famix.Class excep) {
++		if ( (meth == null) || (excep == null) ) {
++			return null;
++		}
+ 		CaughtException decl = new CaughtException();
+ 		decl.setExceptionClass(excep);
+ 		decl.setDefiningMethod(meth);
+@@ -548,7 +580,10 @@
+ 	 * @param excep -- the exception thrown
+ 	 * @return the ThrownException
+ 	 */
+-	public ThrownException ensureFamixThrownException(Method meth, fr.inria.verveine.core.gen.famix.Class excep) {
++	public ThrownException createFamixThrownException(Method meth, fr.inria.verveine.core.gen.famix.Class excep) {
++		if ( (meth == null) || (excep == null) ) {
++			return null;
++		}
+ 		ThrownException decl = new ThrownException();
+ 		decl.setExceptionClass(excep);
+ 		decl.setDefiningMethod(meth);
+@@ -642,6 +677,11 @@
+ 	@SuppressWarnings("unchecked")
+ 	public <T extends NamedEntity> T ensureFamixUniqEntity(Class<T> fmxClass, B key, String name) {
+ 		T fmx = null;
++		
++		if (name == null) {
++			return null;
++		}
++		
+ 		if (key != null) {
+ 			fmx = (T) getEntityByKey(key);
+ 		}
+Index: verveine.extractor.java/src/tests/fr/inria/verveine/extractor/java/VerveineJTest_LanModel.java
+===================================================================
+--- verveine.extractor.java/src/tests/fr/inria/verveine/extractor/java/VerveineJTest_LanModel.java	(revision 115)
++++ verveine.extractor.java/src/tests/fr/inria/verveine/extractor/java/VerveineJTest_LanModel.java	(revision 116)
+@@ -112,7 +112,7 @@
+ 		assertEquals(10+1,  TestVerveineUtils.selectElementsOfType(repo, Attribute.class).size());//10+{System.out}
+ 		assertEquals(2+4,   TestVerveineUtils.selectElementsOfType(repo, Namespace.class).size());//2+{moose,java.lang,java.io,java}
+ 		assertEquals(26,    TestVerveineUtils.selectElementsOfType(repo, Parameter.class).size());
+-		assertEquals(54,    TestVerveineUtils.selectElementsOfType(repo, Invocation.class).size());//actually 54, missing 2 !!!!
++		assertEquals(54,    TestVerveineUtils.selectElementsOfType(repo, Invocation.class).size());
+ 		assertEquals(6+24,  TestVerveineUtils.selectElementsOfType(repo, Inheritance.class).size());//6 internal + 24 from imported packages/classes
+ 		assertEquals(25,    TestVerveineUtils.selectElementsOfType(repo, Access.class).size());// 16 "internal" attributes + 9 System.out
+ 		assertEquals(0,     TestVerveineUtils.selectElementsOfType(repo, LocalVariable.class).size());
+Index: verveine.extractor.java/src/tests/fr/inria/verveine/extractor/java/VerveineJTest_Basic.java
+===================================================================
+--- verveine.extractor.java/src/tests/fr/inria/verveine/extractor/java/VerveineJTest_Basic.java	(revision 115)
++++ verveine.extractor.java/src/tests/fr/inria/verveine/extractor/java/VerveineJTest_Basic.java	(revision 116)
+@@ -7,10 +7,16 @@
+ import test.fr.inria.verveine.core.TestVerveineUtils;
+ import ch.akuhn.fame.Repository;
+ import fr.inria.verveine.core.gen.famix.Association;
++import fr.inria.verveine.core.gen.famix.Attribute;
+ import fr.inria.verveine.core.gen.famix.BehaviouralEntity;
++import fr.inria.verveine.core.gen.famix.Inheritance;
++import fr.inria.verveine.core.gen.famix.Namespace;
++import fr.inria.verveine.core.gen.famix.ParameterizableClass;
++import fr.inria.verveine.core.gen.famix.ParameterizedType;
+ import fr.inria.verveine.core.gen.famix.PrimitiveType;
+ import fr.inria.verveine.core.gen.famix.StructuralEntity;
+ import fr.inria.verveine.core.gen.famix.Type;
++import fr.inria.verveine.extractor.java.JavaDictionary;
+ import fr.inria.verveine.extractor.java.VerveineJParser;
+ 
+ public abstract class VerveineJTest_Basic {
+@@ -55,4 +61,80 @@
+ 		}
+ 	}
+ 
++	/**
++	 * Test of some "basic" Java entities that we know should be here such as: java.lang, java.io, Object, String, System
++	 * (and respective superclasses and implemented interfaces)
++	 */
++	@Test
++	public void testJavaCore() {
++		
++		// namespaces
++		Namespace java = TestVerveineUtils.detectElement(repo,Namespace.class, "java");
++		assertNotNull(java);
++
++		String javaLangName = JavaDictionary.OBJECT_PACKAGE_NAME.substring(JavaDictionary.OBJECT_PACKAGE_NAME.lastIndexOf('.')+1);
++		Namespace javaLang = TestVerveineUtils.detectElement(repo,Namespace.class, javaLangName);
++		assertNotNull(javaLang);
++		assertEquals(java, javaLang.getBelongsTo());
++		 // Object,String,StringBuffer,AbstractStringBuilder,System,Comparable,Comparable<String>,Appendable,CharSequence
++
++		Namespace javaIO = TestVerveineUtils.detectElement(repo,Namespace.class, "io");
++		assertNotNull(javaIO);
++		assertEquals(java, javaIO.getBelongsTo());
++
++		// Object
++		fr.inria.verveine.core.gen.famix.Class obj = TestVerveineUtils.detectElement(repo,fr.inria.verveine.core.gen.famix.Class.class, JavaDictionary.OBJECT_NAME);
++		assertNotNull(obj);
++		assertSame(javaLang, obj.getContainer());
++		assertEquals(0, obj.getSuperInheritances().size());
++
++		// String
++		fr.inria.verveine.core.gen.famix.Class charSeq = TestVerveineUtils.detectElement(repo,fr.inria.verveine.core.gen.famix.Class.class, "CharSequence");
++		assertNotNull(charSeq);
++		assertSame(javaLang, charSeq.getContainer());
++		assertTrue(charSeq.getIsInterface());
++		assertEquals(0, charSeq.getSuperInheritances().size());
++
++		fr.inria.verveine.core.gen.famix.Class serial = TestVerveineUtils.detectElement(repo,fr.inria.verveine.core.gen.famix.Class.class, "Serializable");
++		assertNotNull(serial);
++		assertSame(javaIO, serial.getContainer());
++		assertTrue(serial.getIsInterface());
++		assertEquals(0, serial.getSuperInheritances().size());
++
++		ParameterizableClass comp = TestVerveineUtils.detectElement(repo,ParameterizableClass.class, "Comparable");
++		assertNotNull(comp);
++		assertSame(javaLang, comp.getContainer());
++		assertTrue(comp.getIsInterface());
++		assertEquals(0, comp.getSuperInheritances().size());
++
++		ParameterizedType compStr = TestVerveineUtils.detectElement(repo,ParameterizedType.class, "Comparable");
++		assertNotNull(compStr);
++		assertSame(comp, compStr.getParameterizableClass());
++		assertEquals(0, compStr.getSuperInheritances().size());
++		
++		fr.inria.verveine.core.gen.famix.Class str = TestVerveineUtils.detectElement(repo,fr.inria.verveine.core.gen.famix.Class.class, "String");
++		assertNotNull(str);
++		assertSame(javaLang, str.getContainer());
++		assertEquals(4, str.getSuperInheritances().size());
++		for (Inheritance inh : str.getSuperInheritances()) {
++			assertTrue( "Unexpected super-class for String: "+inh.getSuperclass().getName(),
++					(inh.getSuperclass() == obj) ||
++					(inh.getSuperclass() == charSeq) ||
++					(inh.getSuperclass() == serial) ||
++					(inh.getSuperclass() == compStr) );
++		}
++
++		// System
++		fr.inria.verveine.core.gen.famix.Class syst = TestVerveineUtils.detectElement(repo,fr.inria.verveine.core.gen.famix.Class.class, "System");
++		assertNotNull(syst);
++		assertSame(javaLang, syst.getContainer());
++		assertEquals(1, syst.getSuperInheritances().size());
++		assertEquals(obj, syst.getSuperInheritances().iterator().next().getSuperclass());
++		assertEquals(2, syst.getAttributes().size());
++		for (Attribute att : syst.getAttributes()) {
++			assertTrue( "Unexpected super-class for String: "+att.getName(),
++					att.getName().equals("out") || att.getName().equals("err") );
++
++		}
++	}
+ }
+\ No newline at end of file
+Index: verveine.extractor.java/src/fr/inria/verveine/extractor/java/VerveineRefVisitor.java
+===================================================================
+--- verveine.extractor.java/src/fr/inria/verveine/extractor/java/VerveineRefVisitor.java	(revision 115)
++++ verveine.extractor.java/src/fr/inria/verveine/extractor/java/VerveineRefVisitor.java	(revision 116)
+@@ -196,7 +196,7 @@
+ 			for (Name excepName : (List<Name>)node.thrownExceptions()) {
+ 				fr.inria.verveine.core.gen.famix.Class excepFmx = this.dico.ensureFamixClass(excepName.resolveTypeBinding(), excepName.getFullyQualifiedName(), /*owner*/null, /*isGeneric*/false);
+ 				if (excepFmx != null) {
+-					dico.ensureFamixDeclaredException(meth, excepFmx);
++					dico.createFamixDeclaredException(meth, excepFmx);
+ 				}
+ 			}
+ 			return super.visit(node);
+@@ -315,7 +315,7 @@
+ 				excepFmx = this.dico.ensureFamixClass(excepClass.resolveBinding(), ((QualifiedType) excepClass).getName().getIdentifier(), /*owner*/null, /*isGeneric*/false);
+ 			}
+ 			if (excepFmx != null) {
+-				dico.ensureFamixCaughtException(meth, excepFmx);
++				dico.createFamixCaughtException(meth, excepFmx);
+ 			}
+ 		}
+ 
+@@ -327,7 +327,7 @@
+ 		Method meth = this.context.topMethod();
+ 		fr.inria.verveine.core.gen.famix.Class excepFmx = this.dico.ensureFamixClass(node.getExpression().resolveTypeBinding(), /*name*/(String)null, /*owner*/(ContainerEntity)null, /*isGeneric*/false);
+ 		if (excepFmx != null) {
+-			dico.ensureFamixThrownException(meth, excepFmx);
++			dico.createFamixThrownException(meth, excepFmx);
+ 		}
+ 		return super.visit(node);
+ 	}
+Index: verveine.core/.classpath
+===================================================================
+--- verveine.core/.classpath	(revision 21)
++++ verveine.core/.classpath	(revision 22)
+@@ -4,5 +4,6 @@
+ 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+ 	<classpathentry kind="lib" path="lib/fame.jar"/>
+ 	<classpathentry kind="var" path="ECLIPSE_HOME/plugins/org.junit_4.8.1.v4_8_1_v20100427-1100/junit.jar"/>
++	<classpathentry kind="lib" path="lib/org.eclipse.jdt.core_3.6.0.v_A58.jar"/>
+ 	<classpathentry kind="output" path="bin"/>
+ </classpath>
+Index: verveine.core/lib/org.eclipse.jdt.core_3.6.0.v_A58.jar
+===================================================================
+Cannot display: file marked as a binary type.
+svn:mime-type = application/octet-stream
+
+Property changes on: verveine.core/lib/org.eclipse.jdt.core_3.6.0.v_A58.jar
+___________________________________________________________________
+Added: svn:mime-type
+   + application/octet-stream
+
+Index: verveine.core/lib/verveine.core.jar
+===================================================================
+Cannot display: file marked as a binary type.
+svn:mime-type = application/octet-stream
+Index: verveine.core/src/test/fr/inria/verveine/core/TestVerveineUtils.java
+===================================================================
+--- verveine.core/src/test/fr/inria/verveine/core/TestVerveineUtils.java	(revision 21)
++++ verveine.core/src/test/fr/inria/verveine/core/TestVerveineUtils.java	(revision 22)
+@@ -13,7 +13,9 @@
+  */
+ public class TestVerveineUtils {
+ 
+-	/** Returns a Collection of all FAMIXEntities in repository of the given fmxClass
++	/**
++	 * Returns a Collection of all FAMIXEntities in repository of the given fmxClass.
++	 * Same method as listAll(Class<T extends Entity>) defined in VerveineParser
+ 	 */
+ 	@SuppressWarnings("unchecked")
+ 	public static <T extends Entity> Collection<T> selectElementsOfType(Repository repository, Class<T> fmxClass) {
+Index: verveine.core/src/fr/inria/verveine/core/VerveineParser.java
+===================================================================
+--- verveine.core/src/fr/inria/verveine/core/VerveineParser.java	(revision 0)
++++ verveine.core/src/fr/inria/verveine/core/VerveineParser.java	(revision 22)
+@@ -0,0 +1,75 @@
++package fr.inria.verveine.core;
++
++import java.io.FileWriter;
++import java.io.IOException;
++import java.io.PrintWriter;
++import java.util.Collection;
++import java.util.Map;
++import java.util.Vector;
++
++import org.eclipse.jdt.core.compiler.CompilationProgress;
++import org.eclipse.jdt.internal.compiler.batch.Main;
++
++import ch.akuhn.fame.Repository;
++import fr.inria.verveine.core.gen.famix.Entity;
++import fr.inria.verveine.core.gen.famix.FAMIXModel;
++
++public class VerveineParser extends Main {
++
++	public final static String OUTPUT_FILE = "output.mse";
++	
++	private Repository famixRepo;
++
++	public VerveineParser() {
++		super(new PrintWriter(System.out), new PrintWriter(System.err), false/*systemExitWhenFinished*/, null/*customDefaultOptions*/, null/*compilationProgress*/);
++	}
++
++	@Override
++	public boolean compile(String[] argv) {
++
++		setFamixRepo(new Repository(FAMIXModel.metamodel()));
++
++		boolean ret = super.compile(argv);
++
++		return ret;
++	}
++
++	/**
++	 * Outputting repository to a file
++	 */
++	public void outputMSE() {
++		// * --- Outputting to a file -----------------------------------------------
++		try {
++			famixRepo.exportMSE(new FileWriter(OUTPUT_FILE));
++		} catch (IOException e) {
++			e.printStackTrace();
++		}
++	}
++
++	public VerveineParser(PrintWriter outWriter, PrintWriter errWriter,	boolean systemExitWhenFinished, @SuppressWarnings("rawtypes")Map customDefaultOptions, CompilationProgress compilationProgress) {
++		super(outWriter, errWriter, systemExitWhenFinished,	customDefaultOptions, compilationProgress);
++	}
++
++	/**
++	 * Returns a Collection of all FAMIXEntities in the repository of the given fmxClass
++	 */
++	@SuppressWarnings("unchecked")
++	public <T extends Entity> Collection<T> listAll(Class<T> fmxClass) {
++		Collection<T> selection = new Vector<T>();
++		for (Object obj : getFamixRepo().getElements()) {
++			if (fmxClass.isInstance(obj)) {
++				selection.add((T) obj);
++			}
++		}
++		return selection;
++	}
++
++	public Repository getFamixRepo() {
++		return famixRepo;
++	}
++
++	public void setFamixRepo(Repository famixRepo) {
++		this.famixRepo = famixRepo;
++	}
++
++}
+\ No newline at end of file

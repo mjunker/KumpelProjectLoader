@@ -1,0 +1,2512 @@
+Index: verveine.extractor.java/memusage.txt
+===================================================================
+--- verveine.extractor.java/memusage.txt	(revision 108)
++++ verveine.extractor.java/memusage.txt	(revision 109)
+@@ -1,54 +0,0 @@
+-
+-memory usage for Eclipse 3.1
+-$ time ./verveinej3_1.sh 2> toto.log >&2
+-$ time ./verveinej-mono-3_1.sh 2> toto.log >&2
+-
+-120.51user 3.31system 2:25.05elapsed 85%CPU 
+-(0avgtext+0avgdata 9.646.080maxresident)k
+-292144inputs+221248outputs (2356major+700607minor)pagefaults 0swaps
+-8522 toto.log
+-
+-120.79user 2.95system 1:53.51elapsed 109%CPU 
+-(0avgtext+0avgdata 9.175.040maxresident)k
+-142416inputs+220976outputs (87major+622960minor)pagefaults 0swaps
+-8522 toto.log
+-3.340.182 output.mse
+-
+-112.33user 4.35system 1:40.17elapsed 116%CPU 
+-(0avgtext+0avgdata 9.777.152maxresident)k
+-68760inputs+221504outputs (190major+682907minor)pagefaults 0swaps
+-
+-$ for i in `grep FAMIX output.mse | sed -e 's/ (id:.*//' | sed -e 's/^        (//' | sort -u`; do echo -n "$i   "; grep -c $i output.mse ; done
+-FAMIX.Access   60984
+-FAMIX.Attribute   27473
+-FAMIX.CaughtException   3690
+-FAMIX.Class   7906
+-FAMIX.Comment   37000
+-FAMIX.DeclaredException   3848
+-FAMIX.FileAnchor   124493
+-FAMIX.ImplicitVariable   4996
+-FAMIX.Inheritance   7136
+-FAMIX.Invocation   169940
+-FAMIX.LocalVariable   37753
+-FAMIX.Method   53602
+-FAMIX.Namespace   377
+-FAMIX.Parameter   52480
+-FAMIX.PrimitiveType   9
+-FAMIX.Reference   30799
+-FAMIX.ThrownException   2414
+-FAMIX.UnknownVariable   23090
+-FAMIX   647990
+-
+-$ grep -c 'null binding' toto.log 
+-8413
+-
+-
+-=======================================
+-SEPARATE
+-
+-2041.59user 115.58system 27:47.42elapsed 129%CPU 
+-(0avgtext+0avgdata 7.086.080maxresident)k
+-135200inputs+6149832outputs (110major+16978083minor)pagefaults 0swaps
+-
+-
+-FAMIX.Attribute   27520
+Index: verveine.extractor.java/.classpath
+===================================================================
+--- verveine.extractor.java/.classpath	(revision 108)
++++ verveine.extractor.java/.classpath	(revision 109)
+@@ -2,11 +2,6 @@
+ <classpath>
+ 	<classpathentry kind="src" path="src"/>
+ 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
+-	<classpathentry kind="lib" path="lib/org.eclipse.jdt.core_3.6.0.v_A58.jar" sourcepath="/org.eclipse.jdt.core/dom">
+-		<attributes>
+-			<attribute name="javadoc_location" value="jar:file:/usr/local/share/eclipse-3_6/plugins/isv-3.2.1-r321_v20060907.jar!/reference/api"/>
+-		</attributes>
+-	</classpathentry>
+ 	<classpathentry kind="lib" path="lib/org.eclipse.core.runtime_3.6.0.v20100505.jar"/>
+ 	<classpathentry kind="lib" path="lib/org.eclipse.core.resources_3.6.0.v20100526-0737.jar"/>
+ 	<classpathentry kind="lib" path="lib/org.eclipse.core.jobs_3.5.0.v20100515.jar"/>
+@@ -14,8 +9,10 @@
+ 	<classpathentry kind="lib" path="lib/org.eclipse.osgi_3.6.0.v20100517.jar"/>
+ 	<classpathentry kind="lib" path="lib/org.eclipse.equinox.common_3.6.0.v20100503.jar"/>
+ 	<classpathentry kind="lib" path="lib/org.eclipse.equinox.preferences_3.3.0.v20100503.jar"/>
+-	<classpathentry kind="lib" path="lib/fame.jar" sourcepath="/Fame/src"/>
+-	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
++	<classpathentry kind="lib" path="lib/fame.jar" sourcepath="/Fame/"/>
+ 	<classpathentry combineaccessrules="false" kind="src" path="/verveine.core"/>
++	<classpathentry kind="lib" path="lib/org.hamcrest.core_1.1.0.v20090501071000.jar"/>
++	<classpathentry kind="lib" path="lib/junit.jar"/>
++	<classpathentry combineaccessrules="false" kind="src" path="/org.eclipse.jdt.core"/>
+ 	<classpathentry kind="output" path="bin"/>
+ </classpath>
+Index: verveine.extractor.java/lib/famix.jar
+===================================================================
+Cannot display: file marked as a binary type.
+svn:mime-type = application/octet-stream
+Index: verveine.extractor.java/lib/junit.jar
+===================================================================
+Cannot display: file marked as a binary type.
+svn:mime-type = application/octet-stream
+
+Property changes on: verveine.extractor.java/lib/junit.jar
+___________________________________________________________________
+Added: svn:mime-type
+   + application/octet-stream
+
+Index: verveine.extractor.java/lib/verveine.core.jar
+===================================================================
+Cannot display: file marked as a binary type.
+svn:mime-type = application/octet-stream
+Index: verveine.extractor.java/lib/org.hamcrest.core_1.1.0.v20090501071000.jar
+===================================================================
+Cannot display: file marked as a binary type.
+svn:mime-type = application/octet-stream
+
+Property changes on: verveine.extractor.java/lib/org.hamcrest.core_1.1.0.v20090501071000.jar
+___________________________________________________________________
+Added: svn:mime-type
+   + application/octet-stream
+
+Index: verveine.extractor.java/test_src/ad_hoc/Client.java
+===================================================================
+--- verveine.extractor.java/test_src/ad_hoc/Client.java	(revision 108)
++++ verveine.extractor.java/test_src/ad_hoc/Client.java	(revision 109)
+@@ -1,70 +0,0 @@
+-package OMGL2;
+-import java.io.BufferedReader;
+-import java.io.IOException;
+-
+-
+-@Override
+-@Deprecated
+-public class Client {
+-	
+-	@Override
+-	@Deprecated
+-	private String num;
+-	@Deprecated
+-	private String nom;
+-
+-	@Deprecated
+-	public Client(String num, String nom) {
+-		this.setNum(num);
+-		this.setNom(nom);
+-	}
+-	
+-	@Override
+-	@Deprecated
+-	public static Client lire(BufferedReader in) throws ReadException {
+-		String nom = "";
+-		String num = "";
+-		char c = ' ';
+-		
+-		try {
+-			for (int i=0; (i<5) && in.ready(); i++) {
+-				c = (char)in.read();
+-				num += c;
+-			}
+-			while ( in.ready() && (c != '.')) {
+-				c = (char)in.read();
+-				if (c != '.') {
+-					nom += c;
+-				}
+-			}
+-		} catch (IOException e) {
+-			throw new ReadException();
+-			return null;
+-		}
+-		
+-		return new Client(num, nom);
+-		
+-	}
+-	
+-	public String toString() {
+-		return "client: ["+getNum()+"] "+getNom();
+-	}
+-	
+-	@Override
+-	@Deprecated
+-	public void setNum(String num) {
+-		this.num = num;
+-	}
+-
+-	public String getNum() {
+-		return num;
+-	}
+-
+-	public void setNom(String nom) {
+-		this.nom = nom;
+-	}
+-
+-	public String getNom() {
+-		return nom;
+-	}
+-}
+Index: verveine.extractor.java/test_src/ad_hoc/Dictionary.java
+===================================================================
+--- verveine.extractor.java/test_src/ad_hoc/Dictionary.java	(revision 108)
++++ verveine.extractor.java/test_src/ad_hoc/Dictionary.java	(revision 109)
+@@ -1,42 +1,17 @@
+-package fr.inria.verveine.core;
++package ad_hoc;
+ 
+ import java.util.Collection;
+ import java.util.Hashtable;
+ import java.util.LinkedList;
+ import java.util.Map;
+ 
+-import ch.akuhn.fame.Repository;
+-
+-import fr.inria.verveine.core.gen.famix.Access;
+-import fr.inria.verveine.core.gen.famix.Association;
+-import fr.inria.verveine.core.gen.famix.Attribute;
+-import fr.inria.verveine.core.gen.famix.BehaviouralEntity;
+-import fr.inria.verveine.core.gen.famix.CaughtException;
+-import fr.inria.verveine.core.gen.famix.Comment;
+-import fr.inria.verveine.core.gen.famix.ContainerEntity;
+-import fr.inria.verveine.core.gen.famix.DeclaredException;
+-import fr.inria.verveine.core.gen.famix.Entity;
+-import fr.inria.verveine.core.gen.famix.ImplicitVariable;
+-import fr.inria.verveine.core.gen.famix.Inheritance;
+-import fr.inria.verveine.core.gen.famix.Invocation;
+-import fr.inria.verveine.core.gen.famix.LocalVariable;
+-import fr.inria.verveine.core.gen.famix.Method;
+-import fr.inria.verveine.core.gen.famix.NamedEntity;
+-import fr.inria.verveine.core.gen.famix.Namespace;
+-import fr.inria.verveine.core.gen.famix.Parameter;
+-import fr.inria.verveine.core.gen.famix.PrimitiveType;
+-import fr.inria.verveine.core.gen.famix.Reference;
+-import fr.inria.verveine.core.gen.famix.SourcedEntity;
+-import fr.inria.verveine.core.gen.famix.StructuralEntity;
+-import fr.inria.verveine.core.gen.famix.ThrownException;
+-
+ public class Dictionary<B> {
+ 
+ 	protected Map<B,NamedEntity> mapBind;
+ 
+ 	protected Map<String,Collection<NamedEntity>> mapName;
+ 
+-	protected Map<fr.inria.verveine.core.gen.famix.Class,ImplicitVars> mapImpVar;
++	protected Map<NamedEntity,ImplicitVars> mapImpVar;
+ 
+ 	protected class ImplicitVars {
+ 		public ImplicitVariable self_iv;
+@@ -53,10 +28,10 @@
+ 		
+ 		this.mapBind = new Hashtable<B,NamedEntity>();
+ 		this.mapName = new Hashtable<String,Collection<NamedEntity>>();
+-		this.mapImpVar = new Hashtable<fr.inria.verveine.core.gen.famix.Class,ImplicitVars>();
++		this.mapImpVar = new Hashtable<NamedEntity,ImplicitVars>();
+ 		
+ 		if (! this.famixRepo.isEmpty()) {
+-			recoverExistingRepository();
++			// nothing
+ 		}
+ 	}
+ 	
+@@ -141,3 +116,23 @@
+ 	}
+ 	
+ }
++
++class NamedEntity {
++	public boolean isInstance(NamedEntity obj) {
++		return false;
++	}
++	public void setName(String f) {
++	}
++	public void setIsStub(Boolean f) {
++	}
++}
++
++class Repository {
++	public boolean isEmtpy() {
++		return false;
++	}
++	public void add(NamedEntity f) {
++	}
++}
++
++}
+\ No newline at end of file
+Index: verveine.extractor.java/test_src/ad_hoc/Card.java
+===================================================================
+--- verveine.extractor.java/test_src/ad_hoc/Card.java	(revision 108)
++++ verveine.extractor.java/test_src/ad_hoc/Card.java	(revision 109)
+@@ -2,7 +2,7 @@
+ 
+ import java.util.ArrayList;
+ import java.util.List;
+-
++/*
+ public class Card {
+ 
+ 	public enum Suit { CLUBS, DIAMONDS, HEARTS, SPADES };
+@@ -37,4 +37,5 @@
+     public static ArrayList<Card> newDeck() {
+         return new ArrayList<Card>(protoDeck); // Return copy of prototype deck
+     }
++ */
+ }
+Index: verveine.extractor.java/test_src/ad_hoc/Element.java
+===================================================================
+--- verveine.extractor.java/test_src/ad_hoc/Element.java	(revision 108)
++++ verveine.extractor.java/test_src/ad_hoc/Element.java	(revision 109)
+@@ -16,14 +16,7 @@
+ //  along with 'Fame (for Java)'. If not, see <http://www.gnu.org/licenses/>.
+ //  
+ 
+-package ch.akuhn.fame.fm3;
+-
+-import ch.akuhn.fame.FameDescription;
+-import ch.akuhn.fame.FamePackage;
+-import ch.akuhn.fame.FameProperty;
+-import ch.akuhn.fame.Named;
+-import ch.akuhn.fame.Nested;
+-import ch.akuhn.fame.internal.Warnings;
++package ad_hoc;
+ 
+ /**
+  * Abstract superclass of MSE metamodel.
+@@ -50,7 +43,7 @@
+  */
+ @FamePackage("FM3")
+ @FameDescription("Element")
+-public abstract class Element implements Named, Nested {
++public abstract class Element {
+ 
+     private String name;
+ 
+@@ -83,7 +76,5 @@
+     public String toString() {
+         return this.getFullname();
+     }
+-    
+-    public abstract void checkConstraints(Warnings warnings);
+ 
+ }
+Index: verveine.extractor.java/test_src/ad_hoc/ReadClient.java
+===================================================================
+--- verveine.extractor.java/test_src/ad_hoc/ReadClient.java	(revision 0)
++++ verveine.extractor.java/test_src/ad_hoc/ReadClient.java	(revision 109)
+@@ -0,0 +1,71 @@
++package ad_hoc;
++
++import java.io.BufferedReader;
++import java.io.IOException;
++
++
++@Override
++@Deprecated
++public class Client {
++	
++	@Override
++	@Deprecated
++	private String num;
++	@Deprecated
++	private String nom;
++
++	@Deprecated
++	public Client(String num, String nom) {
++		this.setNum(num);
++		this.setNom(nom);
++	}
++	
++	@Override
++	@Deprecated
++	public static Client lire(BufferedReader in) throws ReadException {
++		String nom = "";
++		String num = "";
++		char c = ' ';
++		
++		try {
++			for (int i=0; (i<5) && in.ready(); i++) {
++				c = (char)in.read();
++				num += c;
++			}
++			while ( in.ready() && (c != '.')) {
++				c = (char)in.read();
++				if (c != '.') {
++					nom += c;
++				}
++			}
++		} catch (IOException e) {
++			throw new ReadException();
++			return null;
++		}
++		
++		return new Client(num, nom);
++		
++	}
++	
++	public String toString() {
++		return "client: ["+getNum()+"] "+getNom();
++	}
++	
++	@Override
++	@Deprecated
++	public void setNum(String num) {
++		this.num = num;
++	}
++
++	public String getNum() {
++		return num;
++	}
++
++	public void setNom(String nom) {
++		this.nom = nom;
++	}
++
++	public String getNom() {
++		return nom;
++	}
++}
+Index: verveine.extractor.java/test_src/ad_hoc/ReadException.java
+===================================================================
+--- verveine.extractor.java/test_src/ad_hoc/ReadException.java	(revision 108)
++++ verveine.extractor.java/test_src/ad_hoc/ReadException.java	(revision 109)
+@@ -1,4 +1,5 @@
+-package OMGL2;
++package ad_hoc;
++
+ public class ReadException extends Exception {
+ 
+ }
+Index: verveine.extractor.java/test_src/ad_hoc/FameProperty.java
+===================================================================
+--- verveine.extractor.java/test_src/ad_hoc/FameProperty.java	(revision 108)
++++ verveine.extractor.java/test_src/ad_hoc/FameProperty.java	(revision 109)
+@@ -16,7 +16,7 @@
+ //  along with 'Fame (for Java)'. If not, see <http://www.gnu.org/licenses/>.
+ //  
+ 
+-package ch.akuhn.fame;
++package ad_hoc;
+ 
+ import java.lang.annotation.ElementType;
+ import java.lang.annotation.Retention;
+@@ -29,7 +29,7 @@
+  * 
+  * @author akuhn
+  * 
+- */
++ * /
+ @Retention(RetentionPolicy.RUNTIME)
+ @Target( { ElementType.METHOD, ElementType.FIELD })
+ public @interface FameProperty {
+@@ -43,5 +43,5 @@
+     String opposite() default "";
+ 
+     Class<?> type() default Void.class;
+-
++*/
+ }
+Index: verveine.extractor.java/testrep/TEST-tests.fr.inria.verveine.extractor.java.VerveineJTest_LanModel.txt
+===================================================================
+--- verveine.extractor.java/testrep/TEST-tests.fr.inria.verveine.extractor.java.VerveineJTest_LanModel.txt	(revision 0)
++++ verveine.extractor.java/testrep/TEST-tests.fr.inria.verveine.extractor.java.VerveineJTest_LanModel.txt	(revision 109)
+@@ -0,0 +1,29 @@
++Testsuite: tests.fr.inria.verveine.extractor.java.VerveineJTest_LanModel
++Tests run: 16, Failures: 2, Errors: 0, Time elapsed: 10.845 sec
++
++Testcase: testEntitiesNumber took 2.874 sec
++	FAILED
++expected:<25> but was:<33>
++junit.framework.AssertionFailedError: expected:<25> but was:<33>
++	at tests.fr.inria.verveine.extractor.java.VerveineJTest_LanModel.testEntitiesNumber(Unknown Source)
++
++Testcase: testClassProperties took 0.933 sec
++Testcase: testNamedEntities took 0.883 sec
++Testcase: testInheritance took 0.632 sec
++Testcase: testMethodProperties took 0.802 sec
++Testcase: testFieldType took 0.753 sec
++Testcase: testStubs took 0.425 sec
++	FAILED
++expected:<9> but was:<17>
++junit.framework.AssertionFailedError: expected:<9> but was:<17>
++	at tests.fr.inria.verveine.extractor.java.VerveineJTest_LanModel.testStubs(Unknown Source)
++
++Testcase: testParameter took 0.41 sec
++Testcase: testImplicitVar took 0.399 sec
++Testcase: testInvocation took 0.393 sec
++Testcase: testAccess took 0.39 sec
++Testcase: testSourceAnchors took 0.395 sec
++Testcase: testModifiers took 0.393 sec
++Testcase: testComment took 0.383 sec
++Testcase: testMetric took 0.375 sec
++Testcase: testAnnotation took 0.376 sec
+Index: verveine.extractor.java/testrep/TEST-tests.fr.inria.verveine.extractor.java.VerveineJTest_AdHoc.txt
+===================================================================
+--- verveine.extractor.java/testrep/TEST-tests.fr.inria.verveine.extractor.java.VerveineJTest_AdHoc.txt	(revision 0)
++++ verveine.extractor.java/testrep/TEST-tests.fr.inria.verveine.extractor.java.VerveineJTest_AdHoc.txt	(revision 109)
+@@ -0,0 +1,43 @@
++Testsuite: tests.fr.inria.verveine.extractor.java.VerveineJTest_AdHoc
++Tests run: 8, Failures: 5, Errors: 0, Time elapsed: 3.495 sec
++------------- Standard Output ---------------
++dico type: Map
++dico type: Map
++dico type: ImplicitVars
++dico type: B
++dico type: Map
++------------- ---------------- ---------------
++
++Testcase: testExceptions took 1.638 sec
++Testcase: testAnnotation took 0.241 sec
++	FAILED
++expected:<1> but was:<0>
++junit.framework.AssertionFailedError: expected:<1> but was:<0>
++	at tests.fr.inria.verveine.extractor.java.VerveineJTest_AdHoc.testAnnotation(Unknown Source)
++
++Testcase: testParameterizableClass took 0.305 sec
++	FAILED
++expected:<6> but was:<5>
++junit.framework.AssertionFailedError: expected:<6> but was:<5>
++	at tests.fr.inria.verveine.extractor.java.VerveineJTest_AdHoc.testParameterizableClass(Unknown Source)
++
++Testcase: testParameterTypeAsType took 0.282 sec
++Testcase: testMethodParameterArgumentTypes took 0.28 sec
++	FAILED
++
++junit.framework.AssertionFailedError: 
++	at tests.fr.inria.verveine.extractor.java.VerveineJTest_AdHoc.testMethodParameterArgumentTypes(Unknown Source)
++
++Testcase: testMethodLocalVariableArgumentTypes took 0.237 sec
++	FAILED
++expected:<1> but was:<0>
++junit.framework.AssertionFailedError: expected:<1> but was:<0>
++	at tests.fr.inria.verveine.extractor.java.VerveineJTest_AdHoc.testMethodLocalVariableArgumentTypes(Unknown Source)
++
++Testcase: testMethodReturnArgumentTypes took 0.237 sec
++Testcase: testEnumDecl took 0.239 sec
++	FAILED
++
++junit.framework.AssertionFailedError: 
++	at tests.fr.inria.verveine.extractor.java.VerveineJTest_AdHoc.testEnumDecl(Unknown Source)
++
+Index: verveine.extractor.java/src/tests/fr/inria/verveine/extractor/java/VerveineJTest_LanModel.java
+===================================================================
+--- verveine.extractor.java/src/tests/fr/inria/verveine/extractor/java/VerveineJTest_LanModel.java	(revision 108)
++++ verveine.extractor.java/src/tests/fr/inria/verveine/extractor/java/VerveineJTest_LanModel.java	(revision 109)
+@@ -15,7 +15,6 @@
+ import java.io.File;
+ import java.util.Collection;
+ 
+-import org.junit.After;
+ import org.junit.Before;
+ import org.junit.Test;
+ 
+@@ -28,6 +27,7 @@
+ import fr.inria.verveine.core.gen.famix.BehaviouralEntity;
+ import fr.inria.verveine.core.gen.famix.Comment;
+ import fr.inria.verveine.core.gen.famix.FileAnchor;
++import fr.inria.verveine.core.gen.famix.ImplicitVariable;
+ import fr.inria.verveine.core.gen.famix.Inheritance;
+ import fr.inria.verveine.core.gen.famix.Invocation;
+ import fr.inria.verveine.core.gen.famix.LocalVariable;
+@@ -59,7 +59,8 @@
+ 	 */
+ 	@Before
+ 	public void setUp() throws Exception {
+-		/*String[] files = new String[] {
++		new File(VerveineJParser.OUTPUT_FILE).delete();
++		String[] files = new String[] {
+ 				"AbstractDestinationAddress.java",
+ 				"Node.java",
+ 				"Packet.java",
+@@ -71,14 +72,18 @@
+ 				"server/PrintServer.java"
+ 		};
+ 
++
+ 		// separate parsing of each source file --------
+ 		for (String f : files) {
+ 			parseFile(f);
+-		}*/
++		}
++
+ 		// or parsing the entire project in one pass ---
+-		VerveineJParser parser = new VerveineJParser();
+-		parser.compile(	new String[] {"test_src/LANModel/moose/lan/"});
++		/*VerveineJParser parser = new VerveineJParser();
+ 		repo = parser.getFamixRepo();
++		parser.setOptions(new String[] {"test_src/LANModel/"});
++		parser.parse();
++		parser.outputMSE();*/
+ 	}
+ 
+ 	/**
+@@ -86,40 +91,36 @@
+ 	 * The "separate parsing" mechanism should ensure that linkages are appropriately done
+ 	 * @param file -- name of the file to parse
+ 	 */
+-/*	private void parseFile(String file) {
++	private void parseFile(String file) {
+ 		String[] args = new String[] {
+ 				"-cp",
+-				"test_src/LANModel//moose/lan/",
++				"test_src/LANModel/",
+ 				"test_src/LANModel/moose/lan/"+file
+ 				};
+ 		
+ 		VerveineJParser parser = new VerveineJParser();
+-		parser.compile(args);
+-		repo = parser.getFamixRepo();
++		this.repo = parser.getFamixRepo();
++		parser.setOptions(args);
++		parser.parse();
+ 		
+ 		new File(VerveineJParser.OUTPUT_FILE).delete();  // delete old MSE file
+ 		parser.outputMSE();  // to create a new one
+ 	}
+-*/
+-	@After
+-	public void tearDown() {
+-		new File(VerveineJParser.OUTPUT_FILE).delete();
+-	}
+-	
++
+ 	@Test
+ 	public void testEntitiesNumber() {
+-		assertEquals(11+14, TestVerveineUtils.selectElementsOfType(repo,fr.inria.verveine.core.gen.famix.Class.class).size()); // 11 + {Object,String,StringBuffer,AbstractStringBuilder,PrintStream,FilterOutputStream,OutputStream,System,Comparable,Serializable,Flushable,Appendable,CharSequence,Closeable}
+-		assertEquals(3,     TestVerveineUtils.selectElementsOfType(repo,PrimitiveType.class).size());//int,boolean,void
+-		assertEquals(40+7,  TestVerveineUtils.selectElementsOfType(repo,Method.class).size());//40+{System.out.println(),System.out.println(...),System.out.print,StringBuffer.append,Object.equals,String.equals,Object.toString}
+-		assertEquals(10+1,  TestVerveineUtils.selectElementsOfType(repo,Attribute.class).size());//10+{System.out}
+-		assertEquals(2+4,   TestVerveineUtils.selectElementsOfType(repo,Namespace.class).size());//2+{moose,java.lang,java.io,java}
+-		assertEquals(26,    TestVerveineUtils.selectElementsOfType(repo,Parameter.class).size());
+-		assertEquals(54,    TestVerveineUtils.selectElementsOfType(repo,Invocation.class).size());//actually 54, missing 2 !!!!
+-		assertEquals(6+24,  TestVerveineUtils.selectElementsOfType(repo,Inheritance.class).size());//6 internal + 24 from imported packages/classes
+-		assertEquals(25,    TestVerveineUtils.selectElementsOfType(repo,Access.class).size());// 16 "internal" attributes + 9 System.out
+-		assertEquals(0,     TestVerveineUtils.selectElementsOfType(repo,LocalVariable.class).size());
+-		assertEquals(1,     TestVerveineUtils.selectElementsOfType(repo,AnnotationType.class).size()); //Override
+-		assertEquals(2,     TestVerveineUtils.selectElementsOfType(repo,AnnotationInstance.class).size()); //PrintServer.output, SingleDestinationAddress.isDestinationFor
++		assertEquals(11+14, TestVerveineUtils.selectElementsOfType(repo, fr.inria.verveine.core.gen.famix.Class.class).size()); // 11 + {Object,String,StringBuffer,AbstractStringBuilder,PrintStream,FilterOutputStream,OutputStream,System,Comparable,Serializable,Flushable,Appendable,CharSequence,Closeable}
++		assertEquals(3,     TestVerveineUtils.selectElementsOfType(repo, PrimitiveType.class).size());//int,boolean,void
++		assertEquals(40+7,  TestVerveineUtils.selectElementsOfType(repo, Method.class).size());//40+{System.out.println(),System.out.println(...),System.out.print,StringBuffer.append,Object.equals,String.equals,Object.toString}
++		assertEquals(10+1,  TestVerveineUtils.selectElementsOfType(repo, Attribute.class).size());//10+{System.out}
++		assertEquals(2+4,   TestVerveineUtils.selectElementsOfType(repo, Namespace.class).size());//2+{moose,java.lang,java.io,java}
++		assertEquals(26,    TestVerveineUtils.selectElementsOfType(repo, Parameter.class).size());
++		assertEquals(54,    TestVerveineUtils.selectElementsOfType(repo, Invocation.class).size());//actually 54, missing 2 !!!!
++		assertEquals(6+24,  TestVerveineUtils.selectElementsOfType(repo, Inheritance.class).size());//6 internal + 24 from imported packages/classes
++		assertEquals(25,    TestVerveineUtils.selectElementsOfType(repo, Access.class).size());// 16 "internal" attributes + 9 System.out
++		assertEquals(0,     TestVerveineUtils.selectElementsOfType(repo, LocalVariable.class).size());
++		assertEquals(1,     TestVerveineUtils.selectElementsOfType(repo, AnnotationType.class).size()); //Override
++		assertEquals(2,     TestVerveineUtils.selectElementsOfType(repo, AnnotationInstance.class).size()); //PrintServer.output, SingleDestinationAddress.isDestinationFor
+ 	}
+ 
+ 	@Test
+@@ -277,7 +278,7 @@
+ 		String javaLangName = JavaDictionary.OBJECT_PACKAGE_NAME.substring(JavaDictionary.OBJECT_PACKAGE_NAME.lastIndexOf('.')+1);
+ 		Namespace ns = TestVerveineUtils.detectElement(repo,Namespace.class, javaLangName);
+ 		assertNotNull(ns);
+-		assertEquals(8, ns.getTypes().size());  // Object,String,StringBuffer,AbstractStringBuilder,System,Comparable,Appendable,CharSequence
++		assertEquals(9, ns.getTypes().size());  // Object,String,StringBuffer,AbstractStringBuilder,System,Comparable,Comparable<String>,Appendable,CharSequence
+ 		assertTrue(ns.getIsStub());
+ 			
+ 		fr.inria.verveine.core.gen.famix.Class obj = TestVerveineUtils.detectElement(repo,fr.inria.verveine.core.gen.famix.Class.class, JavaDictionary.OBJECT_NAME);
+@@ -340,6 +341,43 @@
+ 	}
+ 
+ 	@Test
++	public void testImplicitVar() {
++		boolean testRan = false;
++		fr.inria.verveine.core.gen.famix.Class clazz = TestVerveineUtils.detectElement(repo, fr.inria.verveine.core.gen.famix.Class.class, "SingleDestinationAddress");
++		assertNotNull(clazz);
++		for (Method m : clazz.getMethods()) {
++			if (m.getName().equals("isDestinationFor" )) {
++				testRan = true;
++				assertEquals(1, m.getOutgoingInvocations().size());
++				Invocation invok = m.getOutgoingInvocations().iterator().next();
++				assertEquals(ImplicitVariable.class, invok.getReceiver().getClass());
++				ImplicitVariable iv = (ImplicitVariable) invok.getReceiver();
++				assertEquals("self", iv.getName());
++				assertSame(m, iv.getBelongsTo());
++			}
++		}
++		assertTrue("Test for SELF did not run, cause: SingleDestinationAddress.isDestinationFor() method not found", testRan);
++
++		testRan = false;
++		clazz = TestVerveineUtils.detectElement(repo, fr.inria.verveine.core.gen.famix.Class.class, "WorkStation");
++		assertNotNull(clazz);
++		for (Method m : clazz.getMethods()) {
++			if (m.getName().equals("name" )) {
++				testRan = true;
++				assertEquals(1, m.getOutgoingInvocations().size());
++				Invocation invok = m.getOutgoingInvocations().iterator().next();
++				assertEquals(ImplicitVariable.class, invok.getReceiver().getClass());
++				ImplicitVariable iv = (ImplicitVariable) invok.getReceiver();
++				assertEquals("super", iv.getName());
++				assertSame(m, iv.getBelongsTo());
++			}
++		}
++		assertTrue("Test for SELF did not run, cause: SingleDestinationAddress.isDestinationFor() method not found", testRan);
++
++	}
++
++
++	@Test
+ 	public void testInvocation() {
+ 		fr.inria.verveine.core.gen.famix.Class nodeClass = TestVerveineUtils.detectElement(repo,fr.inria.verveine.core.gen.famix.Class.class, "Node");
+ 		assertNotNull(nodeClass);
+@@ -413,6 +451,7 @@
+ 		}
+ 
+ 	}
++
+ 	
+ 	@Test
+ 	public void testAccess() {
+@@ -452,6 +491,7 @@
+ 		}
+ 	}
+ 
++
+ 	@Test
+ 	public void testSourceAnchors() {
+ 		SourceAnchor anc = null;
+@@ -463,7 +503,7 @@
+ 		assertNotNull(anc);
+ 		assertSame(clazz, anc.getElement());
+ 		assertSame(FileAnchor.class, anc.getClass());
+-		assertTrue("Wrong file source for class XPrinter", ((FileAnchor)anc).getFileName().equals("test_src/LANModel/moose/lan/server/PrintServer.java"));
++		assertEquals("test_src/LANModel/moose/lan/server/PrintServer.java", ((FileAnchor)anc).getFileName());
+ 		assertEquals(17, ((FileAnchor)anc).getStartLine());
+ 		assertEquals(31, ((FileAnchor)anc).getEndLine());
+ 
+@@ -502,6 +542,7 @@
+ 		
+ 	}
+ 
++
+ 	@Test
+ 	public void testModifiers() {
+ 		fr.inria.verveine.core.gen.famix.Class clazz = TestVerveineUtils.detectElement(repo,fr.inria.verveine.core.gen.famix.Class.class, "OutputServer");
+@@ -536,6 +577,7 @@
+ 		assertFalse(a.getIsFinal());
+ 	}
+ 
++
+ 	@Test
+ 	public void testComment() {	
+ 		fr.inria.verveine.core.gen.famix.Class clazz = TestVerveineUtils.detectElement(repo, fr.inria.verveine.core.gen.famix.Class.class, "SingleDestinationAddress");
+@@ -555,6 +597,7 @@
+ 		assertEquals(34, ((FileAnchor)anc).getEndLine());
+ 
+ 	}
++
+ 	
+ 	@Test
+ 	public void testMetric() {
+@@ -576,6 +619,7 @@
+ 			}
+ 		}		
+ 	}
++
+ 	
+ 	@Test
+ 	public void testAnnotation() {
+@@ -602,6 +646,7 @@
+ 		}
+ 		clazz = TestVerveineUtils.detectElement(repo,fr.inria.verveine.core.gen.famix.Class.class, "SingleDestinationAddress");
+ 		assertNotNull(clazz);
++		assertEquals(5, clazz.getMethods().size());
+ 		for (Method method : clazz.getMethods()) {
+ 			annInstances = method.getAnnotationInstances();
+ 			if (method.getName().equals("isDestinationFor")) {
+@@ -615,4 +660,5 @@
+ 			}
+ 		}	
+ 	}
++
+ }
+\ No newline at end of file
+Index: verveine.extractor.java/src/tests/fr/inria/verveine/extractor/java/VerveineJTest_AdHoc.java
+===================================================================
+--- verveine.extractor.java/src/tests/fr/inria/verveine/extractor/java/VerveineJTest_AdHoc.java	(revision 108)
++++ verveine.extractor.java/src/tests/fr/inria/verveine/extractor/java/VerveineJTest_AdHoc.java	(revision 109)
+@@ -10,9 +10,9 @@
+ import static org.junit.Assert.assertTrue;
+ 
+ import java.io.File;
++import java.io.FileWriter;
+ import java.util.Collection;
+ 
+-import org.junit.After;
+ import org.junit.Before;
+ import org.junit.Test;
+ 
+@@ -46,32 +46,24 @@
+ 
+ 	private Repository repo;
+ 
+-	public VerveineJTest_AdHoc() {
+-		// make sure we don't have any pre-existing mse lying in the way
+-		new File(VerveineJParser.OUTPUT_FILE).delete();
+-	}
+-	
+-
+ 	/**
+ 	 * @throws java.lang.Exception
+ 	 */
+ 	@Before
+ 	public void setUp() throws Exception {
++		new File(VerveineJParser.OUTPUT_FILE).delete();
+ 		VerveineJParser parser = new VerveineJParser();
+-		parser.compile(new String[] {"test_src/ad_hoc"});
+-		repo = parser.getFamixRepo();
++		this.repo = parser.getFamixRepo();
++		parser.setOptions(new String[] {"test_src/ad_hoc"});
++		parser.parse();
++		repo.exportMSE(new FileWriter(VerveineJParser.OUTPUT_FILE));
+ 	}
+ 
+-	@After
+-	public void tearDown() {
+-		new File(VerveineJParser.OUTPUT_FILE).delete();
+-	}
+-	
+ 	@Test
+ 	public void testExceptions() {
+ 		Method meth = TestVerveineUtils.detectElement(repo, Method.class, "lire");
+ 		assertNotNull(meth);
+-		
++
+ 		fr.inria.verveine.core.gen.famix.Class excepClass = TestVerveineUtils.detectElement(repo, fr.inria.verveine.core.gen.famix.Class.class, "ReadException");
+ 		assertNotNull(excepClass);
+ 
+@@ -79,7 +71,7 @@
+ 		DeclaredException exD = meth.getDeclaredExceptions().iterator().next();
+ 		assertSame(meth, exD.getDefiningMethod());
+ 		assertSame(excepClass, exD.getExceptionClass());
+-		
++
+ 		assertEquals(1, meth.getThrownExceptions().size());
+ 		ThrownException exT = meth.getThrownExceptions().iterator().next();
+ 		assertSame(meth, exT.getDefiningMethod());
+@@ -169,19 +161,27 @@
+ 	}
+ 
+ 	@Test
+-	public void testClassParameterTypes() {
+-		ParameterizableClass dicoClass = TestVerveineUtils.detectElement(repo, ParameterizableClass.class, "Dictionary");
+-		assertNotNull(dicoClass);
+-		assertEquals("Dictionary", dicoClass.getName());
+-		assertEquals(2, dicoClass.getTypes().size());
+-		assertEquals(1, dicoClass.getParameters().size());
++	public void testParameterizableClass() {
++		ParameterizableClass dico = TestVerveineUtils.detectElement(repo, ParameterizableClass.class, "Dictionary");
++		assertNotNull(dico);
++		for (Type t : dico.getTypes()) {
++			System.out.println("dico type: "+t.getName());
++		}
++		assertEquals("Dictionary", dico.getName());
++		assertEquals(6, dico.getTypes().size());  // <B> , ImplicitVars , Map<B,NamedEntity> , Map<String,Collection<NamedEntity>> , Collection<NamedEntity> , Map<Class,ImplicitVars>
++		assertEquals(1, dico.getParameters().size());
+ 		
+ 		ParameterType dicoParam = TestVerveineUtils.detectElement(repo, ParameterType.class, "B");
+ 		assertNotNull(dicoParam);
+ 		assertEquals("B", dicoParam.getName());
+ 		
+-		assertSame(dicoClass, dicoParam.getContainer());
+-		assertSame(dicoParam, dicoClass.getParameters().iterator().next());
++		assertSame(dico, dicoParam.getContainer());
++		assertSame(dicoParam, dico.getParameters().iterator().next());
++
++		/* Collection<Object> is not seen as parameterizable by JDT 		 */
++		 ParameterizableClass collec = TestVerveineUtils.detectElement(repo, ParameterizableClass.class, "Collection");
++		 assertNotNull(collec);
++
+ 	}
+ 
+ 	@Test
+@@ -206,17 +206,6 @@
+ 	}
+ 	
+ 	@Test
+-	public void testFieldArgumentTypes() {
+-		Attribute famixAtt = TestVerveineUtils.detectElement(repo, Attribute.class, "mapBind");
+-		assertNotNull(famixAtt);
+-		assertEquals("mapBind", famixAtt.getName());
+-		//assertEquals(2, famixAtt.getDeclaredArgumentTypes().size());
+-		//Iterator<Type> it = famixAtt.getDeclaredArgumentTypes().iterator();
+-		//assertSame(TestVerveineUtils.detectElement(repo, Type.class, "B"), it.next());
+-		//assertSame(TestVerveineUtils.detectElement(repo, Type.class, "NamedEntity"), it.next());
+-	}
+-	
+-	@Test
+ 	public void testMethodParameterArgumentTypes() {
+ 		Method fmxMethod = TestVerveineUtils.detectElement(repo, Method.class, "getEntityByName");
+ 		assertNotNull(fmxMethod);
+@@ -321,8 +310,7 @@
+ 			}
+ 		}
+ 	}
+-	
+-	
++
+ 	@Test
+ 	public void testMethodReturnArgumentTypes() {
+ 		Method fmxMethod = TestVerveineUtils.detectElement(repo, Method.class, "getEntityByName");
+Index: verveine.extractor.java/src/fr/inria/verveine/extractor/java/VerveineRefVisitor.java
+===================================================================
+--- verveine.extractor.java/src/fr/inria/verveine/extractor/java/VerveineRefVisitor.java	(revision 108)
++++ verveine.extractor.java/src/fr/inria/verveine/extractor/java/VerveineRefVisitor.java	(revision 109)
+@@ -73,15 +73,24 @@
+ 	// VISITOR METHODS
+ 
+ 	public boolean visit(CompilationUnit node) {
++//		System.err.println("TRACE, RefVisiting CompilationUnit");
++
+ 		PackageDeclaration pckg = node.getPackage();
++		Namespace fmx = null;
+ 		if (pckg==null) {
+-			this.context.pushPckg( dico.ensureFamixNamespaceDefault() );
++			 fmx = dico.ensureFamixNamespaceDefault();
+ 		}
+ 		else {
+-			this.context.pushPckg( (Namespace)dico.getEntityByKey(pckg.resolveBinding()) );
++			fmx = (Namespace)dico.getEntityByKey(pckg.resolveBinding());
+ 		}
+-		return super.visit(node);
+-
++		if (pckg != null) {
++			this.context.pushPckg(fmx);
++			return super.visit(node);
++		}
++		else {
++			this.context.pushPckg(null);
++			return false;
++		}
+ 	}
+ 
+ 	public void endVisit(CompilationUnit node) {
+@@ -114,19 +123,26 @@
+ 			importName = dico.removeLastName(importName);
+ 		}
+ 		Namespace fmxDest = dico.ensureFamixNamespace( (IPackageBinding)importBnd, importName);
+-		context.setLastReference( dico.createFamixReference(fmxSrc, fmxDest, context.getLastReference()) );
++		context.setLastReference( dico.ensureFamixReference(fmxSrc, fmxDest, context.getLastReference()) );
+ 		
+ 		return super.visit(node);
+ 	}
+ 
+ 	public boolean visit(TypeDeclaration node) {
++//		System.err.println("TRACE, RefVisiting TypeDeclaration: "+node.getName().getIdentifier());
+ 		ITypeBinding bnd = node.resolveBinding();
+ 		fr.inria.verveine.core.gen.famix.Class fmx = (fr.inria.verveine.core.gen.famix.Class)dico.getEntityByKey(bnd);
+-		this.context.pushClass(fmx );
++		if (fmx != null) {
++			this.context.pushClass(fmx );
+ 
+-		dico.addFamixAnnotationInstances(bnd, fmx);
++			dico.addFamixAnnotationInstances(bnd, fmx);
+ 
+-		return super.visit(node);
++			return super.visit(node);
++		}
++		else {
++			this.context.pushClass(null);
++			return false;
++		}
+ 	}
+ 
+ 	public void endVisit(TypeDeclaration node) {
+@@ -135,15 +151,24 @@
+ 	}
+ 
+ 	public boolean visit(ClassInstanceCreation node) {
++//		System.err.println("TRACE, RefVisiting ClassInstanceCreation");
+ 		AnonymousClassDeclaration decl = node.getAnonymousClassDeclaration(); 
+ 		if (decl != null) {
+ 			ITypeBinding bnd = decl.resolveBinding();
+ 			fr.inria.verveine.core.gen.famix.Class fmx = (fr.inria.verveine.core.gen.famix.Class)dico.getEntityByKey(bnd); 
+-			this.context.pushClass(fmx);
+-
+-			dico.addFamixAnnotationInstances(bnd, fmx);
++			if (fmx != null) {
++				this.context.pushClass(fmx);
++				dico.addFamixAnnotationInstances(bnd, fmx);
++				return super.visit(node);
++			}
++			else {
++				this.context.pushClass(null );
++				return false;
++			}
+ 		}
+-		return super.visit(node);
++		else {// TODO appears to be a new: class reference
++			return super.visit(node);
++		}
+ 	}
+ 
+ 	public void endVisit(AnonymousClassDeclaration node) {
+@@ -153,6 +178,8 @@
+ 
+ 	@SuppressWarnings("unchecked")
+ 	public boolean visit(MethodDeclaration node) {
++//		System.err.println("TRACE, RefVisiting MethodDeclaration: "+node.getName().getIdentifier());
++
+ 		IMethodBinding bnd = node.resolveBinding();
+ 		Method meth = (Method) dico.getEntityByKey(bnd);
+ 
+@@ -165,12 +192,16 @@
+ 			for (Name excepName : (List<Name>)node.thrownExceptions()) {
+ 				fr.inria.verveine.core.gen.famix.Class excepFmx = this.dico.ensureFamixClass(excepName.resolveTypeBinding(), excepName.getFullyQualifiedName(), null);
+ 				if (excepFmx != null) {
+-					dico.createFamixDeclaredException(meth, excepFmx);
++					dico.ensureFamixDeclaredException(meth, excepFmx);
+ 				}
+ 			}
++			return super.visit(node);
++		}
++		else {
++			this.context.pushMethod(null);
++			return false;
+ 		}
+ 
+-		return super.visit(node);
+ 	}
+ 
+ 	public void endVisit(MethodDeclaration node) {
+@@ -180,7 +211,7 @@
+ 
+ 	@SuppressWarnings({ "unchecked" })
+ 	public boolean visit(FieldDeclaration node) {
+-//		System.err.println("TRACE, RefVisiting FieldDeclaration");
++//		System.err.println("TRACE, RefVisiting FieldDeclaration: ");
+ 		for (VariableDeclarationFragment vd : (List<VariableDeclarationFragment>)node.fragments()) {
+ 			IVariableBinding bnd = vd.resolveBinding();
+ 			Attribute fmx = (Attribute) dico.getEntityByKey(bnd);
+@@ -199,7 +230,7 @@
+ 
+ 	@SuppressWarnings({ "static-access" })
+ 	public boolean visit(SuperMethodInvocation node) {
+-		methodInvocation(node.resolveMethodBinding(), node.getName().getFullyQualifiedName(), this.dico.ensureFamixImplicitVariable(this.context.topClass(), dico.SUPER_NAME));
++		methodInvocation(node.resolveMethodBinding(), node.getName().getFullyQualifiedName(), this.dico.ensureFamixImplicitVariable(dico.SUPER_NAME, this.context.topClass(), context.top()));
+ 		return super.visit(node);
+ 	}
+ 
+@@ -212,19 +243,8 @@
+ 	private void methodInvocation(IMethodBinding calledBnd, String calledName, NamedEntity receiver) {
+ 		BehaviouralEntity sender = this.context.topMethod();
+ 		if (sender != null) {
+-			Method invoked = this.dico.ensureFamixMethod(calledBnd, calledName, (Collection<org.eclipse.jdt.core.dom.Type>)null, null, null);  // cast needed to desambiguate the call
+-			/* TODO old code, may not be valid anymore ...
+-			   if (invoked == null) {
+-				if (receiver != null && receiver.getName().equals("self")) {
+-					receiver = this.context.topClass();
+-				}
+-				invoked = this.dico.ensureFamixMethod(calledName, receiver, list);
+-				//invoked = this.dico.ensureFamixStubMethod(name);
+-			}
+-			if (invoked == null) {
+-				invoked = this.dico.ensureFamixStubMethod(calledName);
+-			}*/
+-			context.setLastInvocation( dico.createFamixInvocation(sender, invoked, receiver, context.getLastInvocation()) );
++			Method invoked = this.dico.ensureFamixMethod(calledBnd, calledName, (Collection<org.eclipse.jdt.core.dom.Type>)null, /*retType*/null, /*owner*/null);  // cast needed to desambiguate the call
++			context.setLastInvocation( dico.ensureFamixInvocation(sender, invoked, receiver, context.getLastInvocation()) );
+ 		}
+ 	}
+ 
+@@ -258,7 +278,7 @@
+ 				excepFmx = this.dico.ensureFamixClass(excepClass.resolveBinding(), ((QualifiedType) excepClass).getName().getIdentifier(), null);
+ 			}
+ 			if (excepFmx != null) {
+-				dico.createFamixCaughtException(meth, excepFmx);
++				dico.ensureFamixCaughtException(meth, excepFmx);
+ 			}
+ 		}
+ 
+@@ -270,7 +290,7 @@
+ 		Method meth = this.context.topMethod();
+ 		fr.inria.verveine.core.gen.famix.Class excepFmx = this.dico.ensureFamixClass(node.getExpression().resolveTypeBinding(), null, null);
+ 		if (excepFmx != null) {
+-			dico.createFamixThrownException(meth, excepFmx);
++			dico.ensureFamixThrownException(meth, excepFmx);
+ 		}
+ 		return super.visit(node);
+ 	}
+@@ -285,7 +305,7 @@
+ 	private NamedEntity getReceiver(Expression expr) {
+ 		// msg(), same as ThisExpression
+ 		if (expr == null) {
+-			return this.dico.ensureFamixImplicitVariable(this.context.topClass(), dico.SELF_NAME);
++			return this.dico.ensureFamixImplicitVariable(dico.SELF_NAME, this.context.topClass(), context.top());
+ 		}
+ 
+ 		// array[i].msg()
+@@ -359,12 +379,12 @@
+ 			if (bnd instanceof ITypeBinding) {
+ 				// msg() is a static method of Name
+ 				//TODO why returning a variable here? Should not it be the class itself?
+-				ret = dico.createFamixUnknownVariable( dico.ensureFamixType((ITypeBinding)bnd, null, null), bnd.getName());
++				ret = dico.ensureFamixUnknownVariable( dico.ensureFamixType((ITypeBinding)bnd, null, null, context.top()), bnd.getName());
+ 			}
+ 			else if (bnd instanceof IVariableBinding) {
+ 				String varName = ( ((Name)expr).isSimpleName() ? ((SimpleName)expr).getFullyQualifiedName() : ((QualifiedName)expr).getName().getIdentifier());
+ 				if ( ((IVariableBinding)bnd).isField() ) {
+-					ret = dico.ensureFamixAttribute(bnd, varName, null, null);
++					ret = dico.ensureFamixAttribute((IVariableBinding)bnd, varName, null, null);//TODO should be ensureAttribute
+ 				}
+ 				else if ( ((IVariableBinding)bnd).isParameter() ) {
+ 					ret = dico.ensureFamixParameter( (IVariableBinding)bnd, varName, null, context.topMethod());
+@@ -406,13 +426,13 @@
+ 		
+ 		// this.msg()
+ 		else if (expr instanceof ThisExpression) {
+-			return this.dico.ensureFamixImplicitVariable(this.context.topClass(), dico.SELF_NAME);
++			return this.dico.ensureFamixImplicitVariable(dico.SELF_NAME, this.context.topClass(), context.top());
+ 		}
+ 
+ 		// type.class.msg()
+ 		else if (expr instanceof TypeLiteral) {
+ 			// may be could specify: ensureFamixClass ??
+-			return dico.ensureFamixType( expr.resolveTypeBinding(), null, null);
++			return dico.ensureFamixType( expr.resolveTypeBinding(), null, null,  context.top());
+ 		}
+ 
+ 		// ... OTHER POSSIBLE EXPRESSIONS ?
+@@ -432,7 +452,7 @@
+ 		if (accessor != null) {
+ 			Attribute accessed = this.dico.ensureFamixAttribute(bnd, null, null, null);
+ 			if (accessed != null) {
+-				context.setLastAccess( dico.createFamixAccess(accessor, accessed, /*isWrite*/false, context.getLastAccess()) );
++				context.setLastAccess( dico.ensureFamixAccess(accessor, accessed, /*isWrite*/false, context.getLastAccess()) );
+ 				if ( (accessed.getParentType() == null) && (accessed.getName().equals("length")) ) {
+ 					accessed.setParentType(dico.ensureFamixClassArray());
+ 				}
+Index: verveine.extractor.java/src/fr/inria/verveine/extractor/java/VerveineDefVisitor.java
+===================================================================
+--- verveine.extractor.java/src/fr/inria/verveine/extractor/java/VerveineDefVisitor.java	(revision 108)
++++ verveine.extractor.java/src/fr/inria/verveine/extractor/java/VerveineDefVisitor.java	(revision 109)
+@@ -23,10 +23,12 @@
+ import org.eclipse.jdt.core.dom.ForStatement;
+ import org.eclipse.jdt.core.dom.IMethodBinding;
+ import org.eclipse.jdt.core.dom.ITypeBinding;
++import org.eclipse.jdt.core.dom.IVariableBinding;
+ import org.eclipse.jdt.core.dom.IfStatement;
+ import org.eclipse.jdt.core.dom.MethodDeclaration;
+ import org.eclipse.jdt.core.dom.MethodInvocation;
+ import org.eclipse.jdt.core.dom.PackageDeclaration;
++import org.eclipse.jdt.core.dom.ParameterizedType;
+ import org.eclipse.jdt.core.dom.ReturnStatement;
+ import org.eclipse.jdt.core.dom.SingleVariableDeclaration;
+ import org.eclipse.jdt.core.dom.SuperConstructorInvocation;
+@@ -38,6 +40,8 @@
+ import org.eclipse.jdt.core.dom.TryStatement;
+ import org.eclipse.jdt.core.dom.Type;
+ import org.eclipse.jdt.core.dom.TypeDeclaration;
++import org.eclipse.jdt.core.dom.TypeParameter;
++import org.eclipse.jdt.core.dom.VariableDeclaration;
+ import org.eclipse.jdt.core.dom.VariableDeclarationExpression;
+ import org.eclipse.jdt.core.dom.VariableDeclarationFragment;
+ import org.eclipse.jdt.core.dom.VariableDeclarationStatement;
+@@ -47,11 +51,16 @@
+ import fr.inria.verveine.core.gen.famix.AnnotationType;
+ import fr.inria.verveine.core.gen.famix.AnnotationTypeAttribute;
+ import fr.inria.verveine.core.gen.famix.Attribute;
++import fr.inria.verveine.core.gen.famix.Class;
++import fr.inria.verveine.core.gen.famix.ContainerEntity;
+ import fr.inria.verveine.core.gen.famix.EnumValue;
+ import fr.inria.verveine.core.gen.famix.LocalVariable;
+ import fr.inria.verveine.core.gen.famix.Method;
+ import fr.inria.verveine.core.gen.famix.Namespace;
+ import fr.inria.verveine.core.gen.famix.Parameter;
++import fr.inria.verveine.core.gen.famix.ParameterType;
++import fr.inria.verveine.core.gen.famix.ParameterizableClass;
++import fr.inria.verveine.core.gen.famix.StructuralEntity;
+ 
+ /**
+  * AST Visitor that defines all the (Famix) entities of interest
+@@ -77,7 +86,7 @@
+ 	// VISITOR METHODS
+ 
+ 	public boolean visit(CompilationUnit node) {
+-//		System.err.println("TRACE, DefVisiting CompilationUnit");
++//		System.err.println("TRACE, DefVisiting CompilationUnit: "+node.getProperty(dico.SOURCE_FILENAME_PROPERTY));
+ 		Namespace fmx = null;
+ 		PackageDeclaration pckg = node.getPackage();
+ 		if (pckg==null) {
+@@ -87,9 +96,14 @@
+ 			fmx = dico.ensureFamixNamespace(pckg.resolveBinding(), pckg.getName().getFullyQualifiedName());
+ 			fmx.setIsStub(false);
+ 		}
+-		this.context.pushPckg(fmx);
+-		return super.visit(node);
+ 
++		if (pckg != null) {
++			return super.visit(node);
++		}
++		else {
++			this.context.pushPckg(null);
++			return false;
++		}
+ 	}
+ 
+ 	public void endVisit(CompilationUnit node) {
+@@ -98,21 +112,34 @@
+ 	}
+ 
+ 	public boolean visit(TypeDeclaration node) {
+-		//System.err.println("TRACE, DefVisiting TypeDeclaration: "+node.getName().getIdentifier());
++		// Can only be a class or interface declaration
++
++//		System.err.println("TRACE, DefVisiting TypeDeclaration: "+node.getName().getIdentifier());
+ 		ITypeBinding bnd = node.resolveBinding();
+-		fr.inria.verveine.core.gen.famix.Class fmx = dico.ensureFamixClass(bnd, node.getName().getIdentifier(), context.top());
++		@SuppressWarnings("unchecked")
++		List<TypeParameter> tparams = node.typeParameters();
++		fr.inria.verveine.core.gen.famix.Class fmx = (Class) dico.ensureFamixType(bnd, /*name*/node.getName().getIdentifier(), /*owner*/context.top(), /*ctxt*/context.top());
+ 		if (fmx != null) {
+ 			fmx.setIsStub(false);
+ 
+ 			this.context.pushClass(fmx);
+ 
+ 			dico.addSourceAnchor(fmx, node);
+-			dico.createFamixComment(node.getJavadoc(), fmx);
++			dico.ensureFamixComment(node.getJavadoc(), fmx);
++			
++			for (TypeParameter tp : tparams) {
++				// if there is a type parameter, then fmx will be a Famix ParameterizableClass
++				ParameterType fmxParam = dico.ensureFamixParameterType( tp.resolveBinding(), tp.getName().getIdentifier(), (ParameterizableClass)fmx); // note: owner of the ParameterType is the ParameterizableClass
++				if (fmxParam != null) {
++					fmxParam.setIsStub(false);
++				}
++			}
++			return super.visit(node);
+ 		}
+-
+-		//TODO fmx.setParameterTypes(dico.ensureFamixTypesParameters(node.typeParameters()));
+-		
+-		return super.visit(node);
++		else {
++			this.context.pushClass(null);
++			return false;
++		}
+ 	}
+ 
+ 	public void endVisit(TypeDeclaration node) {
+@@ -121,56 +148,68 @@
+ 	}
+ 
+ 	public boolean visit(ClassInstanceCreation node) {
+-		//System.err.println("TRACE, DefVisiting ClassInstanceCreation");
++//		System.err.println("TRACE, DefVisiting ClassInstanceCreation");
+ 		fr.inria.verveine.core.gen.famix.Class fmx = null;
+ 		AnonymousClassDeclaration decl = node.getAnonymousClassDeclaration(); 
+ 		if (decl != null) {
+-			fmx = this.dico.ensureFamixClass(decl.resolveBinding(), null, context.top());
++			fmx = (Class) this.dico.ensureFamixType(decl.resolveBinding(), /*name*/"anonymous("+dico.findTypeName(node.getType())+")", /*owner*/context.top(), /*ctxt*/context.top());  //  isGeneric = false
+ 			if (fmx != null) {
+ 				fmx.setIsStub(false);
+-			}
+ 
+-			dico.addSourceAnchor(fmx, node);
++				dico.addSourceAnchor(fmx, node);
++				this.context.pushClass(fmx);
++				return super.visit(node);
++			}
++			else {
++				this.context.pushClass(null);
++				return false;
++			}
+ 		}
+-		this.context.pushClass(fmx);
+ 		return super.visit(node);
+ 	}
+ 
+ 	public void endVisit(ClassInstanceCreation node) {
+-		this.context.popClass();
++		if (node.getAnonymousClassDeclaration() != null) {
++			this.context.popClass();
++		}
+ 		super.endVisit(node);
+ 	}
+ 
+ 	public boolean visit(AnnotationTypeDeclaration node) {
+-		//System.err.println("TRACE, DefVisiting AnnotationTypeDeclaration: "+node.getName().getIdentifier());
++//		System.err.println("TRACE, DefVisiting AnnotationTypeDeclaration: "+node.getName().getIdentifier());
+ 		ITypeBinding bnd = node.resolveBinding();
+ 		AnnotationType fmx = dico.ensureFamixAnnotationType(bnd, node.getName().getIdentifier(), context.top());
+ 		if (fmx != null) {
+ 			fmx.setIsStub(Boolean.FALSE);
+ 			
+ 			context.pushAnnotationType(fmx);
++			return super.visit(node);
+ 		}
+-
+-		return super.visit(node);
++		else {
++			context.pushAnnotationType(null);
++			return false;
++		}
+ 	}
+ 
+-
+ 	public void endVisit(AnnotationTypeDeclaration node) {
+ 		this.context.popAnnotationType();
+ 		super.endVisit(node);
+ 	}
+ 
+ 	public boolean visit(AnnotationTypeMemberDeclaration node) {
+-		//System.err.println("TRACE, DefVisiting AnnotationTypeMemberDeclaration: "+node.getName().getIdentifier());
++//		System.err.println("TRACE, DefVisiting AnnotationTypeMemberDeclaration: "+node.getName().getIdentifier());
+ 		IMethodBinding bnd = node.resolveBinding();
+ 		AnnotationTypeAttribute fmx = dico.ensureFamixAnnotationTypeAttribute(bnd, node.getName().getIdentifier(), context.topAnnotationType());
+ 		if (fmx != null) {
+ 			fmx.setIsStub(false);
+ 			
+ 			context.pushAnnotationMember(fmx);
++			return super.visit(node);
+ 		}
+-
+-		return super.visit(node);
++		else {
++			context.pushAnnotationMember(null);
++			return false;
++		}
+ 	}
+ 
+ 	public void endVisit(AnnotationTypeMemberDeclaration node) {
+@@ -189,8 +228,11 @@
+ 				EnumValue ev = dico.ensureFamixEnumValue(ecst.resolveVariable(), ecst.getName().getIdentifier(), fmx);
+ 				ev.setIsStub(Boolean.FALSE);
+ 			}
++			return super.visit(node);
+ 		}
+-		return super.visit(node);
++		else {
++			return false;
++		}
+ 	}
+ 
+ 	@SuppressWarnings("unchecked")
+@@ -204,13 +246,20 @@
+ 		for (SingleVariableDeclaration param : (List<SingleVariableDeclaration>)node.parameters()) {
+ 				paramTypes.add(param.getType());
+ 		}
++
++		fr.inria.verveine.core.gen.famix.Type fmxTyp;
++		if (retTyp == null) {
++			fmxTyp = null;
++		}
++		else {
++			fmxTyp = dico.ensureFamixType(retTyp.resolveBinding(), dico.findTypeName(retTyp), /*owner*/null, context.top());
++		}
++
+ 		// creating/recovering it
+-		Method fmx = dico.ensureFamixMethod(bnd, node.getName().getIdentifier(), paramTypes,
+-											(retTyp == null) ? null : dico.ensureFamixType(retTyp.resolveBinding(), retTyp.toString(), null),
+-											context.topClass());
++		Method fmx = dico.ensureFamixMethod(bnd, node.getName().getIdentifier(), paramTypes, fmxTyp, context.topClass());
+ 		
+-		if (node.getReturnType2() != null && node.getReturnType2().isParameterizedType()) {
+-			//TODO fmx.setDeclaredArgumentTypes(dico.ensureFamixTypes(((ParameterizedType)node.getReturnType2()).typeArguments()));
++		if (retTyp != null && retTyp.isParameterizedType()) {
++			//TODO fmx.setDeclaredArgumentTypes(dico.ensureFamixTypes(((ParameterizedType)retTyp).typeArguments()));
+ 		}
+ 		
+ 		if (fmx != null) {
+@@ -222,82 +271,130 @@
+ 			}
+ 
+ 			dico.addSourceAnchor(fmx, node);
+-			dico.createFamixComment(node.getJavadoc(), fmx);
++			dico.ensureFamixComment(node.getJavadoc(), fmx);
+ 
+ 			// creating the method's parameters
++			List<VariableDeclaration> paramAsVarList;
+ 			for (SingleVariableDeclaration param : (List<SingleVariableDeclaration>)node.parameters()) {
+-				fr.inria.verveine.core.gen.famix.Type paramTyp = dico.ensureFamixType(param.getType().resolveBinding(), dico.findTypeName(param.getType()), null);
+-				Parameter fmxParam = dico.ensureFamixParameter(param.resolveBinding(), param.getName().getIdentifier(), paramTyp, fmx);
+-				if (fmxParam != null) {
+-					fmxParam.setIsStub(false);
+-				}
+-				if (param.getType().isParameterizedType()) {
+-					//TODO fmxParam.setDeclaredArgumentTypes(dico.ensureFamixTypes(((ParameterizedType)param.getType()).typeArguments()));
+-				}
++				// Note: method and ParamTyp bindings are null for ParameterType :-(
++				paramAsVarList = new ArrayList<VariableDeclaration>(1);
++				paramAsVarList.add(param);
++				visitVariablesDeclarations(node, param.getType(), paramAsVarList, context.topMethod());
+ 			}
++			return super.visit(node);
+ 		}
+-		return super.visit(node);	
++		else {
++			this.context.pushMethod(null);
++			return false;
++		}
+ 	}
+ 
+ 	public void endVisit(MethodDeclaration node) {
+-		int cyclo = context.getTopMethodCyclo();
+-		int nos = context.getTopMethodNOS();
++		int cyclo = 0;
++		int nos = 0;
++		if (context.topMethod() != null) {
++			cyclo = context.getTopMethodCyclo();
++			nos = context.getTopMethodNOS();
++		}
+ 		Method fmx = this.context.popMethod();
+-		fmx.setNOS(nos);
+-		fmx.setCyclo(cyclo);
++		if (fmx != null) {
++			fmx.setNOS(nos);
++			fmx.setCyclo(cyclo);
++		}
+ 		super.endVisit(node);
+ 	}
+-	
++
+ 	@SuppressWarnings({ "unchecked" })
+ 	public boolean visit(FieldDeclaration node) {
+ //		System.err.println("TRACE, DefVisiting FieldDeclaration");
+-		for (VariableDeclarationFragment vd : (List<VariableDeclarationFragment>)node.fragments()) {
+-			Attribute fmx = dico.ensureFamixAttribute(vd.resolveBinding(), vd.getName().getFullyQualifiedName(), dico.ensureFamixType(null, node.getType().toString(), null), context.topClass());
+-
+-			if (fmx != null) {
+-				fmx.setIsStub(false);
+-			}
+-			if (node.getType().isParameterizedType()) {
+-				//TODO fmx.setDeclaredArgumentTypes(dico.ensureFamixTypes(((ParameterizedType)node.getType()).typeArguments()));
+-			}
+ 
+-			dico.addSourceAnchor(fmx, node);
+-			dico.createFamixComment(node.getJavadoc(), fmx);
++		for (StructuralEntity att : visitVariablesDeclarations(node, node.getType(), (List<VariableDeclaration>)node.fragments(), context.topClass()) ) {
++			dico.addSourceAnchor(att, node);
++			dico.ensureFamixComment(node.getJavadoc(), att);
+ 		}
+ 		return super.visit(node);
+ 	}
+ 
+ 	@SuppressWarnings("unchecked")
+ 	public boolean visit(VariableDeclarationExpression node) {
+-		//System.err.println("TRACE, DefVisiting VariableDeclarationExpression");
+-		visitVariablesDeclarations(node, node.getType(), (List<VariableDeclarationFragment>)node.fragments());
++//		System.err.println("TRACE, DefVisiting VariableDeclarationExpression");
++
++		// we don't declare (local) variables that have a primitive type
++		// because we are assuming that the user is not interested in them 
++		if (! node.getType().isPrimitiveType()) {
++			for (StructuralEntity att : visitVariablesDeclarations(node, node.getType(), (List<VariableDeclaration>)node.fragments(), context.topMethod())) {
++				dico.addSourceAnchor(att, node);
++			}
++		}
++
+ 		return super.visit(node);
+ 	}
+ 
+ 	@SuppressWarnings("unchecked")
+ 	public boolean visit(VariableDeclarationStatement node) {
+-		//System.err.println("TRACE, DefVisiting VariableDeclarationStatement");
+-		visitVariablesDeclarations(node, node.getType(), (List<VariableDeclarationFragment>)node.fragments());
++//		System.err.println("TRACE, DefVisiting VariableDeclarationStatement");
++
++		// we don't declare (local) variables that have a primitive type
++		// because we are assuming that the user is not interested in them 
++		if (! node.getType().isPrimitiveType()) {
++			for (StructuralEntity att : visitVariablesDeclarations(node, node.getType(), (List<VariableDeclaration>)node.fragments(), context.topMethod())) {
++				dico.addSourceAnchor(att, node);
++			}
++		}
++
+ 		return super.visit(node);
+ 	}
+ 
+-	private void visitVariablesDeclarations(ASTNode node, Type nodeTyp, List<VariableDeclarationFragment> fragments) {
+-		// we don't declare (local) variables that have a primitive type
+-		// because we are assuming here that the user is not interested in them 
+-		if (nodeTyp.isPrimitiveType()) {
+-			return;
++	@SuppressWarnings("unchecked")
++	private Collection<StructuralEntity> visitVariablesDeclarations(ASTNode node, Type varTyp, List<VariableDeclaration> fragments, ContainerEntity ctxt) {
++		Collection<StructuralEntity> ret = new ArrayList<StructuralEntity>();
++
++		fr.inria.verveine.core.gen.famix.Type fmxTyp;
++		if (varTyp.isParameterizedType()) {
++			ITypeBinding parameterizedBnd = varTyp.resolveBinding();
++			ITypeBinding parameterizableBnd = (parameterizedBnd == null) ? null : parameterizedBnd.getErasure();
++			String tname = dico.findTypeName(varTyp);
++			ParameterizableClass tmpGeneric = null;
++			tmpGeneric = (ParameterizableClass) dico.ensureFamixClass(parameterizableBnd, tname, /*owner*/null, /*isGeneric*/true);
++
++			fmxTyp = dico.ensureFamixParameterizedType(parameterizedBnd, tname, tmpGeneric, /*owner*/ctxt);
++			for (Type targ : (List<Type>) ((ParameterizedType)varTyp).typeArguments()) {
++				fr.inria.verveine.core.gen.famix.Type fmxTArg = dico.ensureFamixType(targ.resolveBinding(), dico.findTypeName(targ), null, ctxt);
++				((fr.inria.verveine.core.gen.famix.ParameterizedType)fmxTyp).addArguments(fmxTArg);
++			}
++		}
++		else {
++			fmxTyp = dico.ensureFamixType(varTyp.resolveBinding(), dico.findTypeName(varTyp), /*owner*/null, ctxt);
+ 		}
++		for (VariableDeclaration vd : fragments) {
++			StructuralEntity fmx;
++			if (node instanceof MethodDeclaration) {
++				// creating the parameters of a method. In this case, 'fragment' is aList<SingleVariableDeclarationFragment> and 'varType' is null
++				fmx = dico.ensureFamixParameter(vd.resolveBinding(), vd.getName().getIdentifier(), fmxTyp, (Method)ctxt);
++			}
++			else if (node instanceof FieldDeclaration) {
++				// creating a class' field
++				fmx = dico.ensureFamixAttribute(vd.resolveBinding(), vd.getName().getIdentifier(), fmxTyp, (fr.inria.verveine.core.gen.famix.Class) ctxt);
++			}
++			else if (node instanceof VariableDeclarationExpression) {
++				// creating a method's local variable
++				fmx = dico.ensureFamixLocalVariable(vd.resolveBinding(), vd.getName().getIdentifier(), fmxTyp, (Method) ctxt);
++			}
++			else if (node instanceof VariableDeclarationExpression) {
++				// creating a method's local variable
++				fmx = dico.ensureFamixLocalVariable(vd.resolveBinding(), vd.getName().getIdentifier(), fmxTyp, (Method) ctxt);
++			}
++			else {
++				fmx = null;
++			}
+ 
+-		for (VariableDeclarationFragment vd : fragments) {
+-			LocalVariable fmx = dico.ensureFamixLocalVariable(vd.resolveBinding(), vd.getName().getIdentifier(), dico.ensureFamixType(null, nodeTyp.toString(), null), context.topMethod());
+ 			if (fmx != null) {
+ 				fmx.setIsStub(false);
+-				dico.addSourceAnchor(fmx, node);
+-			}
+-			if (nodeTyp.isParameterizedType()) {
+-				//TODO fmx.setDeclaredArgumentTypes(dico.ensureFamixTypes(((ParameterizedType)nodeTyp).typeArguments()));
++				ret.add(fmx);
+ 			}
+ 		}
++
++		return ret;
+ 	}
+ 
+ 	// METRICS: CYCLO, NOS
+Index: verveine.extractor.java/src/fr/inria/verveine/extractor/java/JavaDictionary.java
+===================================================================
+--- verveine.extractor.java/src/fr/inria/verveine/extractor/java/JavaDictionary.java	(revision 108)
++++ verveine.extractor.java/src/fr/inria/verveine/extractor/java/JavaDictionary.java	(revision 109)
+@@ -3,7 +3,6 @@
+ import java.util.ArrayList;
+ import java.util.Collection;
+ import java.util.LinkedList;
+-import java.util.List;
+ 
+ import org.eclipse.jdt.core.dom.ASTNode;
+ import org.eclipse.jdt.core.dom.ArrayType;
+@@ -18,7 +17,6 @@
+ import org.eclipse.jdt.core.dom.Modifier;
+ import org.eclipse.jdt.core.dom.QualifiedType;
+ import org.eclipse.jdt.core.dom.SimpleType;
+-import org.eclipse.jdt.core.dom.TypeParameter;
+ 
+ import ch.akuhn.fame.Repository;
+ import fr.inria.verveine.core.Dictionary;
+@@ -38,6 +36,9 @@
+ import fr.inria.verveine.core.gen.famix.NamedEntity;
+ import fr.inria.verveine.core.gen.famix.Namespace;
+ import fr.inria.verveine.core.gen.famix.Parameter;
++import fr.inria.verveine.core.gen.famix.ParameterType;
++import fr.inria.verveine.core.gen.famix.ParameterizableClass;
++import fr.inria.verveine.core.gen.famix.ParameterizedType;
+ import fr.inria.verveine.core.gen.famix.PrimitiveType;
+ import fr.inria.verveine.core.gen.famix.SourceAnchor;
+ import fr.inria.verveine.core.gen.famix.SourcedEntity;
+@@ -90,7 +91,7 @@
+ 			 * Because the preferred solution in Moose is to give their simple names to packages, they must be post-processed when
+ 			 * all is said and done. */
+ 			fmx = super.ensureFamixNamespace( bnd, name);
+-			parent = this.ensureFamixNamespace(null, removeLastName(name));
++			parent = ensureFamixNamespace(null, removeLastName(name));
+ 			// set the parentscope relationship
+ 			if ( (parent != null) && (fmx != null) && (fmx.getParentScope() == null)) {
+ 				parent.addChildScopes(fmx);
+@@ -100,39 +101,40 @@
+ 		return fmx;
+ 	}
+ 
+-	public Collection<Type> ensureFamixTypes(List<org.eclipse.jdt.core.dom.Type> types) {
+-		Collection<Type> fmxTypes = new ArrayList<Type>();
+-		
+-		Type fmxType = null;
+-		for (org.eclipse.jdt.core.dom.Type type : types) {
+-			ITypeBinding bnd = type.resolveBinding();
+-			if (bnd != null) {
+-				fmxType = ensureFamixType(bnd, findTypeName(type), null);
+-			} else {
+-				fmxType = ensureFamixUniqEntity(fr.inria.verveine.core.gen.famix.Class.class, null, type.toString());
+-			}
+-			fmxTypes.add(fmxType);
+-		}
+-		return fmxTypes;
+-	}
+-
+ 	/**
+ 	 * Recovers or creates a Famix Type (see also {@link Dictionary#ensureFamixType(Object, String, ContainerEntity)}
+ 	 */
+-	public Type ensureFamixType(ITypeBinding bnd, String name, ContainerEntity owner) {
++	public Type ensureFamixType(ITypeBinding bnd, String name, ContainerEntity owner, ContainerEntity ctxt) {
++		Type fmx = null;
+ 
+ 		if (bnd == null) {
+-			return super.ensureFamixType(null, name, owner);
++			if (name == null) {
++				return null;
++			}
++			fmx = searchTypeInContext(name, ctxt);
++			if (fmx != null) {
++				return fmx;
++			}
++
++			if ( (owner != null) && (owner instanceof ParameterizableClass) ) {
++				return ensureFamixParameterType(null, name, (ParameterizableClass) owner);
++			}
++			else {
++				return super.ensureFamixType(null, name, owner);
++			}
++		}
++
++		// bnd != null
++
++		fmx = (Type) getEntityByKey(bnd);
++		if (fmx != null) {
++			return fmx;
+ 		}
+ 
+ 		if (bnd.isArray()) {
+ 			bnd = bnd.getElementType();
+ 		}
+ 
+-		if (bnd.isClass() || bnd.isInterface()) {
+-			return this.ensureFamixClass(bnd, name, owner);
+-		}
+-		
+ 		if (bnd.isPrimitive()) {
+ 			return ensureFamixPrimitiveType(bnd, name);
+ 		}
+@@ -141,25 +143,236 @@
+ 			return ensureFamixEnum(bnd, name, owner);
+ 		}
+ 		
++		if (bnd.isTypeVariable() ) {
++			return ensureFamixParameterType(bnd, name, (ParameterizableClass) owner);
++		}
++
++		if (bnd.isRawType() || bnd.isGenericType()) {
++			return ensureFamixClass(bnd.getErasure(), name, owner, /*isGeneric*/true);
++		}
++
++		if (bnd.isParameterizedType()) {
++			return ensureFamixParameterizedType(bnd, name, /*generic*/null, owner);
++		}
++
++		// it seems wise to test isClass after isGenericType, isParameterizedType, ... ? 
++		if (bnd.isClass() || bnd.isInterface()) {
++			return ensureFamixClass(bnd, name, owner, /*isGeneric*/false);
++		}
++
++
+ 		return super.ensureFamixType(bnd, name, owner);
+ 	}
+-	
+-	public Collection<Type> ensureFamixTypesParameters(List<TypeParameter> types) {
+-		Collection<Type> fmxTypes = new ArrayList<Type>();
+-		Type fmxType = null;
++
++	/**
++	 * Returns a Famix Class associated with the ITypeBinding.
++	 * The Entity is created if it does not exist.<br>
++	 * Params: see {@link Dictionary#ensureFamixClass(Object, String, ContainerEntity)}.
++	 * @return the Famix Entity found or created. May return null if "bnd" is null or in case of a Famix error
++	 */
++	public fr.inria.verveine.core.gen.famix.Class ensureFamixClass(ITypeBinding bnd, String name, ContainerEntity owner, boolean isGeneric) {
++		fr.inria.verveine.core.gen.famix.Class fmx = null;
++
++		// if Binding is null, we can only rely on provided parameters, so lets do it now and return
++		if (bnd == null) {
++			if (name == null) {
++				return null;
++			}
++			if (owner == null) {
++				owner = ensureFamixNamespaceDefault();
++			}
++			
++			if (isGeneric) {
++				return super.ensureFamixParameterizableClass(null, name, owner);
++			}
++			else {
++				return super.ensureFamixClass(null, name, owner);
++			}
++		}
++
++		// --------------- some special cases
++		if (bnd.isArray()) {
++			bnd = bnd.getElementType();
++		}
++
++		if (bnd.isPrimitive()) {
++			// should have called ensureFamixPrimitiveType(bnd). Why are we here ?
++			return null;
++		}
++
++		fmx = (fr.inria.verveine.core.gen.famix.Class)getEntityByKey(bnd);	// to avoid useless computations if we can
++		if (fmx != null) {
++			return fmx;
++		}
++
++		// --------------- name
++		if (name == null) {
++			if (! bnd.isAnonymous()) {
++				name = bnd.getErasure().getName();  // for generics, will give the "core" type name, for naormal type, won't change anything
++			}
++			else { // anonymous class
++				if (bnd.getSuperclass() != null) {
++					name = bnd.getSuperclass().getName();
++				}
++				if ( (name == null) || name.equals(OBJECT_NAME)) {
++					ITypeBinding[] intfcs = bnd.getInterfaces();
++					if ( (intfcs != null) && (intfcs.length > 0) ) {
++						name = bnd.getInterfaces()[0].getName();
++					}
++					else {
++						name = "???";
++					}
++				}
++				name = "anonymous(" + name + ")";
++			}
++		}
++
++		if (name.equals(OBJECT_NAME)) {
++			return ensureFamixClassObject(bnd);
++		}
++
++		// --------------- owner
++		if (owner == null) {
++			IMethodBinding parentMtd = bnd.getDeclaringMethod();
++			if (parentMtd != null) {
++				owner = this.ensureFamixMethod(parentMtd, null, (Collection<org.eclipse.jdt.core.dom.Type>)null, null, null);  // cast needed to desambiguate the call
++			}
++			else {
++				ITypeBinding parentClass = bnd.getDeclaringClass();
++				if (parentClass != null) {
++					Type tmpOwn = this.ensureFamixType(parentClass, /*name*/null, /*owner*/null, /*ctxt*/null);
++					if (tmpOwn instanceof ParameterizedType) {
++						owner = ((ParameterizedType) tmpOwn).getParameterizableClass(); 
++					}
++					else {
++						owner = tmpOwn;
++					}
++				}
++				else {
++					IPackageBinding parentPckg = bnd.getPackage();
++					if (parentPckg != null) {
++						owner = this.ensureFamixNamespace(parentPckg, null);
++					}
++					else {
++						owner = this.ensureFamixNamespaceDefault();
++					}
++				}
++			}
++		}
++
++		// --------------- superclasses (including interfaces)
++		Collection<Type> sups = new LinkedList<Type>();
++		if (! bnd.isInterface()) {
++			ITypeBinding supbnd = bnd.getSuperclass();
++			if (supbnd != null) {
++				sups.add(ensureFamixType(supbnd, /*name*/null, /*owner*/null, /*ctxt*/null)); //supbnd.isGenericType()));
++			}
++			else {
++				sups.add( ensureFamixClassObject(null));
++			}
++		}
++		for (ITypeBinding intbnd : bnd.getInterfaces()) {
++			sups.add( ensureFamixType(intbnd, /*name*/null, /*owner*/null, /*ctxt*/owner));
++		}
++
++		// --------------- recover from name ?
++		for (Type candidate : this.getEntityByName(Type.class, name)) {
++			if ( checkAndMapClass(bnd, candidate) ) {
++				fmx = (Class) candidate;
++				break;
++			}
++		}
++		if (fmx == null) {
++			if (isGeneric) {
++				fmx = super.ensureFamixParameterizableClass(bnd, name, owner);
++			}
++			else {
++				fmx = super.ensureFamixClass(bnd, name, owner);
++			}
++		}
+ 		
+-		for (TypeParameter type : types) {
+-			ITypeBinding bnd = type.resolveBinding();
+-			if (bnd != null) {
+-				fmxType = ensureFamixType(bnd, null, null);
+-			} else {
+-				fmxType = ensureFamixUniqEntity(fr.inria.verveine.core.gen.famix.Class.class, null, type.toString());
++		if (fmx!=null) {
++			// we just created it or it was not bound, so we make sure it has the right information in it
++			fmx.setIsInterface(bnd.isInterface());
++			Inheritance lastInheritance = null;
++			for (Type sup : sups) {
++				lastInheritance = ensureFamixInheritance(sup, fmx, lastInheritance);
+ 			}
+-			fmxTypes.add(fmxType);
++			setNamedEntityModifiers(fmx, bnd.getDeclaredModifiers());
++			if (fmx.getIsAbstract()) {
++				// don't know why there must be two different ways to mark abstract classes !!! But this is a pain!
++				fmx.addModifiers("abstract");
++			}
+ 		}
+-		return fmxTypes;
+-	}
+ 	
++		return fmx;
++	}
++
++	public ParameterizedType ensureFamixParameterizedType(ITypeBinding bnd, String name, ParameterizableClass generic, ContainerEntity owner) {
++		ParameterizedType fmx = null;
++
++		// if Binding is null, we can only rely on provided parameters, so lets do it now and return
++		if (bnd == null) {
++			if (name == null) {
++				return null;
++			}
++			return super.ensureFamixParameterizedType(null, name, generic, owner);
++		}
++
++		// --------------- name
++		if (name == null) {
++			name = bnd.getName();
++		}
++
++		// --------------- owner
++		if (owner == null) {
++			IMethodBinding parentMtd = bnd.getDeclaringMethod();
++			if (parentMtd != null) {
++				owner = this.ensureFamixMethod(parentMtd, null, (Collection<org.eclipse.jdt.core.dom.Type>)null, null, null);  // cast needed to desambiguate the call
++			}
++			else {
++				ITypeBinding parentClass = bnd.getDeclaringClass();
++				if (parentClass != null) {
++					Type tmpOwn = this.ensureFamixType(parentClass, /*name*/null, /*owner*/null, /*ctxt*/null);
++					if (tmpOwn instanceof ParameterizedType) {
++						owner = ((ParameterizedType) tmpOwn).getParameterizableClass(); 
++					}
++					else {
++						owner = tmpOwn;
++					}
++				}
++				else {
++					IPackageBinding parentPckg = bnd.getPackage();
++					if (parentPckg != null) {
++						owner = this.ensureFamixNamespace(parentPckg, null);
++					}
++					else {
++						owner = this.ensureFamixNamespaceDefault();
++					}
++				}
++			}
++		}
++
++		// --------------- generic
++		if (generic == null) {
++			generic = (ParameterizableClass) ensureFamixClass(bnd.getErasure(), name, owner, /*isGeneric*/true);
++		}
++
++		// --------------- recover from name ?
++		for (ParameterizedType candidate : getEntityByName(ParameterizedType.class, name) ) {
++			if ( checkAndMapType(bnd, candidate) ) {
++				fmx = candidate;
++				break;
++			}
++		}
++
++		if (fmx == null) {
++			fmx = super.ensureFamixParameterizedType(bnd, name, generic, owner);
++		}
++
++		return fmx;
++	}
++
+ 	public PrimitiveType ensureFamixPrimitiveType(ITypeBinding bnd, String name) {
+ 		if (name == null) {
+ 			if (bnd == null) {
+@@ -365,6 +578,11 @@
+ 		return fmx;
+ 	}
+ 
++	/**
++	 * Adds possible annotation instances to a Famix NamedEntity with the given binding
++	 * @param bnd
++	 * @param fmx
++	 */
+ 	public void addFamixAnnotationInstances(IBinding bnd, NamedEntity fmx) {
+ 		for (IAnnotationBinding annBnd : bnd.getAnnotations()) {
+ 			AnnotationType annType = ensureFamixAnnotationType(annBnd.getAnnotationType(), null, null);
+@@ -378,14 +596,8 @@
+ 		}
+ 	}
+ 
+-	/**
+-	 * Returns a Famix Class associated with the ITypeBinding.
+-	 * The Entity is created if it does not exist.<br>
+-	 * Params: see {@link Dictionary#ensureFamixClass(Object, String, ContainerEntity)}.
+-	 * @return the Famix Entity found or created. May return null if "bnd" is null or in case of a Famix error
+-	 */
+-	public fr.inria.verveine.core.gen.famix.Class ensureFamixClass(ITypeBinding bnd, String name, ContainerEntity owner) {
+-		fr.inria.verveine.core.gen.famix.Class fmx = null;
++	public ParameterType ensureFamixParameterType(ITypeBinding bnd,	String name, ParameterizableClass owner) {
++		ParameterType fmx = null;
+ 
+ 		// if Binding is null, we can only rely on provided parameters, so lets do it now and return
+ 		if (bnd == null) {
+@@ -393,115 +605,41 @@
+ 				return null;
+ 			}
+ 			if (owner == null) {
+-				owner = ensureFamixNamespaceDefault();
++				return super.ensureFamixParameterType(null, name, null);
+ 			}
+-			return super.ensureFamixClass(null, name, owner);
+-		}
+-
+-		// --------------- some special cases
+-		while (bnd.isArray()) {
+-			bnd = bnd.getComponentType();
+-		}
+-
+-		if (bnd.isPrimitive()) {
+-			// should have called ensureFamixPrimitiveType(bnd). Why are we here ?
+-			return null;
++			
++			return super.ensureFamixParameterType(null, name, owner);
+ 		}
+ 
+-		fmx = (fr.inria.verveine.core.gen.famix.Class)getEntityByKey(bnd);	// to avoid useless computations if we can
++		fmx = (ParameterType)getEntityByKey(bnd);	// to avoid useless computations if we can
+ 		if (fmx != null) {
+ 			return fmx;
+ 		}
+ 
+ 		// --------------- name
+ 		if (name == null) {
+-			if (! bnd.isAnonymous()) {
+-				name = bnd.getName();
+-			}
+-			else { // anonymous class
+-				if (bnd.getSuperclass() != null) {
+-					name = bnd.getSuperclass().getName();
+-				}
+-				if ( (name == null) || name.equals(OBJECT_NAME)) {
+-					ITypeBinding[] intfcs = bnd.getInterfaces();
+-					if ( (intfcs != null) && (intfcs.length > 0) ) {
+-						name = bnd.getInterfaces()[0].getName();
+-					}
+-					else {
+-						name = "???";
+-					}
+-				}
+-				name = "anonymous(" + name + ")";
+-			}
+-		}
+-		
+-		if (name.equals(OBJECT_NAME)) {
+-			return ensureFamixClassObject(bnd);
++			name = bnd.getName();
+ 		}
+ 
+ 		// --------------- owner
+ 		if (owner == null) {
+-			IMethodBinding parentMtd = bnd.getDeclaringMethod();
+-			if (parentMtd != null) {
+-				owner = this.ensureFamixMethod(parentMtd, null, (Collection<org.eclipse.jdt.core.dom.Type>)null, null, null);  // cast needed to desambiguate the call
+-			}
+-			else {
+-				ITypeBinding parentClass = bnd.getDeclaringClass();
+-				if (parentClass != null) {
+-					owner = this.ensureFamixClass(parentClass, null, null);
+-				}
+-				else {
+-					IPackageBinding parentPckg = bnd.getPackage();
+-					if (parentPckg != null) {
+-						owner = this.ensureFamixNamespace(parentPckg, null);
+-					}
+-					else {
+-						owner = this.ensureFamixNamespaceDefault();
+-					}
+-				}
+-			}
+-		}
+-
+-		// --------------- superclasses (including interfaces)
+-		Collection<fr.inria.verveine.core.gen.famix.Class> sups = new LinkedList<fr.inria.verveine.core.gen.famix.Class>();
+-		if (! bnd.isInterface()) {
+-			ITypeBinding supbnd = bnd.getSuperclass();
+-			if (supbnd != null) {
+-				sups.add(this.ensureFamixClass(supbnd, null, null));
+-			}
+-			else {
+-				sups.add( ensureFamixClassObject(null));
++			ITypeBinding parentClass = bnd.getDeclaringClass();
++			if (parentClass != null) {
++				owner = (ParameterizableClass) this.ensureFamixType(parentClass, /*name*/null, /*owner*/null, /*ctxt*/null);  // isGeneric=true
+ 			}
+ 		}
+-		for (ITypeBinding intbnd : bnd.getInterfaces()) {
+-			sups.add( ensureFamixClass(intbnd, null, null));
+-		}
+ 
+ 		// --------------- recover from name ?
+ 		for (Type candidate : this.getEntityByName(Type.class, name)) {
+-			if ( checkAndMapClass(bnd, candidate) ) {
+-				fmx = (Class) candidate;
++			if ( checkAndMapType(bnd, candidate) ) {
++				fmx = (ParameterType) candidate;
+ 				break;
+ 			}
+ 		}
+ 		if (fmx == null) {
+-			fmx = super.ensureFamixClass(bnd, name, owner);
+-		}
+-		
+-		if (fmx!=null) {
+-			// we just created it or it was not bound, so we make sure it has the right information in it
+-			fmx.setIsInterface(bnd.isInterface());
+-			Inheritance lastInheritance = null;
+-			for (fr.inria.verveine.core.gen.famix.Class sup : sups) {
+-				lastInheritance = ensureFamixInheritance(sup, fmx, lastInheritance);
+-			}
+-			setNamedEntityModifiers(fmx, bnd.getDeclaredModifiers());
+-			if (fmx.getIsAbstract()) {
+-				// don't know why there must be two different ways to mark abstract classes !!! But this is a pain!
+-				fmx.addModifiers("abstract");
+-			}
++			fmx = super.ensureFamixParameterType(bnd, name, owner);
+ 		}
+-	
++
+ 		return fmx;
+ 	}
+ 
+@@ -561,10 +699,6 @@
+ 			return false;
+ 		}
+ 		
+-		if ( bnd.isClass() || bnd.isInterface() || bnd.isEnum() ) {
+-			return checkAndMapClass(bnd, (Type) candidate);
+-		}
+-
+ 		if ( bnd.isPrimitive() && (candidate instanceof PrimitiveType) ) {
+ 			// names are equal so it's OK
+ 			mapToKey.put(bnd, candidate);
+@@ -580,7 +714,12 @@
+ 				return false;
+ 			}
+ 		}
+-		
++
++		// Annotation are interfaces too, so we should check this one after isAnnotation
++		if ( bnd.isClass() || bnd.isInterface() || bnd.isEnum() ) {
++			return checkAndMapClass(bnd, (Type) candidate);
++		}
++
+ 		return false;
+ 	}
+ 
+@@ -689,15 +828,25 @@
+ 					sig += parBnd.getName();
+ 					first = false;
+ 				}
+-				sig += ")";
+ 			}
++			sig += ")";
+ 			if (! ((Method) candidate).getSignature().equals(sig)) {
+ 				return false;
+ 			}
+ 
+ 			// ... and the signature should include the return type
+-			if (! checkAndMapType(bnd.getReturnType(), ((Method) candidate).getDeclaredType()) ) {
+-				return false;
++			if (bnd.isConstructor()) {
++				if ( ((Method) candidate).getDeclaredType() != null) {
++					return false;
++				}
++			}
++			else {
++				if ( ((Method) candidate).getDeclaredType() == null) {
++					return false;
++				}
++				if (! checkAndMapType(bnd.getReturnType(), ((Method) candidate).getDeclaredType()) ) {
++					return false;
++				}
+ 			}
+ 		}
+ 
+@@ -742,7 +891,7 @@
+ 
+ 		ContainerEntity candidateOwner = candidate.getBelongsTo();
+ 		IMethodBinding methBnd = bnd.getDeclaringMethod();
+-		if ( (methBnd != null) && (candidateOwner  instanceof Method) ) {
++		if ( (methBnd != null) && (candidateOwner instanceof Method) ) {
+ 			if ( checkAndMapMethod(methBnd, (Method)candidateOwner) ) {
+ 				mapToKey.put(bnd, candidate);
+ 				return true;
+@@ -835,13 +984,22 @@
+ 
+ 		// --------------- return type
+ 		if ( (ret == null) && (! bnd.isConstructor()) ) {
+-			ret = this.ensureFamixType(bnd.getReturnType(), null, null);
++			ret = this.ensureFamixType(bnd.getReturnType(), null, null, owner);
+ 		}
+ 		// else leave it to null ...
+ 
+ 		// --------------- owner
+ 		if (owner == null) {
+-			owner = ensureFamixClass(bnd.getDeclaringClass(), null, null);
++			ITypeBinding classBnd = bnd.getDeclaringClass();
++			if (classBnd != null) {
++				Type tmpOwn = ensureFamixType(classBnd, /*name*/null, /*owner*/null, /*ctxt*/null);
++				if (tmpOwn instanceof ParameterizedType) {
++					owner = ((ParameterizedType) tmpOwn).getParameterizableClass();
++				}
++				else {
++					owner = (Class)tmpOwn; 
++				}
++			}
+ 		}
+ 		
+ 		// --------------- recover from name ?
+@@ -866,6 +1024,10 @@
+ 	}
+ 	
+ 	public String findTypeName(org.eclipse.jdt.core.dom.Type t) {
++		if (t == null) {
++			return null;
++		}
++		
+ 		if (t.isPrimitiveType()) {
+ 			return t.toString();
+ 		}
+@@ -879,10 +1041,15 @@
+ 			return findTypeName( ((ArrayType)t).getElementType() );
+ 		}
+ 		else if (t.isParameterizedType()) {
+-			return "?";  // TODO
++			return findTypeName(((org.eclipse.jdt.core.dom.ParameterizedType)t).getType());
+ 		}
+ 		else { // it is a WildCardType
+-			return "?"; // TODO
++			if ( ((org.eclipse.jdt.core.dom.WildcardType)t).isUpperBound() ) {
++				return findTypeName( ((org.eclipse.jdt.core.dom.WildcardType)t).getBound() );
++			}
++			else {
++				return OBJECT_NAME;
++			}
+ 		}
+ 	}
+ 
+@@ -913,12 +1080,21 @@
+ 
+ 		// --------------- return type
+ 		if (type == null) {
+-			type = this.ensureFamixType(bnd.getType(), null, null);
++			type = this.ensureFamixType(bnd.getType(), null, null, owner);
+ 		}
+ 
+ 		// --------------- owner
+ 		if (owner == null) {
+-			owner = ensureFamixClass(bnd.getDeclaringClass(), null, null);
++			ITypeBinding classBnd = bnd.getDeclaringClass();
++			if (classBnd != null) {
++				Type tmpOwn = ensureFamixType(classBnd, /*name*/null, /*owner*/null, /*ctxt*/null);
++				if (tmpOwn instanceof ParameterizedType) {
++					owner = ((ParameterizedType) tmpOwn).getParameterizableClass(); 
++				}
++				else {
++					owner = tmpOwn;
++				}
++			}
+ 		}
+ 		
+ 		// --------------- recover from name ?
+@@ -975,7 +1151,7 @@
+ 			if (owner == null) {
+ 				owner = ensureFamixStubMethod("<"+name+"_owner>");
+ 			}
+-			return super.ensureFamixParameter(null, name, typ, owner);
++			return super.createFamixParameter(null, name, typ, owner);
+ 		}
+ 
+ 		// --------------- name
+@@ -985,7 +1161,7 @@
+ 
+ 		// --------------- return type
+ 		if (typ == null) {
+-			typ = this.ensureFamixType(bnd.getType(), null, null);
++			typ = this.ensureFamixType(bnd.getType(), null, null, owner.getParentType());  // context of the parameter def = the class definition
+ 		}
+ 
+ 		// --------------- owner
+@@ -1001,7 +1177,7 @@
+ 			}
+ 		}
+ 		if (fmx == null) {
+-			fmx = super.ensureFamixParameter(bnd, name, typ, owner);
++			fmx = super.createFamixParameter(bnd, name, typ, owner);
+ 		}
+ 		
+ 		if (fmx != null) {
+@@ -1039,7 +1215,7 @@
+ 
+ 		// --------------- return type
+ 		if (typ == null) {
+-			typ = this.ensureFamixType(bnd.getType(), null, null);
++			typ = this.ensureFamixType(bnd.getType(), null, null, owner);
+ 		}
+ 
+ 		// --------------- owner
+@@ -1068,18 +1244,18 @@
+ 	}
+ 	
+ 	/**
+-	 * Returns a Famix UnknownVariable associated with the IVariableBinding. The Entity is created if it does not exist.
++	 * Returns a Famix UnknownVariable. The Entity is created if it does not exist.
+ 	 */
+-	public UnknownVariable createFamixUnknownVariable(Type type, String name) {
+-//		System.err.println("TRACE -- createFamixUnknownVariable: "+name);
+-		UnknownVariable fmx = (UnknownVariable) createFamixNamedEntity(UnknownVariable.class, name);
++	public UnknownVariable ensureFamixUnknownVariable(Type type, String name) {
++//		System.err.println("TRACE -- ensureFamixUnknownVariable: "+name);
++		UnknownVariable fmx = (UnknownVariable) createFamixEntity(UnknownVariable.class, name);
+ 		if (fmx!=null) {
+ 			fmx.setDeclaredType(type);
+ 		}
+ 		return fmx;
+ 	}
+ 
+-	public Comment createFamixComment(org.eclipse.jdt.core.dom.Comment jdoc, NamedEntity fmx) {
++	public Comment ensureFamixComment(org.eclipse.jdt.core.dom.Comment jdoc, NamedEntity fmx) {
+ 		Comment cmt = null;
+ 		if (jdoc != null) {
+ 			cmt = createFamixComment(jdoc.toString(), fmx);
+@@ -1218,6 +1394,4 @@
+ 		return ret;
+ 	}
+ 
+-
+-
+ }
+\ No newline at end of file
+Index: verveine.extractor.java/src/fr/inria/verveine/extractor/java/VerveineJParser.java
+===================================================================
+--- verveine.extractor.java/src/fr/inria/verveine/extractor/java/VerveineJParser.java	(revision 108)
++++ verveine.extractor.java/src/fr/inria/verveine/extractor/java/VerveineJParser.java	(revision 109)
+@@ -1,9 +1,13 @@
+ package fr.inria.verveine.extractor.java;
+ 
++import java.io.File;
++import java.util.ArrayList;
++import java.util.Collection;
++import java.util.Map;
++
++import org.eclipse.jdt.core.JavaCore;
+ import org.eclipse.jdt.core.dom.AST;
+ import org.eclipse.jdt.core.dom.ASTParser;
+-import org.eclipse.jdt.internal.compiler.batch.FileSystem.Classpath;
+-import org.eclipse.jdt.internal.compiler.impl.CompilerOptions;
+ 
+ import fr.inria.verveine.core.VerveineParser;
+ import fr.inria.verveine.core.gen.famix.Namespace;
+@@ -20,35 +24,83 @@
+ 	 * The arguments that were passed to the parser
+ 	 * Needed to relativize the source file names
+ 	 */
+-	private String[] initialArgs;
++	private Collection<String> sourceFiles;
+ 	
+-	public static void main(String[] args) {
+-		VerveineJParser parser = new VerveineJParser();
+-		parser.compile(args);
+-		parser.outputMSE();
++	private ASTParser jdtParser = null;
++	
++	public VerveineJParser() {
++		super();
++
++		jdtParser = ASTParser.newParser(AST.JLS3);
++	}
++	
++	public void setOptions(String[] args) {
++		// we assume java 1.5 code for now, this should be configurable
++		@SuppressWarnings("unchecked")
++		Map<String,String> options = JavaCore.getOptions();
++		options.put(JavaCore.COMPILER_COMPLIANCE, JavaCore.VERSION_1_5);
++		options.put(JavaCore.COMPILER_CODEGEN_TARGET_PLATFORM, JavaCore.VERSION_1_5);
++		options.put(JavaCore.COMPILER_SOURCE, JavaCore.VERSION_1_5);
++		jdtParser.setCompilerOptions(options);
++
++		Collection<String> classPath = new ArrayList<String>();
++		Collection<String> sourcePath = new ArrayList<String>();
++		sourceFiles = new ArrayList<String>();
++		for (int i=0; i < args.length; i++) {
++			String current = args[i];
++			if (current.equals("-cp")) {
++				classPath.add(args[++i]);
++			}
++			else if (current.endsWith(".java")) {
++				sourceFiles.add(current);
++			}
++			else {
++				sourcePath.add(current);
++			}
++		}
++		
++		jdtParser.setEnvironment(classPath.toArray(new String[0]), sourcePath.toArray(new String[0]), null, true);
++		jdtParser.setResolveBindings(true);
++		jdtParser.setKind(ASTParser.K_COMPILATION_UNIT);
++		
++		collectJavaFiles(sourcePath, sourceFiles);
++	}
++
++	private void collectJavaFiles(Collection<String> paths, Collection<String> files) {
++		for (String p : paths) {
++			collectJavaFiles(new File(p), files);
++		}
+ 	}
+ 
+-	private void setInitialArgs(String[] args) {
+-		this.initialArgs = args;
++	private void collectJavaFiles(File f, Collection<String> files) {
++		if (f.isFile() && f.getName().endsWith(".java")) {
++			files.add(f.getAbsolutePath());
++		}
++		else if (f.isDirectory()){
++			for (File child : f.listFiles()) {
++				collectJavaFiles(child, files);
++			}
++		}
++		// else ignore it?
++		
+ 	}
+ 
+-	public String[] getInitialArgs() {
+-		return this.initialArgs;
++	public static void main(String[] args) {
++		VerveineJParser parser = new VerveineJParser();
++		parser.setOptions(args);
++		parser.parse();
++		parser.outputMSE();
+ 	}
+ 
+-	@Override
+-	public boolean compile(String[] argv) {
+-		boolean ret;
+-		/*if (this.linkToExisting()) {
++	public void parse() {
++		if (this.linkToExisting()) {
+ 			this.expandNamespacesNames();
+-		}*/
++		}
+ 
+-		setInitialArgs(argv);
+-		ret = super.compile(argv);
++		FamixRequestor req = new FamixRequestor(getFamixRepo(), new String[0]);
++		jdtParser.createASTs(sourceFiles.toArray(new String[0]), null, new String[0], req, null);
+ 		
+ 		this.compressNamespacesNames();
+-		
+-		return ret;
+ 	}
+ 
+ 	/**
+@@ -90,41 +142,5 @@
+ 			}
+ 		}
+ 	}
+-
+-	/*
+-	 *  Low-level API performing the actual parsing
+-	 *  Overwrite the one in org.eclipse.jdt.internal.compiler.batch.Main;
+-	 *  SHOULD NOT USE an internal JDT class. But I don't know how to do it otherwise
+-	 */
+-	public void performCompilation() {
+-
+-		this.compilerOptions = new CompilerOptions(this.options);
+-		this.compilerOptions.performMethodsFullRecovery = false;
+-		this.compilerOptions.performStatementsRecovery = false;
+-
+-		// NA --- beginning of parsing code --------------------------------------------------
+-		String[] tmpclasspath=null;
+-		if (this.checkedClasspaths!=null) {
+-			tmpclasspath = new String[this.checkedClasspaths.length];
+-			int i = 0;
+-			for (Classpath cp : this.checkedClasspaths) {
+-				tmpclasspath[i++] = cp.getPath();
+-			}
+-		}
+-
+-		ASTParser pars = ASTParser.newParser(AST.JLS3);
+-		pars.setEnvironment(/*classpathEntries*/tmpclasspath,
+-				/*sourcepathEntries*/ new String[0],  // TODO this might be wrong. What if the user specifies some "-sourcepath" when calling Verveine?
+-				/*encodings*/null, 
+-				/*includeRunningVMBootclasspath*/true);
+-		pars.setResolveBindings(true);
+-		pars.setKind(ASTParser.K_COMPILATION_UNIT);
+-		pars.createASTs(/*sourceFilePaths*/this.filenames, 
+-				/*encodings*/this.encodings, 
+-				/*bindingKeys*/new String[0], 
+-				/*requestor*/new FamixRequestor(getFamixRepo(), getInitialArgs()), 
+-				/*monitor*/null);
+-		// NA --- end of parsing code --------------------------------------------------
+-	}
+ 	
+ }
+Index: verveine.extractor.java/src/fr/inria/verveine/extractor/java/FamixRequestor.java
+===================================================================
+--- verveine.extractor.java/src/fr/inria/verveine/extractor/java/FamixRequestor.java	(revision 108)
++++ verveine.extractor.java/src/fr/inria/verveine/extractor/java/FamixRequestor.java	(revision 109)
+@@ -21,9 +21,9 @@
+ 	}
+ 
+ 	public void acceptAST(String sourceFilePath, CompilationUnit ast) {
++//		System.out.println("  ******* TRACE, Requestor is visiting : "+sourceFilePath+" *******");
+ 		
+ 		ast.setProperty(JavaDictionary.SOURCE_FILENAME_PROPERTY, relativePath(sourceFilePath));
+-		//System.out.println("  ******* DOING : "+sourceFilePath+" *******");
+ 		ast.accept(new VerveineDefVisitor(this.famixDictionnary));
+ 		ast.accept(new VerveineRefVisitor(this.famixDictionnary));
+ 	}
+Index: verveine.extractor.java/build.xml
+===================================================================
+--- verveine.extractor.java/build.xml	(revision 0)
++++ verveine.extractor.java/build.xml	(revision 109)
+@@ -0,0 +1,83 @@
++<?xml version="1.0"?>
++<project name="verveine.extractor.java" default="jar" basedir=".">
++	<!-- Sets variables which can later be used. -->
++	<!-- The value of a property is accessed via ${} -->
++	<property name="src.dir"      location="src" />
++	<property name="build.dir"    location="bin" />
++	<property name="docs.dir"     location="docs" />
++	<property name="dist.dir"     location="lib" />
++	<property name="verveine.jar" location="${dist.dir}/verveine.extractor,java.jar" />
++
++	<!-- Variables used for JUnit testin -->
++	<property name="test.dir" location="src/tests/fr/inria/verveine/extractor/java/" />
++	<property name="test.report.dir" location="testrep" />
++
++
++	<!-- Create a classpath container which can be later used in the ant task -->
++	<path id="build.classpath">
++		<fileset dir="${dist.dir}">
++			<include name="*.jar" />
++		</fileset>
++	</path>
++
++
++	<!-- Deletes the existing build, docs and dist directory-->
++	<target name="clean">
++		<delete dir="${build.dir}" />
++		<delete dir="${docs.dir}" />
++		<delete file="${verveine.jar}" />
++	</target>
++
++	<!-- Creates the  build, docs and dist directory-->
++	<target name="makedir">
++		<mkdir dir="${build.dir}" />
++		<mkdir dir="${docs.dir}" />
++		<mkdir dir="${test.report.dir}" />
++	</target>
++
++	<!-- copies the jar from verveine.core -->
++	<target name="corejars" depends="makedir">
++		<copy todir="${dist.dir}" file="../verveine.core/lib/famix.jar"/>
++		<copy todir="${dist.dir}" file="../verveine.core/lib/verveine.core.jar"/>
++	</target>
++
++	<!-- Compiles the java code (including the usage of library for JUnit -->
++	<target name="compile" depends="clean, corejars">
++		<javac srcdir="${src.dir}" destdir="${build.dir}" classpathref="build.classpath">
++		</javac>
++	</target>
++
++	<!-- Creates Javadoc -->
++	<target name="docs" depends="compile">
++		<javadoc packagenames="src" sourcepath="${src.dir}" destdir="${docs.dir}">
++			<!-- Define which files / directory should get included, we include all -->
++			<fileset dir="${src.dir}">
++				<include name="**" />
++			</fileset>
++		</javadoc>
++	</target>
++
++	<!--Creates the deployable jar file  -->
++	<target name="jar" depends="compile">
++		<jar destfile="${verveine.jar}" basedir="${build.dir}">
++			<include name="fr/inria/verveine/extractor/java/*.class"/>
++		</jar>
++	</target>
++
++	<!-- Run the JUnit Tests -->
++	<!-- Output is XML, could also be plain-->
++	<target name="junit" depends="compile">
++		<junit printsummary="on" fork="true" haltonfailure="no">
++			<classpath>
++				<pathelement path="${build.dir}"/>
++				<fileset dir="${dist.dir}">
++  				  <include name="*.jar"/>
++				</fileset>
++			</classpath>
++			<formatter type="plain" />
++			<test name="tests.fr.inria.verveine.extractor.java.VerveineJTest_LanModel" todir="${test.report.dir}" />
++			<test name="tests.fr.inria.verveine.extractor.java.VerveineJTest_AdHoc" todir="${test.report.dir}" />
++		</junit>
++	</target>
++
++</project>

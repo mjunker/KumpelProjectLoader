@@ -1,0 +1,10 @@
+url=svn://scm.gforge.inria.fr/svn/verveinej
+startRev=1
+endRev=122
+login=
+password=
+reposRoot=svn://scm.gforge.inria.fr/svn/verveinej
+projectName=verveinej
+relativePath=
+nodeKind=dir
+initialDiffPathPrefix=svn://scm.gforge.inria.fr/svn/verveinej

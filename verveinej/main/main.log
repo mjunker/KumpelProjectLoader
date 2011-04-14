@@ -1,0 +1,1581 @@
+=========================================
+author=anquetil
+revision=1
+date=2010-10-26 18:12:12
+message=First release, v. 1.0
+
+
+-----------------------------------------
+action=A pathString="/verveine.extractor.java/lib/org.eclipse.core.contenttype_3.4.100.v20100505-1235.jar" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/verveine.core/src/fr/inria/verveine/core/gen/famix/Exception.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/verveine.extractor.java/.classpath" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/verveine.core/src/fr/inria/verveine/core/gen/famix/Invocation.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/verveine.core/src/fr/inria/verveine/core/gen/hismo/HismoMethodVersion.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/verveine.core/mse/famix30_famix.mse" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/verveine.core/src/fr/inria/verveine/core/gen/famix/SourcedEntity.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/verveine.extractor.java/test_src/LANModel/moose/lan/SingleDestinationAddress.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/verveine.core/src/fr/inria/verveine/core/gen/hismo/HismoEntityVersion.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/verveine.core/lib/verveine.core.jar" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/verveine.core/src" nodeKind=dir copyFromPath="null" copyFromRevision=-1
+action=A pathString="/verveine.core/src/fr/inria/verveine/core/gen/hismo/HismoClassVersion.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/verveine.core/src/fr/inria/verveine/core/Dictionary.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/verveine.extractor.java/test_src" nodeKind=dir copyFromPath="null" copyFromRevision=-1
+action=A pathString="/verveine.core/src/fr/inria/verveine/core/gen/famix/ClassGroup.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/verveine.core/src/fr/inria/verveine/core/gen/famix/Entity.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/verveine.extractor.java/lib/verveine.core.jar" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/verveine.core/src/fr/inria/verveine/core/gen/dude/DuplicationGroup.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/verveine.core/src/test/fr/inria" nodeKind=dir copyFromPath="null" copyFromRevision=-1
+action=A pathString="/verveine.core/src/fr" nodeKind=dir copyFromPath="null" copyFromRevision=-1
+action=A pathString="/verveine.extractor.java/lib/org.eclipse.jdt.core_3.6.0.v_A58.jar" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/verveine.core/src/fr/inria/verveine/core/gen/famix/PackageGroup.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/verveine.core/mse/famix30_complete.mse" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/verveine.extractor.java/src/fr/inria/verveine/extractor/java" nodeKind=dir copyFromPath="null" copyFromRevision=-1
+action=A pathString="/verveine.extractor.java/test_src/LANModel/moose/lan/server/OutputServer.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/verveine.extractor.java/src/tests" nodeKind=dir copyFromPath="null" copyFromRevision=-1
+action=A pathString="/verveine.core/src/fr/inria/verveine/core/gen/hismo/HismoCoChangePattern.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/verveine.core/src/fr/inria/verveine/core/gen/famix/BehaviouralEntity.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/verveine.core/src/fr/inria/verveine/core/gen/dude/CodeFragment.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/verveine.core/bin" nodeKind=dir copyFromPath="null" copyFromRevision=-1
+action=A pathString="/verveine.core/src/fr/inria/verveine/core/gen/famix/ThrownException.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/verveine.core/src/fr/inria/verveine/core/gen/famix/Package.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/verveine.core/src/fr/inria/verveine/core/gen/famix/Access.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/verveine.core/src/fr/inria/verveine/core/gen/famix/AnnotationInstance.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/verveine.extractor.java/lib/org.eclipse.osgi_3.6.0.v20100517.jar" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/verveine.core/src/fr/inria/verveine/core/gen/hismo/HismoNamespaceHistory.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/verveine.core/src/fr/inria/verveine" nodeKind=dir copyFromPath="null" copyFromRevision=-1
+action=A pathString="/verveine.core/src/fr/inria/verveine/core/gen/famix/GlobalVariable.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/verveine.core/src/fr/inria/verveine/core/gen/moose/HismoAccessHistory.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/verveine.core/src/fr/inria/verveine/core/gen/famix/NamedEntity.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/verveine.core/src/fr/inria/verveine/core/gen/famix/SourceTextAnchor.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/verveine.extractor.java/lib/org.eclipse.core.resources_3.6.0.v20100526-0737.jar" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/verveine.extractor.java/.settings/org.eclipse.jdt.core.prefs" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/verveine.core/src/fr/inria/verveine/core/GenerateFamix.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/verveine.core/src/fr/inria/verveine/core/NonCloseablePrintStream.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/verveine.core/src/fr/inria/verveine/core/EntityStack.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/verveine.extractor.java/src/fr/inria/verveine" nodeKind=dir copyFromPath="null" copyFromRevision=-1
+action=A pathString="/verveine.extractor.java/.settings" nodeKind=dir copyFromPath="null" copyFromRevision=-1
+action=A pathString="/verveine.core/src/fr/inria/verveine/core/gen/file/FolderGroup.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/verveine.core/src/fr/inria/verveine/core/gen/dude" nodeKind=dir copyFromPath="null" copyFromRevision=-1
+action=A pathString="/verveine.core/lib/famix.jar" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/verveine.core/src/fr/inria/verveine/core/gen/moose/MooseAbsractGroup.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/verveine.extractor.java/test_src/LANModel/moose" nodeKind=dir copyFromPath="null" copyFromRevision=-1
+action=A pathString="/verveine.extractor.java/src/fr/inria/verveine/extractor/java/VerveineDefVisitor.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/verveine.extractor.java/test_src/LANModel/moose/lan/WorkStation.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/verveine.extractor.java/src/tests/fr/inria" nodeKind=dir copyFromPath="null" copyFromRevision=-1
+action=A pathString="/verveine.core/src/fr/inria/verveine/core/gen/famix/PrimitiveType.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/verveine.core/src/fr/inria/verveine/core/gen/famix/Association.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/verveine.core/src/fr/inria/verveine/core/gen/dude/Duplication.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/verveine.core/src/fr/inria/verveine/core/gen/moose/MooseGroup.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/verveine.core/src/fr/inria/verveine/core/gen/file/FileGroup.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/verveine.core/src/fr/inria/verveine/core/gen/famix/LeafEntity.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/verveine.extractor.java/test_src/LANModel/moose/lan" nodeKind=dir copyFromPath="null" copyFromRevision=-1
+action=A pathString="/verveine.extractor.java/src" nodeKind=dir copyFromPath="null" copyFromRevision=-1
+action=A pathString="/verveine.extractor.java/lib/famix.jar" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/verveine.core/src/fr/inria/verveine/core/gen/hismo/HismoClassHistoryGroup.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/verveine.core/src/fr/inria/verveine/core/gen/famix/Type.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/verveine.core/src/fr/inria/verveine/core/gen/famix/CaughtException.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/verveine.core/src/test" nodeKind=dir copyFromPath="null" copyFromRevision=-1
+action=A pathString="/verveine.core/src/test/fr" nodeKind=dir copyFromPath="null" copyFromRevision=-1
+action=A pathString="/verveine.core/src/fr/inria/verveine/core/gen/file/Folder.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/verveine.core/src/fr/inria/verveine/core/gen/hismo" nodeKind=dir copyFromPath="null" copyFromRevision=-1
+action=A pathString="/verveine.extractor.java/src/tests/fr/inria/verveine/extractor" nodeKind=dir copyFromPath="null" copyFromRevision=-1
+action=A pathString="/verveine.extractor.java/src/fr/inria/verveine/extractor/java/JavaDictionary.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/verveine.extractor.java/test_src/LANModel/moose/lan/Packet.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/verveine.extractor.java/lib/org.eclipse.equinox.preferences_3.3.0.v20100503.jar" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/verveine.core/src/fr/inria/verveine/core/gen/famix/ContainerEntity.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/verveine.core/src/fr/inria/verveine/core/gen/hismo/HismoNamespaceVersion.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/verveine.extractor.java/src/fr/inria/verveine/extractor/java/FamixRequestor.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/verveine.extractor.java/test_src/LANModel/moose/lan/Node.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/verveine.core/src/fr/inria/verveine/core/gen/famix" nodeKind=dir copyFromPath="null" copyFromRevision=-1
+action=A pathString="/verveine.core/src/fr/inria/verveine/core/gen/famix/Namespace.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/verveine.extractor.java/bin" nodeKind=dir copyFromPath="null" copyFromRevision=-1
+action=A pathString="/verveine.extractor.java/test_src/LANModel" nodeKind=dir copyFromPath="null" copyFromRevision=-1
+action=A pathString="/verveine.extractor.java/.project" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/verveine.extractor.java" nodeKind=dir copyFromPath="null" copyFromRevision=-1
+action=A pathString="/verveine.core/src/fr/inria/verveine/core/gen/dude/CodeLine.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/verveine.core/src/fr/inria/verveine/core/gen/famix/Reference.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/verveine.extractor.java/test_src/LANModel/moose/lan/server/FileServer.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/verveine.core/src/fr/inria/verveine/core/gen/hismo/HismoAbstractHistory.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/verveine.core/src/test/fr/inria/verveine/core" nodeKind=dir copyFromPath="null" copyFromRevision=-1
+action=A pathString="/verveine.core/src/fr/inria/verveine/core/gen/famix/UnknownVariable.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/verveine.core/lib/fame.jar" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/verveine.core/src/fr/inria" nodeKind=dir copyFromPath="null" copyFromRevision=-1
+action=A pathString="/verveine.extractor.java/src/tests/fr/inria/verveine/extractor/java" nodeKind=dir copyFromPath="null" copyFromRevision=-1
+action=A pathString="/verveine.extractor.java/src/tests/fr/inria/verveine" nodeKind=dir copyFromPath="null" copyFromRevision=-1
+action=A pathString="/verveine.core/src/fr/inria/verveine/core/gen/file/AbstractFile.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/verveine.core/src/fr/inria/verveine/core/gen/hismo/HismoInheritanceDefinitionHistory.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/verveine.core/src/fr/inria/verveine/core/gen/file/File.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/verveine.extractor.java/src/fr/inria/verveine/extractor" nodeKind=dir copyFromPath="null" copyFromRevision=-1
+action=A pathString="/verveine.extractor.java/src/tests/fr" nodeKind=dir copyFromPath="null" copyFromRevision=-1
+action=A pathString="/verveine.core/src/fr/inria/verveine/core/gen/hismo/HismoPackageHistory.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/verveine.core/src/fr/inria/verveine/core/gen/famix/ScopingEntity.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/verveine.extractor.java/lib/verveine.extractor.java.jar" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/verveine.core/src/fr/inria/verveine/core/gen/dude/Multiplication.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/verveine.core/mse" nodeKind=dir copyFromPath="null" copyFromRevision=-1
+action=A pathString="/verveine.core/src/fr/inria/verveine/core/gen/hismo/HismoCoChangeHistory.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/verveine.core/src/fr/inria/verveine/core/gen/famix/SourceAnchor.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/verveine.core/src/fr/inria/verveine/core/gen/dude/DudeModel.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/verveine.core/src/fr/inria/verveine/core/gen/famix/Inheritance.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/verveine.core/lib" nodeKind=dir copyFromPath="null" copyFromRevision=-1
+action=A pathString="/verveine.extractor.java/lib/org.eclipse.equinox.common_3.6.0.v20100503.jar" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/verveine.core/src/fr/inria/verveine/core/gen/famix/AnnotationType.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/verveine.extractor.java/src/fr" nodeKind=dir copyFromPath="null" copyFromRevision=-1
+action=A pathString="/verveine.core/src/fr/inria/verveine/core/gen/famix/FAMIXModel.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/verveine.extractor.java/test_src/LANModel/moose/lan/AbstractDestinationAddress.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/verveine.core/.project" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/verveine.core/src/fr/inria/verveine/core/gen/famix/NamespaceGroup.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/verveine.extractor.java/test_src/LANModel/moose/lan/server/PrintServer.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/verveine.core/src/fr/inria/verveine/core/gen/famix/GlobalVariableGroup.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/verveine.core/src/fr/inria/verveine/core/gen/famix/Comment.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/verveine.core" nodeKind=dir copyFromPath="null" copyFromRevision=-1
+action=A pathString="/verveine.core/src/fr/inria/verveine/core/gen/famix/StructuralEntity.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/verveine.core/.settings" nodeKind=dir copyFromPath="null" copyFromRevision=-1
+action=A pathString="/verveine.extractor.java/verveinej.sh" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/verveine.core/src/fr/inria/verveine/core" nodeKind=dir copyFromPath="null" copyFromRevision=-1
+action=A pathString="/verveine.core/src/fr/inria/verveine/core/gen/hismo/HismoAbstractVersion.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/verveine.core/src/fr/inria/verveine/core/gen/dude/MultiplicationGroup.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/verveine.core/src/fr/inria/verveine/core/gen/hismo/HismoMethodHistory.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/verveine.core/src/fr/inria/verveine/core/gen/file/FILEModel.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/verveine.core/src/test/fr/inria/verveine" nodeKind=dir copyFromPath="null" copyFromRevision=-1
+action=A pathString="/verveine.core/src/fr/inria/verveine/core/gen/famix/LocalVariable.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/verveine.core/src/fr/inria/verveine/core/gen/hismo/HismoClassHierarchy.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/verveine.core/src/fr/inria/verveine/core/gen/hismo/HismoClassHistory.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/verveine.core/src/fr/inria/verveine/core/gen/moose" nodeKind=dir copyFromPath="null" copyFromRevision=-1
+action=A pathString="/verveine.core/src/fr/inria/verveine/core/gen/hismo/HismoModel.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/verveine.extractor.java/lib/org.eclipse.core.runtime_3.6.0.v20100505.jar" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/verveine.core/src/fr/inria/verveine/core/gen/famix/Method.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/verveine.core/src/fr/inria/verveine/core/gen/famix/MethodGroup.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/verveine.core/src/fr/inria/verveine/core/gen/hismo/HismoFolderHistory.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/verveine.core/src/fr/inria/verveine/core/gen/hismo/HismoNamespaceHistoryGroup.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/verveine.core/src/fr/inria/verveine/core/gen/famix/Attribute.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/verveine.extractor.java/src/fr/inria/verveine/extractor/java/VerveineRefVisitor.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/verveine.core/src/fr/inria/verveine/core/gen/famix/DeclaredException.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/verveine.extractor.java/lib/fame.jar" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/verveine.core/src/fr/inria/verveine/core/gen/hismo/HismoCoChangeVersion.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/verveine.core/src/fr/inria/verveine/core/gen/hismo/HismoHistoryGroup.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/verveine.extractor.java/src/fr/inria" nodeKind=dir copyFromPath="null" copyFromRevision=-1
+action=A pathString="/verveine.core/src/fr/inria/verveine/core/gen/famix/FileAnchor.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/verveine.core/src/fr/inria/verveine/core/gen/hismo/HismoFileHistory.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/verveine.extractor.java/test_src/LANModel/moose/lan/server" nodeKind=dir copyFromPath="null" copyFromRevision=-1
+action=A pathString="/verveine.core/.settings/org.eclipse.jdt.core.prefs" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/verveine.core/src/fr/inria/verveine/core/gen/moose/MooseModel.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/verveine.core/src/fr/inria/verveine/core/gen/famix/Parameter.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/verveine.extractor.java/src/fr/inria/verveine/extractor/java/BatchParser.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/verveine.core/src/test/fr/inria/verveine/core/TestVerveineUtils.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/verveine.extractor.java/src/tests/fr/inria/verveine/extractor/java/VerveineExtractorJavaTest.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/verveine.core/src/fr/inria/verveine/core/gen/file" nodeKind=dir copyFromPath="null" copyFromRevision=-1
+action=A pathString="/verveine.core/.classpath" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/verveine.core/src/fr/inria/verveine/core/gen/moose/MooseEntity.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/verveine.core/src/fr/inria/verveine/core/gen/hismo/HismoAttributeHistory.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/verveine.extractor.java/lib/org.eclipse.core.jobs_3.5.0.v20100515.jar" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/verveine.core/src/fr/inria/verveine/core/gen/famix/ImplicitVariable.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/verveine.extractor.java/test_src/LANModel/moose/lan/server/IPrinter.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/verveine.extractor.java/lib" nodeKind=dir copyFromPath="null" copyFromRevision=-1
+action=A pathString="/verveine.core/src/fr/inria/verveine/core/gen/hismo/HismoInvocationHistory.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/verveine.core/src/fr/inria/verveine/core/gen/famix/Class.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/verveine.core/src/fr/inria/verveine/core/gen/famix/Function.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/verveine.core/src/fr/inria/verveine/core/gen/hismo/HismoMethodHistoryGroup.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/verveine.core/src/fr/inria/verveine/core/gen/hismo/HismoModelHistory.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/verveine.core/src/fr/inria/verveine/core/gen" nodeKind=dir copyFromPath="null" copyFromRevision=-1
+=========================================
+author=anquetil
+revision=2
+date=2010-10-28 13:17:09
+message=Just comment correction
+-----------------------------------------
+action=M pathString="/verveine.core/lib/verveine.core.jar" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.core/src/fr/inria/verveine/core/Dictionary.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+=========================================
+author=anquetil
+revision=3
+date=2010-10-28 13:21:23
+message=Corrections from Doru:
+- remove space before '(' in methods' signatures
+- name of namespace is only the last element of fully qualified name
+- added FileAnchors to Classes, Methods, Attributes
+-----------------------------------------
+action=M pathString="/verveine.extractor.java/lib/verveine.core.jar" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.extractor.java/src/fr/inria/verveine/extractor/java/VerveineRefVisitor.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.extractor.java/src/fr/inria/verveine/extractor/java/JavaDictionary.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.extractor.java/src/fr/inria/verveine/extractor/java/VerveineDefVisitor.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.extractor.java/src/tests/fr/inria/verveine/extractor/java/VerveineExtractorJavaTest.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.extractor.java/lib/verveine.extractor.java.jar" nodeKind=file copyFromPath="null" copyFromRevision=-1
+=========================================
+author=anquetil
+revision=4
+date=2010-10-28 18:15:07
+message=Now deals with Interface by setting the flag isInterface = true
+-----------------------------------------
+action=M pathString="/verveine.extractor.java/src/fr/inria/verveine/extractor/java/JavaDictionary.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.extractor.java/src/tests/fr/inria/verveine/extractor/java/VerveineExtractorJavaTest.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.extractor.java/lib/verveine.extractor.java.jar" nodeKind=file copyFromPath="null" copyFromRevision=-1
+=========================================
+author=anquetil
+revision=5
+date=2010-10-29 13:08:26
+message=Added modifiers (abstract, public/private/protected) to classes, methods and attributes
+-----------------------------------------
+action=M pathString="/verveine.extractor.java/lib/famix.jar" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.extractor.java/src/fr/inria/verveine/extractor/java/JavaDictionary.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.extractor.java/src/tests/fr/inria/verveine/extractor/java/VerveineExtractorJavaTest.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.extractor.java/lib/verveine.extractor.java.jar" nodeKind=file copyFromPath="null" copyFromRevision=-1
+=========================================
+author=anquetil
+revision=6
+date=2010-10-29 13:09:36
+message=Changed getIsAbstract. Still don't get why there are two ways to specify abstract classes ... ?
+-----------------------------------------
+action=M pathString="/verveine.core/lib/famix.jar" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.core/src/fr/inria/verveine/core/gen/famix/Class.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+=========================================
+author=anquetil
+revision=7
+date=2010-10-29 15:10:45
+message=Renamed create/ensure Stub in create/ensure Entity
+-----------------------------------------
+action=M pathString="/verveine.core/lib/verveine.core.jar" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.core/src/fr/inria/verveine/core/Dictionary.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+=========================================
+author=anquetil
+revision=8
+date=2010-10-29 15:13:13
+message=Changed the meaning of Stub to better match Moose's "definition": Stubs are all elements not part of the parsed source code
+-----------------------------------------
+action=M pathString="/verveine.extractor.java/lib/verveine.core.jar" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.extractor.java/src/fr/inria/verveine/extractor/java/JavaDictionary.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.extractor.java/src/fr/inria/verveine/extractor/java/VerveineDefVisitor.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.extractor.java/src/tests/fr/inria/verveine/extractor/java/VerveineExtractorJavaTest.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.extractor.java/lib/verveine.extractor.java.jar" nodeKind=file copyFromPath="null" copyFromRevision=-1
+=========================================
+author=anquetil
+revision=9
+date=2010-11-03 07:53:33
+message=Introduced PrimitiveTypes
+-----------------------------------------
+action=M pathString="/verveine.core/lib/verveine.core.jar" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.core/src/fr/inria/verveine/core/Dictionary.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+=========================================
+author=anquetil
+revision=10
+date=2010-11-03 07:55:57
+message=Now exports int,boolean,void,... as PrimitiveTypes
+-----------------------------------------
+action=M pathString="/verveine.extractor.java/lib/verveine.core.jar" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.extractor.java/src/fr/inria/verveine/extractor/java/VerveineRefVisitor.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.extractor.java/src/fr/inria/verveine/extractor/java/JavaDictionary.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.extractor.java/src/tests/fr/inria/verveine/extractor/java/VerveineExtractorJavaTest.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.extractor.java/lib/verveine.extractor.java.jar" nodeKind=file copyFromPath="null" copyFromRevision=-1
+=========================================
+author=anquetil
+revision=11
+date=2010-11-04 14:42:34
+message=Added endLine to sourceAnchors
+-----------------------------------------
+action=M pathString="/verveine.extractor.java/src/fr/inria/verveine/extractor/java/JavaDictionary.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.extractor.java/src/tests/fr/inria/verveine/extractor/java/VerveineExtractorJavaTest.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.extractor.java/lib/verveine.extractor.java.jar" nodeKind=file copyFromPath="null" copyFromRevision=-1
+=========================================
+author=anquetil
+revision=12
+date=2010-11-16 14:16:48
+message=Corrects a bug with accesses to the length field of arrays.
+Also introduces metrics for methods, but not yet fully tested
+-----------------------------------------
+action=M pathString="/verveine.extractor.java/lib/verveine.core.jar" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.extractor.java/lib/famix.jar" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.extractor.java/src/fr/inria/verveine/extractor/java/VerveineRefVisitor.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.extractor.java/src/fr/inria/verveine/extractor/java/JavaDictionary.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.extractor.java/src/fr/inria/verveine/extractor/java/VerveineDefVisitor.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.extractor.java/src/tests/fr/inria/verveine/extractor/java/VerveineExtractorJavaTest.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.extractor.java/lib/verveine.extractor.java.jar" nodeKind=file copyFromPath="null" copyFromRevision=-1
+=========================================
+author=anquetil
+revision=13
+date=2010-11-16 22:28:53
+message=Adds to metrics to methods: Cyclomatic complexity , Number of statements.
+Also attach javadoc to entities
+-----------------------------------------
+action=M pathString="/verveine.extractor.java/lib/verveine.core.jar" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.extractor.java/.classpath" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.extractor.java/lib/famix.jar" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.extractor.java/src/tests/fr/inria/verveine/extractor/java/VerveineExtractorJavaTest.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.extractor.java/lib/verveine.extractor.java.jar" nodeKind=file copyFromPath="null" copyFromRevision=-1
+=========================================
+author=anquetil
+revision=14
+date=2010-11-16 22:35:12
+message=Adds to metrics to methods: Cyclomatic complexity , Number of statements.
+-----------------------------------------
+action=M pathString="/verveine.core/lib/verveine.core.jar" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.core/src/fr/inria/verveine/core/gen/famix/BehaviouralEntity.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.core/lib/famix.jar" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.core/src/fr/inria/verveine/core/Dictionary.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.core/src/fr/inria/verveine/core/EntityStack.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+=========================================
+author=anquetil
+revision=15
+date=2010-11-18 17:32:12
+message=Reconsidered how comments are treated. Removed them from the EntityStack
+-----------------------------------------
+action=M pathString="/verveine.core/lib/verveine.core.jar" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.core/src/fr/inria/verveine/core/Dictionary.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.core/src/fr/inria/verveine/core/EntityStack.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+=========================================
+author=anquetil
+revision=16
+date=2010-11-18 17:38:37
+message=Changed how javadocs are recorded. Also added source anchor to them ...
+-----------------------------------------
+action=M pathString="/verveine.extractor.java/lib/verveine.core.jar" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.extractor.java/.classpath" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.extractor.java/src/fr/inria/verveine/extractor/java/VerveineDefVisitor.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.extractor.java/src/tests/fr/inria/verveine/extractor/java/VerveineExtractorJavaTest.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.extractor.java/lib/verveine.extractor.java.jar" nodeKind=file copyFromPath="null" copyFromRevision=-1
+=========================================
+author=anquetil
+revision=17
+date=2010-11-22 23:29:49
+message=Handling exceptions (declared, thrown, caught)
+-----------------------------------------
+action=M pathString="/verveine.core/lib/verveine.core.jar" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.core/src/fr/inria/verveine/core/Dictionary.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+=========================================
+author=anquetil
+revision=18
+date=2010-11-22 23:31:37
+message=Handling exceptions (declared, thrown, caught)
+Not fully tested because test case (LanModel) does not have Exceptions
+-----------------------------------------
+action=M pathString="/verveine.extractor.java/lib/verveine.core.jar" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.extractor.java/.classpath" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.extractor.java/src/fr/inria/verveine/extractor/java/VerveineRefVisitor.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.extractor.java/src/fr/inria/verveine/extractor/java/JavaDictionary.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.extractor.java/lib/verveine.extractor.java.jar" nodeKind=file copyFromPath="null" copyFromRevision=-1
+=========================================
+author=anquetil
+revision=19
+date=2010-11-23 13:24:38
+message=Bug correction with FamixClass>>getIsAbstract()
+-----------------------------------------
+action=M pathString="/verveine.extractor.java/lib/verveine.core.jar" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.extractor.java/.classpath" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.extractor.java/src/fr/inria/verveine/extractor/java/JavaDictionary.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.extractor.java/lib/verveine.extractor.java.jar" nodeKind=file copyFromPath="null" copyFromRevision=-1
+=========================================
+author=anquetil
+revision=20
+date=2010-11-23 13:25:08
+message=Bug correction with FamixClass>>getIsAbstract()
+-----------------------------------------
+action=M pathString="/verveine.core/lib/verveine.core.jar" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.core/src/fr/inria/verveine/core/Dictionary.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+=========================================
+author=anquetil
+revision=21
+date=2010-11-26 15:28:25
+message=Corrected a bug with namespaces having the same name
+Also refactored the main class (BatchParser) in (VerveineJParser and VerveineParser)
+-----------------------------------------
+action=M pathString="/verveine.extractor.java/lib/verveine.core.jar" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.extractor.java/.classpath" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/verveine.extractor.java/src/fr/inria/verveine/extractor/java/VerveineJParser.java" nodeKind=file copyFromPath="/verveine.extractor.java/src/fr/inria/verveine/extractor/java/BatchParser.java" copyFromRevision=11
+action=M pathString="/verveine.extractor.java/src/fr/inria/verveine/extractor/java/JavaDictionary.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=D pathString="/verveine.extractor.java/src/fr/inria/verveine/extractor/java/BatchParser.java" nodeKind=unknown copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.extractor.java/src/fr/inria/verveine/extractor/java/VerveineDefVisitor.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.extractor.java/verveinej.sh" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.extractor.java/src/tests/fr/inria/verveine/extractor/java/VerveineExtractorJavaTest.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.extractor.java/lib/verveine.extractor.java.jar" nodeKind=file copyFromPath="null" copyFromRevision=-1
+=========================================
+author=anquetil
+revision=22
+date=2010-11-26 15:29:24
+message=Refactored the main class of VerveineJ (BatchParser) in (VerveineJParser and VerveineParser)
+-----------------------------------------
+action=A pathString="/verveine.core/src/fr/inria/verveine/core/VerveineParser.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.core/lib/verveine.core.jar" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/verveine.core/lib/org.eclipse.jdt.core_3.6.0.v_A58.jar" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.core/src/test/fr/inria/verveine/core/TestVerveineUtils.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.core/.classpath" nodeKind=file copyFromPath="null" copyFromRevision=-1
+=========================================
+author=anquetil
+revision=23
+date=2010-11-26 16:46:11
+message=Added tests for exception handling
+-----------------------------------------
+action=A pathString="/verveine.extractor.java/test_src/ad_hoc/OMGL2/ReadException.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/verveine.extractor.java/test_src/ad_hoc/OMGL2/SequSynchro.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/verveine.extractor.java/test_src/ad_hoc" nodeKind=dir copyFromPath="null" copyFromRevision=-1
+action=A pathString="/verveine.extractor.java/test_src/ad_hoc/OMGL2" nodeKind=dir copyFromPath="null" copyFromRevision=-1
+action=A pathString="/verveine.extractor.java/test_src/ad_hoc/OMGL2/Fournisseur.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=D pathString="/verveine.extractor.java/src/tests/fr/inria/verveine/extractor/java/VerveineExtractorJavaTest.java" nodeKind=unknown copyFromPath="null" copyFromRevision=-1
+action=A pathString="/verveine.extractor.java/src/tests/fr/inria/verveine/extractor/java/VerveineJTest_AdHoc.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/verveine.extractor.java/src/tests/fr/inria/verveine/extractor/java/VerveineJTest_LanModel.java" nodeKind=file copyFromPath="/verveine.extractor.java/src/tests/fr/inria/verveine/extractor/java/VerveineExtractorJavaTest.java" copyFromRevision=21
+action=A pathString="/verveine.extractor.java/test_src/ad_hoc/OMGL2/Client.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/verveine.extractor.java/test_src/ad_hoc/OMGL2/Main.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+=========================================
+author=anquetil
+revision=24
+date=2010-12-12 15:59:57
+message=Changes to allow separate analysis of the files of a project
+-----------------------------------------
+action=M pathString="/verveine.core/src/fr/inria/verveine/core/VerveineParser.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.core/lib/verveine.core.jar" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.core/lib/famix.jar" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.core/src/fr/inria/verveine/core/gen/famix/Class.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.core/src/test/fr/inria/verveine/core/TestVerveineUtils.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.core/src/fr/inria/verveine/core/Dictionary.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.core/src/fr/inria/verveine/core/gen/famix/Access.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+=========================================
+author=anquetil
+revision=25
+date=2010-12-12 16:01:11
+message=Changes to allow separate analysis of the files of a project
+-----------------------------------------
+action=M pathString="/verveine.extractor.java/lib/verveine.core.jar" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.extractor.java/.classpath" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.extractor.java/lib/famix.jar" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.extractor.java/src/fr/inria/verveine/extractor/java/VerveineJParser.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.extractor.java/src/fr/inria/verveine/extractor/java/JavaDictionary.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.extractor.java/src/tests/fr/inria/verveine/extractor/java/VerveineJTest_AdHoc.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.extractor.java/src/tests/fr/inria/verveine/extractor/java/VerveineJTest_LanModel.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+=========================================
+author=anquetil
+revision=26
+date=2010-12-15 22:33:05
+message=Implemented separate parsing
+-----------------------------------------
+action=M pathString="/verveine.extractor.java/lib/verveine.core.jar" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.extractor.java/.classpath" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/verveine.extractor.java/lib/akuhn-util-r28011.jar" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.extractor.java/verveinej.sh" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.extractor.java/lib/fame.jar" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.extractor.java/src/tests/fr/inria/verveine/extractor/java/VerveineJTest_LanModel.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.extractor.java/lib/verveine.extractor.java.jar" nodeKind=file copyFromPath="null" copyFromRevision=-1
+=========================================
+author=anquetil
+revision=27
+date=2010-12-15 22:34:13
+message=Implemented separate parsing
+-----------------------------------------
+action=M pathString="/verveine.core/lib/verveine.core.jar" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.core/lib/fame.jar" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/verveine.core/lib/akuhn-util-r28011.jar" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.core/.classpath" nodeKind=file copyFromPath="null" copyFromRevision=-1
+=========================================
+author=anquetil
+revision=28
+date=2010-12-19 23:25:27
+message=Relative path of files in SourceAnchors
+Prepared next/previous link in Associations, but did not activate it because Moose importer does not support it yet
+-----------------------------------------
+action=M pathString="/verveine.core/lib/verveine.core.jar" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.core/src/fr/inria/verveine/core/Dictionary.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.core/lib/fame.jar" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=D pathString="/verveine.core/lib/akuhn-util-r28011.jar" nodeKind=unknown copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.core/src/fr/inria/verveine/core/EntityStack.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.core/.classpath" nodeKind=file copyFromPath="null" copyFromRevision=-1
+=========================================
+author=anquetil
+revision=29
+date=2010-12-19 23:26:51
+message=Relative path of files in SourceAnchors
+Prepared next/previous link in Associations, but did not activate it because Moose importer does not support it yet
+-----------------------------------------
+action=M pathString="/verveine.extractor.java/lib/verveine.core.jar" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.extractor.java/.classpath" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.extractor.java/src/fr/inria/verveine/extractor/java/VerveineJParser.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.extractor.java/src/fr/inria/verveine/extractor/java/VerveineRefVisitor.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=D pathString="/verveine.extractor.java/lib/akuhn-util-r28011.jar" nodeKind=unknown copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.extractor.java/lib/fame.jar" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.extractor.java/src/tests/fr/inria/verveine/extractor/java/VerveineJTest_LanModel.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.extractor.java/lib/verveine.extractor.java.jar" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.extractor.java/src/fr/inria/verveine/extractor/java/FamixRequestor.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+=========================================
+author=hora
+revision=30
+date=2011-01-07 18:44:37
+message=Solved issue: 479 New   VerveineJ: next and previous values set for the associations
+-----------------------------------------
+action=M pathString="/verveine.extractor.java/lib/verveine.core.jar" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.extractor.java/.classpath" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.core/lib/verveine.core.jar" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.extractor.java/src/fr/inria/verveine/extractor/java/VerveineRefVisitor.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.core/src/fr/inria/verveine/core/Dictionary.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.extractor.java/src/tests/fr/inria/verveine/extractor/java/VerveineJTest_LanModel.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.core/src/fr/inria/verveine/core/EntityStack.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.core/.classpath" nodeKind=file copyFromPath="null" copyFromRevision=-1
+=========================================
+author=hora
+revision=31
+date=2011-01-10 12:00:46
+message=Added the method ensureFamixInheritance(fr.inria.verveine.core.gen.famix.Class sup, fr.inria.verveine.core.gen.famix.Class sub, Inheritance prev)
+-----------------------------------------
+action=M pathString="/verveine.core/src/fr/inria/verveine/core/Dictionary.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+=========================================
+author=hora
+revision=32
+date=2011-01-10 12:01:00
+message=
+-----------------------------------------
+action=M pathString="/verveine.core/lib/verveine.core.jar" nodeKind=file copyFromPath="null" copyFromRevision=-1
+=========================================
+author=hora
+revision=33
+date=2011-01-10 12:04:52
+message=Added functionalities to possibility use next/previous of a Inheritance,
+Added functionalities to possibility export the implemented interface(s) of classes.
+-----------------------------------------
+action=M pathString="/verveine.extractor.java/src/fr/inria/verveine/extractor/java/JavaDictionary.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+=========================================
+author=hora
+revision=34
+date=2011-01-10 12:05:22
+message=
+-----------------------------------------
+action=M pathString="/verveine.extractor.java/src/fr/inria/verveine/extractor/java/VerveineRefVisitor.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+=========================================
+author=hora
+revision=35
+date=2011-01-10 12:08:26
+message=Updated the tests due implemented interface(s) of classes functionality.
+Added new tests to inheritance next/previous.
+-----------------------------------------
+action=M pathString="/verveine.extractor.java/src/tests/fr/inria/verveine/extractor/java/VerveineJTest_LanModel.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+=========================================
+author=hora
+revision=36
+date=2011-01-10 12:08:41
+message=
+-----------------------------------------
+action=M pathString="/verveine.extractor.java/lib/verveine.extractor.java.jar" nodeKind=file copyFromPath="null" copyFromRevision=-1
+=========================================
+author=hora
+revision=37
+date=2011-01-10 12:08:59
+message=
+-----------------------------------------
+action=D pathString="/verveine.extractor.java/lib/verveine.core.jar" nodeKind=unknown copyFromPath="null" copyFromRevision=-1
+=========================================
+author=hora
+revision=38
+date=2011-01-10 12:09:09
+message=
+-----------------------------------------
+action=A pathString="/verveine.extractor.java/lib/verveine.core.jar" nodeKind=file copyFromPath="null" copyFromRevision=-1
+=========================================
+author=hora
+revision=39
+date=2011-01-11 12:33:08
+message=setLastAccess(null);
+-----------------------------------------
+action=M pathString="/verveine.core/src/fr/inria/verveine/core/EntityStack.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+=========================================
+author=hora
+revision=40
+date=2011-01-11 14:33:49
+message=
+-----------------------------------------
+action=M pathString="/verveine.core/src/fr/inria/verveine/core/Dictionary.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+=========================================
+author=hora
+revision=41
+date=2011-01-11 16:01:55
+message=
+-----------------------------------------
+action=M pathString="/verveine.core/lib/verveine.core.jar" nodeKind=file copyFromPath="null" copyFromRevision=-1
+=========================================
+author=hora
+revision=42
+date=2011-01-11 16:02:16
+message=
+-----------------------------------------
+action=D pathString="/verveine.extractor.java/lib/verveine.core.jar" nodeKind=unknown copyFromPath="null" copyFromRevision=-1
+=========================================
+author=hora
+revision=43
+date=2011-01-11 16:02:25
+message=
+-----------------------------------------
+action=A pathString="/verveine.extractor.java/lib/verveine.core.jar" nodeKind=file copyFromPath="null" copyFromRevision=-1
+=========================================
+author=hora
+revision=44
+date=2011-01-11 16:07:42
+message=Solved issue 478. In VerveineJ exports annotation instances and annotation type.
+-----------------------------------------
+action=M pathString="/verveine.extractor.java/src/fr/inria/verveine/extractor/java/VerveineDefVisitor.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+=========================================
+author=hora
+revision=45
+date=2011-01-11 16:33:15
+message=Solved issue 478. In VerveineJ exports annotation instances and annotation type. Updated for attributes and classes.
+-----------------------------------------
+action=M pathString="/verveine.extractor.java/src/fr/inria/verveine/extractor/java/VerveineDefVisitor.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+=========================================
+author=hora
+revision=46
+date=2011-01-11 16:42:30
+message=Solved issue 478. In VerveineJ exports annotation instances and annotation type.
+-----------------------------------------
+action=M pathString="/verveine.extractor.java/src/fr/inria/verveine/extractor/java/JavaDictionary.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+=========================================
+author=hora
+revision=47
+date=2011-01-11 17:34:38
+message=Updated and added new test for AnnotationType and AnnotationInstance.
+-----------------------------------------
+action=M pathString="/verveine.extractor.java/src/tests/fr/inria/verveine/extractor/java/VerveineJTest_LanModel.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+=========================================
+author=hora
+revision=48
+date=2011-01-11 17:59:36
+message=Updated and added new test for AnnotationType and AnnotationInstance for the ad_hoc model.
+-----------------------------------------
+action=M pathString="/verveine.extractor.java/src/tests/fr/inria/verveine/extractor/java/VerveineJTest_AdHoc.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+=========================================
+author=hora
+revision=49
+date=2011-01-11 18:03:06
+message=Updated class Client to test AnnotationType and AnnotationInstance.
+-----------------------------------------
+action=M pathString="/verveine.extractor.java/test_src/ad_hoc/OMGL2/Client.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+=========================================
+author=hora
+revision=50
+date=2011-01-11 18:03:51
+message=
+-----------------------------------------
+action=M pathString="/verveine.extractor.java/lib/verveine.extractor.java.jar" nodeKind=file copyFromPath="null" copyFromRevision=-1
+=========================================
+author=hora
+revision=51
+date=2011-01-12 11:13:46
+message=
+-----------------------------------------
+action=M pathString="/verveine.extractor.java/src/fr/inria/verveine/extractor/java/VerveineDefVisitor.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+=========================================
+author=hora
+revision=52
+date=2011-01-15 13:01:50
+message=Added createFamixParameter
+-----------------------------------------
+action=M pathString="/verveine.core/src/fr/inria/verveine/core/Dictionary.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+=========================================
+author=hora
+revision=53
+date=2011-01-15 14:59:39
+message=Updated to use generic types even if the binding is null.
+-----------------------------------------
+action=M pathString="/verveine.extractor.java/src/fr/inria/verveine/extractor/java/JavaDictionary.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+=========================================
+author=hora
+revision=54
+date=2011-01-15 15:00:38
+message=Updated to use generic types even if the binding is null.
+-----------------------------------------
+action=M pathString="/verveine.extractor.java/src/fr/inria/verveine/extractor/java/VerveineDefVisitor.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+=========================================
+author=hora
+revision=55
+date=2011-01-15 15:01:43
+message=Updated to use generic types even if the binding is null.
+-----------------------------------------
+action=M pathString="/verveine.extractor.java/src/fr/inria/verveine/extractor/java/VerveineRefVisitor.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+=========================================
+author=hora
+revision=56
+date=2011-01-15 15:07:26
+message=
+-----------------------------------------
+action=M pathString="/verveine.core/lib/verveine.core.jar" nodeKind=file copyFromPath="null" copyFromRevision=-1
+=========================================
+author=hora
+revision=57
+date=2011-01-15 15:11:30
+message=
+-----------------------------------------
+action=D pathString="/verveine.extractor.java/lib/verveine.core.jar" nodeKind=unknown copyFromPath="null" copyFromRevision=-1
+=========================================
+author=hora
+revision=58
+date=2011-01-15 15:13:16
+message=
+-----------------------------------------
+action=A pathString="/verveine.extractor.java/lib/verveine.core.jar" nodeKind=file copyFromPath="null" copyFromRevision=-1
+=========================================
+author=hora
+revision=59
+date=2011-01-17 22:23:23
+message=Added the class Dictionary to the tests.
+-----------------------------------------
+action=A pathString="/verveine.extractor.java/test_src/Dictionary/Dictionary.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/verveine.extractor.java/test_src/Dictionary" nodeKind=dir copyFromPath="null" copyFromRevision=-1
+=========================================
+author=hora
+revision=60
+date=2011-01-18 12:08:06
+message=Added parameterTypes method.
+-----------------------------------------
+action=M pathString="/verveine.core/src/fr/inria/verveine/core/gen/famix/Class.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+=========================================
+author=hora
+revision=61
+date=2011-01-18 12:09:54
+message=Added declaredArgumentTypes method.
+-----------------------------------------
+action=M pathString="/verveine.core/src/fr/inria/verveine/core/gen/famix/StructuralEntity.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+=========================================
+author=hora
+revision=62
+date=2011-01-18 15:19:09
+message=Added Unit Tests (related to Dictionary model) to test parameterTypes and argumentTypes.
+-----------------------------------------
+action=A pathString="/verveine.extractor.java/src/tests/fr/inria/verveine/extractor/java/VerveineJTest_Dictionary.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+=========================================
+author=hora
+revision=63
+date=2011-01-18 15:20:48
+message=Updated the call to ensureFamixLocalVariable. Now it receives a Famix Method to be used if binding is null.
+-----------------------------------------
+action=M pathString="/verveine.extractor.java/src/fr/inria/verveine/extractor/java/VerveineRefVisitor.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+=========================================
+author=hora
+revision=64
+date=2011-01-18 15:22:24
+message=Updated to deal with parameterTypes and argumentTypes.
+-----------------------------------------
+action=M pathString="/verveine.extractor.java/src/fr/inria/verveine/extractor/java/VerveineDefVisitor.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+=========================================
+author=hora
+revision=65
+date=2011-01-18 15:23:34
+message=Updated to deal with parameterTypes and argumentTypes.
+-----------------------------------------
+action=M pathString="/verveine.extractor.java/src/fr/inria/verveine/extractor/java/JavaDictionary.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+=========================================
+author=hora
+revision=66
+date=2011-01-18 15:24:59
+message=Added the property declaredArgumentTypes.
+-----------------------------------------
+action=M pathString="/verveine.core/src/fr/inria/verveine/core/gen/famix/Method.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+=========================================
+author=hora
+revision=67
+date=2011-01-18 15:25:57
+message=
+-----------------------------------------
+action=M pathString="/verveine.core/lib/famix.jar" nodeKind=file copyFromPath="null" copyFromRevision=-1
+=========================================
+author=hora
+revision=68
+date=2011-01-18 15:26:15
+message=
+-----------------------------------------
+action=D pathString="/verveine.extractor.java/lib/famix.jar" nodeKind=unknown copyFromPath="null" copyFromRevision=-1
+=========================================
+author=hora
+revision=69
+date=2011-01-18 15:26:24
+message=
+-----------------------------------------
+action=A pathString="/verveine.extractor.java/lib/famix.jar" nodeKind=file copyFromPath="null" copyFromRevision=-1
+=========================================
+author=hora
+revision=70
+date=2011-01-18 15:27:31
+message=
+-----------------------------------------
+action=M pathString="/verveine.core/lib/verveine.core.jar" nodeKind=file copyFromPath="null" copyFromRevision=-1
+=========================================
+author=hora
+revision=71
+date=2011-01-18 15:27:51
+message=
+-----------------------------------------
+action=D pathString="/verveine.extractor.java/lib/verveine.core.jar" nodeKind=unknown copyFromPath="null" copyFromRevision=-1
+=========================================
+author=hora
+revision=72
+date=2011-01-18 15:28:01
+message=
+-----------------------------------------
+action=A pathString="/verveine.extractor.java/lib/verveine.core.jar" nodeKind=file copyFromPath="null" copyFromRevision=-1
+=========================================
+author=hora
+revision=73
+date=2011-01-18 15:28:38
+message=
+-----------------------------------------
+action=M pathString="/verveine.core/lib/verveine.core.jar" nodeKind=file copyFromPath="null" copyFromRevision=-1
+=========================================
+author=hora
+revision=74
+date=2011-01-18 15:29:03
+message=
+-----------------------------------------
+action=D pathString="/verveine.extractor.java/lib/verveine.core.jar" nodeKind=unknown copyFromPath="null" copyFromRevision=-1
+=========================================
+author=hora
+revision=75
+date=2011-01-18 15:30:28
+message=
+-----------------------------------------
+action=A pathString="/verveine.extractor.java/lib/verveine.core.jar" nodeKind=file copyFromPath="null" copyFromRevision=-1
+=========================================
+author=hora
+revision=76
+date=2011-01-18 15:32:09
+message=
+-----------------------------------------
+action=M pathString="/verveine.extractor.java/lib/verveine.extractor.java.jar" nodeKind=file copyFromPath="null" copyFromRevision=-1
+=========================================
+author=anquetil
+revision=77
+date=2011-01-27 11:23:17
+message=Corrected a bug with constructors having a null binding
+-----------------------------------------
+action=M pathString="/verveine.extractor.java/src/tests/fr/inria/verveine/extractor/java/VerveineJTest_Dictionary.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.extractor.java/src/fr/inria/verveine/extractor/java/JavaDictionary.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.extractor.java/test_src/Dictionary/Dictionary.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.extractor.java/src/fr/inria/verveine/extractor/java/VerveineDefVisitor.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.extractor.java/lib/verveine.extractor.java.jar" nodeKind=file copyFromPath="null" copyFromRevision=-1
+=========================================
+author=anquetil
+revision=78
+date=2011-02-25 13:51:21
+message=Generated Famix entities from new metamodel (Moose 4.3)
+-----------------------------------------
+action=M pathString="/verveine.core/src/fr/inria/verveine/core/gen/file/FolderGroup.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/verveine.core/src/fr/inria/verveine/core/gen/moose/AbsractGroup.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.core/src/fr/inria/verveine/core/gen/dude/MultiplicationGroup.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.core/src/fr/inria/verveine/core/gen/famix/SourcedEntity.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.core/src/fr/inria/verveine/core/gen/file/FILEModel.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=D pathString="/verveine.core/src/fr/inria/verveine/core/gen/moose/MooseAbsractGroup.java" nodeKind=unknown copyFromPath="null" copyFromRevision=-1
+action=A pathString="/verveine.core/src/fr/inria/verveine/core/gen/moose/Model.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/verveine.core/src/fr/inria/verveine/core/gen/hismo/HismoAccessHistory.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/verveine.core/src/fr/inria/verveine/core/gen/famix/SmalltalkSourceLanguage.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.core/lib/fame.jar" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.core/src/fr/inria/verveine/core/gen/famix/ClassGroup.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/verveine.core/lib/akuhn-util-r28011.jar" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/verveine.core/src/fr/inria/verveine/core/gen/famix/ParameterType.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.core/src/fr/inria/verveine/core/gen/dude/Duplication.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.core/src/fr/inria/verveine/core/gen/hismo/HismoModel.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=D pathString="/verveine.core/src/fr/inria/verveine/core/gen/moose/MooseGroup.java" nodeKind=unknown copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.core/src/fr/inria/verveine/core/gen/file/FileGroup.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.core/src/fr/inria/verveine/core/gen/famix/Method.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.core/src/fr/inria/verveine/core/gen/famix/MethodGroup.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/verveine.core/src/fr/inria/verveine/core/gen/famix/UnknownSourceLanguage.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.core/src/fr/inria/verveine/core/gen/dude/DuplicationGroup.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/verveine.core/src/fr/inria/verveine/core/gen/famix/AnnotationInstanceAttribute.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.core/src/fr/inria/verveine/core/gen/famix/PackageGroup.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.core/mse/famix30_complete.mse" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/verveine.core/src/fr/inria/verveine/core/gen/famix/JavaSourceLanguage.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.core/src/fr/inria/verveine/core/gen/hismo/HismoHistoryGroup.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/verveine.core/src/fr/inria/verveine/core/gen/famix/SourceLanguage.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.core/src/fr/inria/verveine/core/gen/dude/Multiplication.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.core/src/fr/inria/verveine/core/gen/hismo/HismoCoChangePattern.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.core/src/fr/inria/verveine/core/gen/famix/BehaviouralEntity.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.core/src/fr/inria/verveine/core/gen/dude/DudeModel.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/verveine.core/src/fr/inria/verveine/core/gen/famix/Module.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.core/src/fr/inria/verveine/core/gen/moose/MooseModel.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.core/src/fr/inria/verveine/core/gen/famix/AnnotationType.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.core/src/fr/inria/verveine/core/gen/famix/FAMIXModel.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/verveine.core/src/fr/inria/verveine/core/gen/moose/Entity.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/verveine.core/src/fr/inria/verveine/core/gen/famix/CustomSourceLanguage.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.core/src/fr/inria/verveine/core/gen/famix/AnnotationInstance.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/verveine.core/src/fr/inria/verveine/core/gen/famix/ParameterizableClass.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.core/src/fr/inria/verveine/core/gen/famix/Access.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.core/src/fr/inria/verveine/core/gen/famix/NamespaceGroup.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.core/.classpath" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=D pathString="/verveine.core/src/fr/inria/verveine/core/gen/moose/MooseEntity.java" nodeKind=unknown copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.core/src/fr/inria/verveine/core/gen/famix/GlobalVariableGroup.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/verveine.core/src/fr/inria/verveine/core/gen/famix/Enum.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.core/src/fr/inria/verveine/core/gen/famix/StructuralEntity.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.core/src/fr/inria/verveine/core/gen/famix/GlobalVariable.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/verveine.core/src/fr/inria/verveine/core/gen/moose/Group.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=D pathString="/verveine.core/src/fr/inria/verveine/core/gen/moose/HismoAccessHistory.java" nodeKind=unknown copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.core/src/fr/inria/verveine/core/GenerateFamix.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.core/src/fr/inria/verveine/core/gen/famix/Class.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.core/src/fr/inria/verveine/core/gen/famix/Function.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/verveine.core/src/fr/inria/verveine/core/gen/famix/AnnotationTypeGroup.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/verveine.core/src/fr/inria/verveine/core/gen/famix/AnnotationTypeAttribute.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/verveine.core/src/fr/inria/verveine/core/gen/famix/ParameterizedType.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/verveine.core/src/fr/inria/verveine/core/gen/famix/SmalltalkMonticelloSourceLanguage.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/verveine.core/src/fr/inria/verveine/core/gen/famix/EnumValue.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+=========================================
+author=anquetil
+revision=79
+date=2011-02-25 13:58:07
+message=Created new verveine.core.jar
+-----------------------------------------
+action=A pathString="/verveine.core/export-verveine-core.jardesc" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.core/lib/verveine.core.jar" nodeKind=file copyFromPath="null" copyFromRevision=-1
+=========================================
+author=anquetil
+revision=80
+date=2011-03-01 12:18:15
+message=In the middle of refactoring for new FAMIX metamodel
+Tests are OK (+/-)
+-----------------------------------------
+action=M pathString="/verveine.core/src/fr/inria/verveine/core/VerveineParser.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.core/lib/verveine.core.jar" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/verveine.core/export-famix.jardesc" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.core/lib/famix.jar" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.core/src/fr/inria/verveine/core/Dictionary.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.core/src/fr/inria/verveine/core/gen/famix/AnnotationInstance.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.core/src/fr/inria/verveine/core/gen/famix/ParameterizableClass.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+=========================================
+author=anquetil
+revision=81
+date=2011-03-01 12:26:38
+message=In the middle of refactoring for new FAMIX metamodel
+Tests are OK (+/-)
+-----------------------------------------
+action=M pathString="/verveine.extractor.java/lib/verveine.core.jar" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/verveine.extractor.java/memusage.txt" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.extractor.java/.classpath" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.extractor.java/lib/famix.jar" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.extractor.java/src/tests/fr/inria/verveine/extractor/java/VerveineJTest_Dictionary.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.extractor.java/src/fr/inria/verveine/extractor/java/VerveineRefVisitor.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.extractor.java/src/fr/inria/verveine/extractor/java/JavaDictionary.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.extractor.java/test_src/Dictionary/Dictionary.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.extractor.java/src/fr/inria/verveine/extractor/java/VerveineDefVisitor.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.extractor.java/src/tests/fr/inria/verveine/extractor/java/VerveineJTest_LanModel.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+=========================================
+author=anquetil
+revision=82
+date=2011-03-08 17:31:24
+message=In the middle of restructuring VerveineJ
+All tests green save for the two about parameterized types
+-----------------------------------------
+action=M pathString="/verveine.core/src/fr/inria/verveine/core/gen/famix/ImplicitVariable.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.core/src/fr/inria/verveine/core/gen/famix/Method.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.core/src/fr/inria/verveine/core/gen/famix/GlobalVariable.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.core/src/fr/inria/verveine/core/gen/famix/NamedEntity.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.core/src/fr/inria/verveine/core/gen/famix/Attribute.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.core/src/fr/inria/verveine/core/gen/famix/Parameter.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.core/src/fr/inria/verveine/core/gen/famix/Type.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.core/src/fr/inria/verveine/core/gen/famix/Class.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.core/src/fr/inria/verveine/core/gen/famix/LocalVariable.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.core/src/fr/inria/verveine/core/Dictionary.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.core/src/fr/inria/verveine/core/gen/famix/AnnotationType.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.core/src/fr/inria/verveine/core/gen/famix/UnknownVariable.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.core/src/fr/inria/verveine/core/gen/famix/ScopingEntity.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.core/.classpath" nodeKind=file copyFromPath="null" copyFromRevision=-1
+=========================================
+author=anquetil
+revision=83
+date=2011-03-08 17:38:07
+message=In the middle of restructuring VerveineJ
+This commit overrides the previous one which was abandoned (restarted from its base version)
+All tests green save for the two about parameterized types
+-----------------------------------------
+action=A pathString="/verveine.extractor.java/test_src/ad_hoc/Dictionary.java" nodeKind=file copyFromPath="/verveine.extractor.java/test_src/Dictionary/Dictionary.java" copyFromRevision=81
+action=M pathString="/verveine.extractor.java/.classpath" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.extractor.java/src/tests/fr/inria/verveine/extractor/java/VerveineJTest_Dictionary.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.extractor.java/src/fr/inria/verveine/extractor/java/VerveineJParser.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.extractor.java/src/fr/inria/verveine/extractor/java/VerveineRefVisitor.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.extractor.java/src/fr/inria/verveine/extractor/java/JavaDictionary.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=D pathString="/verveine.extractor.java/test_src/Dictionary/Dictionary.java" nodeKind=unknown copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.extractor.java/src/fr/inria/verveine/extractor/java/VerveineDefVisitor.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.extractor.java/src/tests/fr/inria/verveine/extractor/java/VerveineJTest_LanModel.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+=========================================
+author=anquetil
+revision=84
+date=2011-03-10 09:51:24
+message=Commit before generating new Famix (to simplify merging)
+-----------------------------------------
+action=M pathString="/verveine.core/src/fr/inria/verveine/core/gen/famix/SourcedEntity.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.core/src/fr/inria/verveine/core/Dictionary.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+=========================================
+author=anquetil
+revision=85
+date=2011-03-10 12:10:29
+message=Generated a new Famix MetaModel corrected from early Moose 4.3 modifications
+-----------------------------------------
+action=M pathString="/verveine.core/src/fr/inria/verveine/core/gen/famix/SourcedEntity.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.core/src/fr/inria/verveine/core/gen/dude/DudeModel.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.core/src/fr/inria/verveine/core/gen/moose/MooseModel.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.core/src/fr/inria/verveine/core/gen/file/FILEModel.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.core/src/fr/inria/verveine/core/gen/famix/FAMIXModel.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.core/src/fr/inria/verveine/core/gen/famix/ParameterizableClass.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.core/src/fr/inria/verveine/core/gen/famix/AnnotationInstance.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.core/src/fr/inria/verveine/core/gen/hismo/HismoModel.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.core/src/fr/inria/verveine/core/gen/famix/Method.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.core/src/fr/inria/verveine/core/gen/famix/Enum.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.core/src/fr/inria/verveine/core/gen/famix/GlobalVariable.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.core/src/fr/inria/verveine/core/gen/famix/NamedEntity.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.core/src/fr/inria/verveine/core/gen/famix/Type.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.core/src/fr/inria/verveine/core/gen/famix/AnnotationInstanceAttribute.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.core/src/fr/inria/verveine/core/gen/famix/Class.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.core/src/fr/inria/verveine/core/gen/famix/Function.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/verveine.core/src/fr/inria/verveine/core/gen/famix/CSourceLanguage.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.core/mse/famix30_complete.mse" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.core/src/fr/inria/verveine/core/gen/famix/AnnotationTypeAttribute.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.core/src/fr/inria/verveine/core/gen/famix/SourceLanguage.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.core/src/fr/inria/verveine/core/gen/famix/EnumValue.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+=========================================
+author=anquetil
+revision=86
+date=2011-03-10 23:12:21
+message=Implemented enums and Annotations
+Enums does not work because of JDT parser problem)
+-----------------------------------------
+action=M pathString="/verveine.core/src/fr/inria/verveine/core/VerveineParser.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.core/src/fr/inria/verveine/core/gen/famix/NamedEntity.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.core/src/fr/inria/verveine/core/Dictionary.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.core/src/fr/inria/verveine/core/gen/famix/AnnotationTypeAttribute.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.core/src/fr/inria/verveine/core/EntityStack.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+=========================================
+author=anquetil
+revision=87
+date=2011-03-10 23:14:19
+message=Implemented enums and Annotations
+Enums does not work because of JDT parser problem)
+Tests green for Annotations
+-----------------------------------------
+action=A pathString="/verveine.extractor.java/test_src/ad_hoc/ReadException.java" nodeKind=file copyFromPath="/verveine.extractor.java/test_src/ad_hoc/OMGL2/ReadException.java" copyFromRevision=76
+action=M pathString="/verveine.extractor.java/.classpath" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=D pathString="/verveine.extractor.java/src/tests/fr/inria/verveine/extractor/java/VerveineJTest_Dictionary.java" nodeKind=unknown copyFromPath="null" copyFromRevision=-1
+action=D pathString="/verveine.extractor.java/test_src/ad_hoc/OMGL2" nodeKind=unknown copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.extractor.java/src/fr/inria/verveine/extractor/java/VerveineJParser.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.extractor.java/src/fr/inria/verveine/extractor/java/VerveineRefVisitor.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.extractor.java/src/fr/inria/verveine/extractor/java/JavaDictionary.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/verveine.extractor.java/test_src/ad_hoc/Card.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.extractor.java/src/fr/inria/verveine/extractor/java/VerveineDefVisitor.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.extractor.java/src/tests/fr/inria/verveine/extractor/java/VerveineJTest_AdHoc.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.extractor.java/src/tests/fr/inria/verveine/extractor/java/VerveineJTest_LanModel.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/verveine.extractor.java/test_src/ad_hoc/Client.java" nodeKind=file copyFromPath="/verveine.extractor.java/test_src/ad_hoc/OMGL2/Client.java" copyFromRevision=76
+action=A pathString="/verveine.extractor.java/test_src/ad_hoc/Element.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.extractor.java/src/fr/inria/verveine/extractor/java/FamixRequestor.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/verveine.extractor.java/test_src/ad_hoc/FameProperty.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+=========================================
+author=anquetil
+revision=88
+date=2011-03-14 18:34:54
+message=
+-----------------------------------------
+action=A pathString="/branches" nodeKind=dir copyFromPath="null" copyFromRevision=-1
+=========================================
+author=anquetil
+revision=89
+date=2011-03-14 18:35:58
+message=Branching from trunk to postMoose4_3Refactor at revision 87
+-----------------------------------------
+action=A pathString="/branches/postMoose4_3Refactoring" nodeKind=dir copyFromPath="null" copyFromRevision=-1
+=========================================
+author=anquetil
+revision=90
+date=2011-03-14 18:36:47
+message=Branch to hold refactoring after chnages in metamodel in moose 4.3
+-----------------------------------------
+action=A pathString="/branches/postMoose4_3Refactoring/verveine.extractor.java" nodeKind=dir copyFromPath="/verveine.extractor.java" copyFromRevision=89
+=========================================
+author=anquetil
+revision=91
+date=2011-03-14 18:42:17
+message=ParameterizableClass done
+Parameterized class on way
+
+Stuck with missing JDT information
+-----------------------------------------
+action=M pathString="/branches/postMoose4_3Refactoring/verveine.extractor.java/src/fr/inria/verveine/extractor/java/JavaDictionary.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/branches/postMoose4_3Refactoring/verveine.extractor.java/src/fr/inria/verveine/extractor/java/VerveineDefVisitor.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/branches/postMoose4_3Refactoring/verveine.extractor.java/src/tests/fr/inria/verveine/extractor/java/VerveineJTest_AdHoc.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/branches/postMoose4_3Refactoring/verveine.extractor.java/src/tests/fr/inria/verveine/extractor/java/VerveineJTest_LanModel.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/branches/postMoose4_3Refactoring/verveine.extractor.java/test_src/ad_hoc/Dictionary.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/branches/postMoose4_3Refactoring/verveine.extractor.java/.classpath" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/branches/postMoose4_3Refactoring/verveine.extractor.java/src/fr/inria/verveine/extractor/java/VerveineJParser.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/branches/postMoose4_3Refactoring/verveine.extractor.java/src/fr/inria/verveine/extractor/java/VerveineRefVisitor.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+=========================================
+author=anquetil
+revision=92
+date=2011-03-15 11:28:17
+message=
+-----------------------------------------
+action=A pathString="/branches/postMoose4_3Refactoring/verveine.core" nodeKind=dir copyFromPath="null" copyFromRevision=-1
+=========================================
+author=anquetil
+revision=93
+date=2011-03-15 12:31:37
+message=
+-----------------------------------------
+action=A pathString="/branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/Dictionary.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/branches/postMoose4_3Refactoring/verveine.core/.project" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/branches/postMoose4_3Refactoring/verveine.core/src/fr/inria" nodeKind=dir copyFromPath="null" copyFromRevision=-1
+action=A pathString="/branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/moose" nodeKind=dir copyFromPath="null" copyFromRevision=-1
+action=A pathString="/branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/hismo/HismoModel.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/dude" nodeKind=dir copyFromPath="null" copyFromRevision=-1
+action=A pathString="/branches/postMoose4_3Refactoring/verveine.core/src" nodeKind=dir copyFromPath="null" copyFromRevision=-1
+action=A pathString="/branches/postMoose4_3Refactoring/verveine.core/src/fr" nodeKind=dir copyFromPath="null" copyFromRevision=-1
+action=A pathString="/branches/postMoose4_3Refactoring/verveine.core/bin" nodeKind=dir copyFromPath="null" copyFromRevision=-1
+action=A pathString="/branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/file" nodeKind=dir copyFromPath="null" copyFromRevision=-1
+action=A pathString="/branches/postMoose4_3Refactoring/verveine.core/src/test" nodeKind=dir copyFromPath="null" copyFromRevision=-1
+action=A pathString="/branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core" nodeKind=dir copyFromPath="null" copyFromRevision=-1
+action=A pathString="/branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen" nodeKind=dir copyFromPath="null" copyFromRevision=-1
+action=A pathString="/branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine" nodeKind=dir copyFromPath="null" copyFromRevision=-1
+action=A pathString="/branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/hismo" nodeKind=dir copyFromPath="null" copyFromRevision=-1
+action=A pathString="/branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/file/FILEModel.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/dude/DudeModel.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/moose/MooseModel.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+=========================================
+author=anquetil
+revision=94
+date=2011-03-15 12:32:20
+message=
+-----------------------------------------
+action=A pathString="/branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/hismo/HismoPackageHistory.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/hismo/HismoAccessHistory.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/hismo/HismoHistoryGroup.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/dude/Multiplication.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/branches/postMoose4_3Refactoring/verveine.core/src/test/fr" nodeKind=dir copyFromPath="null" copyFromRevision=-1
+action=A pathString="/branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/file/Folder.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/dude/Duplication.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/file/FileGroup.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/hismo/HismoFolderHistory.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/hismo/HismoNamespaceHistoryGroup.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/dude/CodeFragment.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/hismo/HismoClassHistoryGroup.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/hismo/HismoNamespaceVersion.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/hismo/HismoCoChangeVersion.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/hismo/HismoNamespaceHistory.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/hismo/HismoAttributeHistory.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/hismo/HismoCoChangeHistory.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/moose/Group.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/hismo/HismoFileHistory.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/hismo/HismoCoChangePattern.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/GenerateFamix.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/NonCloseablePrintStream.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/hismo/HismoMethodHistoryGroup.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/EntityStack.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/hismo/HismoModelHistory.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/moose/Entity.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix" nodeKind=dir copyFromPath="null" copyFromRevision=-1
+action=A pathString="/branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/VerveineParser.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/dude/CodeLine.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/hismo/HismoInvocationHistory.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/hismo/HismoClassVersion.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/moose/Model.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/hismo/HismoClassHierarchy.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/hismo/HismoClassHistory.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/file/AbstractFile.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/hismo/HismoInheritanceDefinitionHistory.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/file/File.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/hismo/HismoMethodVersion.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/file/FolderGroup.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/dude/DuplicationGroup.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/moose/AbsractGroup.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/hismo/HismoAbstractVersion.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/dude/MultiplicationGroup.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/hismo/HismoEntityVersion.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/hismo/HismoMethodHistory.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/hismo/HismoAbstractHistory.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+=========================================
+author=anquetil
+revision=95
+date=2011-03-15 12:32:46
+message=
+-----------------------------------------
+action=A pathString="/branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/CSourceLanguage.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/DeclaredException.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/ScopingEntity.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/ClassGroup.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/CaughtException.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/Entity.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/Method.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/LeafEntity.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/BehaviouralEntity.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/Inheritance.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/Parameter.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/ThrownException.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/Package.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/Type.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/PackageGroup.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/ContainerEntity.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/JavaSourceLanguage.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/GlobalVariableGroup.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/SourceLanguage.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/Comment.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/FileAnchor.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/NamedEntity.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/SourceAnchor.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/Namespace.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/Module.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/Class.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/AnnotationTypeGroup.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/AnnotationType.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/FAMIXModel.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/ParameterizedType.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/AnnotationTypeAttribute.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/SmalltalkMonticelloSourceLanguage.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/NamespaceGroup.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/CustomSourceLanguage.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/AnnotationInstance.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/ParameterizableClass.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/EnumValue.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/Access.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/Exception.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/ImplicitVariable.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/Enum.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/StructuralEntity.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/SourcedEntity.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/GlobalVariable.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/Reference.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/SourceTextAnchor.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/LocalVariable.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/SmalltalkSourceLanguage.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/UnknownVariable.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/Function.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/ParameterType.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/PrimitiveType.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/Association.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/MethodGroup.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/UnknownSourceLanguage.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/Invocation.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/Attribute.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/branches/postMoose4_3Refactoring/verveine.core/src/test/fr/inria" nodeKind=dir copyFromPath="null" copyFromRevision=-1
+action=A pathString="/branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/AnnotationInstanceAttribute.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+=========================================
+author=anquetil
+revision=96
+date=2011-03-15 12:32:58
+message=
+-----------------------------------------
+action=A pathString="/branches/postMoose4_3Refactoring/verveine.core/src/test/fr/inria/verveine" nodeKind=dir copyFromPath="null" copyFromRevision=-1
+=========================================
+author=anquetil
+revision=97
+date=2011-03-15 12:33:11
+message=
+-----------------------------------------
+action=A pathString="/branches/postMoose4_3Refactoring/verveine.core/src/test/fr/inria/verveine/core" nodeKind=dir copyFromPath="null" copyFromRevision=-1
+=========================================
+author=anquetil
+revision=98
+date=2011-03-15 12:33:21
+message=
+-----------------------------------------
+action=A pathString="/branches/postMoose4_3Refactoring/verveine.core/src/test/fr/inria/verveine/core/TestVerveineUtils.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+=========================================
+author=anquetil
+revision=99
+date=2011-03-15 12:49:44
+message=Recovered lost Dictionary
+Messed a lot with SVN to create this branch
+-----------------------------------------
+action=A pathString="/branches/postMoose4_3Refactoring/verveine.core/lib/fame.jar" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/branches/postMoose4_3Refactoring/verveine.core/lib/akuhn-util-r28011.jar" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/branches/postMoose4_3Refactoring/verveine.core/mse/famix30_complete.mse" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/branches/postMoose4_3Refactoring/verveine.core/.classpath" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/branches/postMoose4_3Refactoring/verveine.core/mse" nodeKind=dir copyFromPath="null" copyFromRevision=-1
+action=A pathString="/branches/postMoose4_3Refactoring/verveine.core/mse/famix30_famix.mse" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/branches/postMoose4_3Refactoring/verveine.core/lib" nodeKind=dir copyFromPath="null" copyFromRevision=-1
+action=A pathString="/branches/postMoose4_3Refactoring/verveine.core/lib/org.eclipse.jdt.core_3.6.0.v_A58.jar" nodeKind=file copyFromPath="null" copyFromRevision=-1
+=========================================
+author=anquetil
+revision=100
+date=2011-03-15 12:51:30
+message=Recovered lost Dictionary
+Messed a lot with SVN to create verveine.core branch
+-----------------------------------------
+action=M pathString="/branches/postMoose4_3Refactoring/verveine.extractor.java/src/fr/inria/verveine/extractor/java/JavaDictionary.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/branches/postMoose4_3Refactoring/verveine.extractor.java/src/fr/inria/verveine/extractor/java/VerveineDefVisitor.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/branches/postMoose4_3Refactoring/verveine.extractor.java/src/tests/fr/inria/verveine/extractor/java/VerveineJTest_LanModel.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=D pathString="/branches/postMoose4_3Refactoring/verveine.extractor.java/memusage.txt" nodeKind=unknown copyFromPath="null" copyFromRevision=-1
+action=M pathString="/branches/postMoose4_3Refactoring/verveine.extractor.java/.classpath" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/branches/postMoose4_3Refactoring/verveine.extractor.java/src/fr/inria/verveine/extractor/java/VerveineRefVisitor.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+=========================================
+author=anquetil
+revision=101
+date=2011-03-15 13:01:22
+message=Trying to get rid of 'test_src/Dictionary'
+-----------------------------------------
+action=D pathString="/branches/postMoose4_3Refactoring/verveine.extractor.java/test_src/Dictionary" nodeKind=unknown copyFromPath="null" copyFromRevision=-1
+=========================================
+author=anquetil
+revision=102
+date=2011-03-15 13:52:29
+message=Finish recovering from deleting Dictionary.java
+Back to restructuring after Moose 4.3
+-----------------------------------------
+action=M pathString="/branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/Dictionary.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+=========================================
+author=anquetil
+revision=103
+date=2011-03-15 13:55:01
+message=intermediary check-in to avoid loosing more stuff
+
+-----------------------------------------
+action=M pathString="/branches/postMoose4_3Refactoring/verveine.extractor.java/src/fr/inria/verveine/extractor/java/VerveineDefVisitor.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/branches/postMoose4_3Refactoring/verveine.extractor.java/src/tests/fr/inria/verveine/extractor/java/VerveineJTest_AdHoc.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/branches/postMoose4_3Refactoring/verveine.extractor.java/verveinej.sh" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/branches/postMoose4_3Refactoring/verveine.extractor.java/src/tests/fr/inria/verveine/extractor/java/VerveineJTest_LanModel.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+=========================================
+author=anquetil
+revision=104
+date=2011-03-17 15:40:53
+message=Incremental parsing is working again
+-----------------------------------------
+action=M pathString="/branches/postMoose4_3Refactoring/verveine.extractor.java/src/fr/inria/verveine/extractor/java/JavaDictionary.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/Dictionary.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/branches/postMoose4_3Refactoring/verveine.extractor.java/src/fr/inria/verveine/extractor/java/VerveineDefVisitor.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/branches/postMoose4_3Refactoring/verveine.extractor.java/src/tests/fr/inria/verveine/extractor/java/VerveineJTest_LanModel.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/branches/postMoose4_3Refactoring/verveine.extractor.java/.classpath" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/branches/postMoose4_3Refactoring/verveine.extractor.java/src/fr/inria/verveine/extractor/java/VerveineRefVisitor.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+=========================================
+author=anquetil
+revision=105
+date=2011-03-22 23:59:59
+message=Added ant build, test targets
+Now calling JDT parser the right way (well, hopefully)
+-----------------------------------------
+action=M pathString="/branches/postMoose4_3Refactoring/verveine.extractor.java/src/fr/inria/verveine/extractor/java/JavaDictionary.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/branches/postMoose4_3Refactoring/verveine.extractor.java/src/fr/inria/verveine/extractor/java/VerveineDefVisitor.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/branches/postMoose4_3Refactoring/verveine.extractor.java/src/tests/fr/inria/verveine/extractor/java/VerveineJTest_AdHoc.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/branches/postMoose4_3Refactoring/verveine.extractor.java/src/tests/fr/inria/verveine/extractor/java/VerveineJTest_LanModel.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/branches/postMoose4_3Refactoring/verveine.extractor.java/lib/junit.jar" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/branches/postMoose4_3Refactoring/verveine.extractor.java/src/fr/inria/verveine/extractor/java/FamixRequestor.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/branches/postMoose4_3Refactoring/verveine.extractor.java/lib/verveine.core.jar" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/branches/postMoose4_3Refactoring/verveine.extractor.java/lib/famix.jar" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/branches/postMoose4_3Refactoring/verveine.extractor.java/lib/org.hamcrest.core_1.1.0.v20090501071000.jar" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/branches/postMoose4_3Refactoring/verveine.extractor.java/.classpath" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/branches/postMoose4_3Refactoring/verveine.extractor.java/build.xml" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/branches/postMoose4_3Refactoring/verveine.extractor.java/src/fr/inria/verveine/extractor/java/VerveineJParser.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+=========================================
+author=anquetil
+revision=106
+date=2011-03-23 24:01:12
+message=Added ant build, test targets
+Now calling JDT parser the right way (well, hopefully)
+-----------------------------------------
+action=M pathString="/branches/postMoose4_3Refactoring/verveine.core/.classpath" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/branches/postMoose4_3Refactoring/verveine.core/lib/verveine.core.jar" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/VerveineParser.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/branches/postMoose4_3Refactoring/verveine.core/lib/famix.jar" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/branches/postMoose4_3Refactoring/verveine.core/build.xml" nodeKind=file copyFromPath="null" copyFromRevision=-1
+=========================================
+author=anquetil
+revision=107
+date=2011-03-23 22:19:20
+message=Corrected bug with Implicit variables' container And created a test for it
+-----------------------------------------
+action=M pathString="/branches/postMoose4_3Refactoring/verveine.extractor.java/src/fr/inria/verveine/extractor/java/JavaDictionary.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/Dictionary.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/branches/postMoose4_3Refactoring/verveine.extractor.java/src/fr/inria/verveine/extractor/java/VerveineDefVisitor.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/branches/postMoose4_3Refactoring/verveine.extractor.java/test_src/Card.java" nodeKind=file copyFromPath="/branches/postMoose4_3Refactoring/verveine.extractor.java/test_src/ad_hoc/Card.java" copyFromRevision=91
+action=M pathString="/branches/postMoose4_3Refactoring/verveine.extractor.java/src/tests/fr/inria/verveine/extractor/java/VerveineJTest_LanModel.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/branches/postMoose4_3Refactoring/verveine.extractor.java/test_src/ad_hoc/FameProperty.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/gen/famix/ImplicitVariable.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/branches/postMoose4_3Refactoring/verveine.extractor.java/build.xml" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=D pathString="/branches/postMoose4_3Refactoring/verveine.extractor.java/test_src/ad_hoc/Card.java" nodeKind=unknown copyFromPath="null" copyFromRevision=-1
+action=M pathString="/branches/postMoose4_3Refactoring/verveine.extractor.java/src/fr/inria/verveine/extractor/java/VerveineRefVisitor.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+=========================================
+author=anquetil
+revision=108
+date=2011-03-24 18:17:33
+message=Intermediate merging of branch  "Post_Moose4_3 refactoring"
+Added an Ant build file
+-----------------------------------------
+action=M pathString="/verveine.core/src/fr/inria/verveine/core/gen/famix/ImplicitVariable.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.core/src/fr/inria/verveine/core/VerveineParser.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.core/lib/verveine.core.jar" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.core/src/fr/inria/verveine/core/gen/dude/DudeModel.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.core/src/fr/inria/verveine/core/gen/moose/MooseModel.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.core/src/fr/inria/verveine/core/gen/file/FILEModel.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.core/lib/famix.jar" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/verveine.core/build.xml" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.core/src/fr/inria/verveine/core/Dictionary.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.core/.classpath" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.core/src/fr/inria/verveine/core/gen/hismo/HismoModel.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+=========================================
+author=anquetil
+revision=109
+date=2011-03-24 18:18:46
+message=Intermediate merging of branch  "Post_Moose4_3 refactoring"
+Added an Ant build file
+All tests are not green
+-----------------------------------------
+action=M pathString="/verveine.extractor.java/test_src/ad_hoc/ReadException.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=D pathString="/verveine.extractor.java/memusage.txt" nodeKind=unknown copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.extractor.java/.classpath" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/verveine.extractor.java/lib/org.hamcrest.core_1.1.0.v20090501071000.jar" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/verveine.extractor.java/build.xml" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/verveine.extractor.java/test_src/ad_hoc/ReadClient.java" nodeKind=file copyFromPath="/verveine.extractor.java/test_src/ad_hoc/Client.java" copyFromRevision=107
+action=M pathString="/verveine.extractor.java/src/fr/inria/verveine/extractor/java/VerveineJParser.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.extractor.java/src/fr/inria/verveine/extractor/java/JavaDictionary.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.extractor.java/src/fr/inria/verveine/extractor/java/VerveineDefVisitor.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.extractor.java/src/tests/fr/inria/verveine/extractor/java/VerveineJTest_AdHoc.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.extractor.java/src/tests/fr/inria/verveine/extractor/java/VerveineJTest_LanModel.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.extractor.java/src/fr/inria/verveine/extractor/java/FamixRequestor.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/verveine.extractor.java/testrep/TEST-tests.fr.inria.verveine.extractor.java.VerveineJTest_AdHoc.txt" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.extractor.java/lib/verveine.core.jar" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.extractor.java/test_src/ad_hoc/Dictionary.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.extractor.java/lib/famix.jar" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.extractor.java/src/fr/inria/verveine/extractor/java/VerveineRefVisitor.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.extractor.java/test_src/ad_hoc/Card.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/verveine.extractor.java/testrep" nodeKind=dir copyFromPath="null" copyFromRevision=-1
+action=D pathString="/verveine.extractor.java/test_src/Dictionary" nodeKind=unknown copyFromPath="null" copyFromRevision=-1
+action=D pathString="/verveine.extractor.java/test_src/ad_hoc/Client.java" nodeKind=unknown copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.extractor.java/test_src/ad_hoc/Element.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/verveine.extractor.java/testrep/TEST-tests.fr.inria.verveine.extractor.java.VerveineJTest_LanModel.txt" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.extractor.java/test_src/ad_hoc/FameProperty.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/verveine.extractor.java/lib/junit.jar" nodeKind=file copyFromPath="null" copyFromRevision=-1
+=========================================
+author=anquetil
+revision=110
+date=2011-03-24 18:57:29
+message=Test_AdHoc does not crash anymore on FameProperty (test are still not green yet)
+-----------------------------------------
+action=M pathString="/verveine.extractor.java/build.xml" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.extractor.java/src/fr/inria/verveine/extractor/java/VerveineRefVisitor.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.extractor.java/test_src/ad_hoc/FameProperty.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+=========================================
+author=anquetil
+revision=111
+date=2011-03-26 23:25:12
+message=Corrected some bugs and added some tests
+-----------------------------------------
+action=M pathString="/verveine.extractor.java/src/fr/inria/verveine/extractor/java/VerveineRefVisitor.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.extractor.java/src/fr/inria/verveine/extractor/java/JavaDictionary.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.core/src/fr/inria/verveine/core/Dictionary.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.extractor.java/src/fr/inria/verveine/extractor/java/VerveineDefVisitor.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.extractor.java/src/tests/fr/inria/verveine/extractor/java/VerveineJTest_AdHoc.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.extractor.java/src/tests/fr/inria/verveine/extractor/java/VerveineJTest_LanModel.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.core/src/fr/inria/verveine/core/EntityStack.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.core/.classpath" nodeKind=file copyFromPath="null" copyFromRevision=-1
+=========================================
+author=anquetil
+revision=112
+date=2011-03-30 15:30:49
+message=Added command line arguments parsing
+Re-added local paths
+All test_lan pass
+-----------------------------------------
+action=D pathString="/verveine.extractor.java/lib/verveine.core.jar" nodeKind=unknown copyFromPath="null" copyFromRevision=-1
+action=D pathString="/verveine.extractor.java/lib/famix.jar" nodeKind=unknown copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.extractor.java/build.xml" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.extractor.java/src/fr/inria/verveine/extractor/java/VerveineJParser.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.extractor.java/src/fr/inria/verveine/extractor/java/VerveineRefVisitor.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.extractor.java/src/fr/inria/verveine/extractor/java/JavaDictionary.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/verveine.extractor.java/lib/akuhn-util-r28011.jar" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.extractor.java/src/fr/inria/verveine/extractor/java/VerveineDefVisitor.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.extractor.java/src/tests/fr/inria/verveine/extractor/java/VerveineJTest_AdHoc.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.extractor.java/src/tests/fr/inria/verveine/extractor/java/VerveineJTest_LanModel.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=D pathString="/verveine.extractor.java/lib/verveine.extractor.java.jar" nodeKind=unknown copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.extractor.java/src/fr/inria/verveine/extractor/java/FamixRequestor.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+=========================================
+author=anquetil
+revision=113
+date=2011-03-31 24:26:29
+message=Changed toString() for NamedEntity to be simpler
+-----------------------------------------
+action=M pathString="/verveine.core/src/fr/inria/verveine/core/gen/famix/NamedEntity.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.core/lib/verveine.core.jar" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.core/lib/famix.jar" nodeKind=file copyFromPath="null" copyFromRevision=-1
+=========================================
+author=anquetil
+revision=114
+date=2011-03-31 24:29:43
+message=Corrected problems with owner of PArameterizedTypes / ParameterizableTypes
+Forced RefVisitor to call methods in JavaDictionary
+-----------------------------------------
+action=A pathString="/verveine.extractor.java/lib/verveine.core.jar" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.extractor.java/test_src/ad_hoc/Dictionary.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/verveine.extractor.java/lib/famix.jar" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.extractor.java/src/fr/inria/verveine/extractor/java/VerveineRefVisitor.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.extractor.java/src/fr/inria/verveine/extractor/java/JavaDictionary.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.extractor.java/src/fr/inria/verveine/extractor/java/VerveineDefVisitor.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.extractor.java/src/tests/fr/inria/verveine/extractor/java/VerveineJTest_AdHoc.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/verveine.extractor.java/lib/verveine.extractor.java.jar" nodeKind=file copyFromPath="null" copyFromRevision=-1
+=========================================
+author=anquetil
+revision=115
+date=2011-04-04 09:48:52
+message=Added new tests (some of which are actually green !)
+-----------------------------------------
+action=M pathString="/verveine.extractor.java/src/fr/inria/verveine/extractor/java/VerveineRefVisitor.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=A pathString="/verveine.extractor.java/src/tests/fr/inria/verveine/extractor/java/VerveineJTest_Basic.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.extractor.java/src/tests/fr/inria/verveine/extractor/java/VerveineJTest_AdHoc.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.extractor.java/src/tests/fr/inria/verveine/extractor/java/VerveineJTest_LanModel.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+=========================================
+author=anquetil
+revision=116
+date=2011-04-04 11:26:51
+message=Still more tests
+Made sure all created association have non null 'From' and 'To'
+-----------------------------------------
+action=M pathString="/verveine.extractor.java/src/fr/inria/verveine/extractor/java/VerveineRefVisitor.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.extractor.java/src/tests/fr/inria/verveine/extractor/java/VerveineJTest_Basic.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.core/src/fr/inria/verveine/core/Dictionary.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.extractor.java/src/tests/fr/inria/verveine/extractor/java/VerveineJTest_LanModel.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+=========================================
+author=anquetil
+revision=117
+date=2011-04-04 17:21:49
+message=Merged Def and Ref visitors in one
+-----------------------------------------
+action=A pathString="/verveine.extractor.java/src/fr/inria/verveine/extractor/java/VerveineVisitor.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=D pathString="/verveine.extractor.java/src/fr/inria/verveine/extractor/java/VerveineRefVisitor.java" nodeKind=unknown copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.extractor.java/src/tests/fr/inria/verveine/extractor/java/VerveineJTest_Basic.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.extractor.java/src/fr/inria/verveine/extractor/java/JavaDictionary.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=D pathString="/verveine.extractor.java/src/fr/inria/verveine/extractor/java/VerveineDefVisitor.java" nodeKind=unknown copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.extractor.java/src/fr/inria/verveine/extractor/java/FamixRequestor.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+=========================================
+author=anquetil
+revision=118
+date=2011-04-04 18:36:33
+message=Correcting bugs ...
+-----------------------------------------
+action=M pathString="/verveine.extractor.java/test_src/ad_hoc/Dictionary.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.extractor.java/src/fr/inria/verveine/extractor/java/VerveineVisitor.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.extractor.java/src/fr/inria/verveine/extractor/java/JavaDictionary.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+=========================================
+author=anquetil
+revision=119
+date=2011-04-04 23:17:47
+message=Annotations and Enumerations working
+-----------------------------------------
+action=M pathString="/verveine.extractor.java/.classpath" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.extractor.java/src/fr/inria/verveine/extractor/java/VerveineVisitor.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.core/lib/verveine.core.jar" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.core/lib/famix.jar" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.extractor.java/test_src/ad_hoc/Card.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.core/src/fr/inria/verveine/core/Dictionary.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.extractor.java/src/tests/fr/inria/verveine/extractor/java/VerveineJTest_AdHoc.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.extractor.java/test_src/ad_hoc/Element.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.core/.classpath" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.core/src/fr/inria/verveine/core/gen/famix/EnumValue.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+=========================================
+author=anquetil
+revision=120
+date=2011-04-05 22:56:17
+message=Corrected bug with EnumValue creation
+Corrected some test with ParameterizedClass
+-----------------------------------------
+action=M pathString="/verveine.extractor.java/lib/verveine.core.jar" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.extractor.java/test_src/ad_hoc/Dictionary.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.extractor.java/src/fr/inria/verveine/extractor/java/VerveineVisitor.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.extractor.java/lib/famix.jar" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.extractor.java/test_src/ad_hoc/Card.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.extractor.java/src/tests/fr/inria/verveine/extractor/java/VerveineJTest_AdHoc.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+=========================================
+author=anquetil
+revision=121
+date=2011-04-06 21:38:36
+message=All tests green for the implemented parts
+Two tests fails for not yet implemented things
+-----------------------------------------
+action=M pathString="/verveine.extractor.java/test_src/ad_hoc/Dictionary.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.extractor.java/src/fr/inria/verveine/extractor/java/VerveineVisitor.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.extractor.java/src/tests/fr/inria/verveine/extractor/java/VerveineJTest_Basic.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.core/src/fr/inria/verveine/core/Dictionary.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.extractor.java/src/tests/fr/inria/verveine/extractor/java/VerveineJTest_LanModel.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+=========================================
+author=anquetil
+revision=122
+date=2011-04-06 21:44:53
+message=Forgot to remove debugging traces
+-----------------------------------------
+action=M pathString="/verveine.extractor.java/src/fr/inria/verveine/extractor/java/VerveineVisitor.java" nodeKind=file copyFromPath="null" copyFromRevision=-1
+action=M pathString="/verveine.extractor.java/lib/verveine.extractor.java.jar" nodeKind=file copyFromPath="null" copyFromRevision=-1

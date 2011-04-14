@@ -1,0 +1,554 @@
+Index: branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/Dictionary.java
+===================================================================
+--- branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/Dictionary.java	(revision 103)
++++ branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/Dictionary.java	(revision 104)
+@@ -99,32 +99,26 @@
+ 		}
+ 	}
+ 
++	/**
++	 * Resets the dictionnary in a proper state after loading entities from an existing MSE file:
++	 * <UL>
++	 * <li>map all named entities to their names in <b>mapName</b></li>
++	 * <li>reset some boolean properties (e.g. <b>isStub</b>) that are false (they are not saved in the mse file and therefore not initialized)</li>
++	 * </ul>
++	 */
+ 	protected void recoverExistingRepository() {
+-		for (Object obj : famixRepo.getElements()) {
+-			if (obj instanceof NamedEntity) {
+-				mapEntityToName( ((NamedEntity)obj).getName(), (NamedEntity) obj);
+-			}
+-		}
+-		
+-		for (Access acc : famixRepo.all(Access.class)) {
+-			try {
+-				if (acc.getIsWrite()) { }
+-			}
+-			catch (NullPointerException e) {
+-				acc.setIsWrite(Boolean.FALSE);
+-			}
+-		}
+-
+-		for (Method meth : famixRepo.all(Method.class)) {
+-			try { if (meth.getIsStub()) { } }
+-			catch (NullPointerException e) { meth.setIsStub(Boolean.FALSE); }
++		for (NamedEntity ent : famixRepo.all(NamedEntity.class)) {
++			mapEntityToName( ent.getName(), ent);
++			// for the Exception to be raised, the return value must be tested
++			try { if (ent.getIsStub()) {} }
++			catch (NullPointerException e) { ent.setIsStub(Boolean.FALSE); }
+ 		}
+ 
+-		for (Attribute att : famixRepo.all(Attribute.class)) {
+-			try { if (att.getIsStub()) { } }
+-			catch (NullPointerException e) { att.setIsStub(Boolean.FALSE); }
++		for (Access acc : famixRepo.all(Access.class)) {
++			// for the Exception to be raised, the return value must be tested
++			try { if (acc.getIsWrite()) {}	}
++			catch (NullPointerException e) { acc.setIsWrite(Boolean.FALSE); }
+ 		}
+-
+ 	}
+ 	
+ 	protected void mapEntityToName(String name, NamedEntity ent) {
+@@ -526,14 +520,6 @@
+ 		return acc;
+ 	}
+ 
+-	public Access ensureFamixAccess(BehaviouralEntity accessor, StructuralEntity var, boolean isWrite) {
+-		return ensureFamixAccess(accessor, var, isWrite, null);
+-	}
+-	
+-	public Access ensureFamixAccess(BehaviouralEntity accessor, StructuralEntity var) {
+-		return ensureFamixAccess(accessor, var, false, null);  // must set some default for isWrite and this one seems safer than the opposite
+-	}
+-
+ 	private void chainPrevNext(Association prev, Association next) {
+ 		if (prev != null) {
+ 			next.setPrevious(prev);  // not yet implemented in importer
+@@ -726,13 +712,6 @@
+ 		return fmx;
+ 	}
+ 
+-
+-
+-
+-
+-
+-
+-
+ 	public Type searchTypeInContext(String name, ContainerEntity ctxt) {
+ 		if (ctxt == null) {
+ 			return null;
+Index: branches/postMoose4_3Refactoring/verveine.extractor.java/.classpath
+===================================================================
+--- branches/postMoose4_3Refactoring/verveine.extractor.java/.classpath	(revision 103)
++++ branches/postMoose4_3Refactoring/verveine.extractor.java/.classpath	(revision 104)
+@@ -2,7 +2,7 @@
+ <classpath>
+ 	<classpathentry kind="src" path="src"/>
+ 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
+-	<classpathentry kind="lib" path="lib/org.eclipse.jdt.core_3.6.0.v_A58.jar" sourcepath="/org.eclipse.jdt.core/dom">
++	<classpathentry kind="lib" path="lib/org.eclipse.jdt.core_3.6.0.v_A58.jar" sourcepath="/org.eclipse.jdt.core/">
+ 		<attributes>
+ 			<attribute name="javadoc_location" value="jar:file:/usr/local/share/eclipse-3_6/plugins/isv-3.2.1-r321_v20060907.jar!/reference/api"/>
+ 		</attributes>
+@@ -14,7 +14,7 @@
+ 	<classpathentry kind="lib" path="lib/org.eclipse.osgi_3.6.0.v20100517.jar"/>
+ 	<classpathentry kind="lib" path="lib/org.eclipse.equinox.common_3.6.0.v20100503.jar"/>
+ 	<classpathentry kind="lib" path="lib/org.eclipse.equinox.preferences_3.3.0.v20100503.jar"/>
+-	<classpathentry kind="lib" path="lib/fame.jar" sourcepath="/Fame/src"/>
++	<classpathentry kind="lib" path="lib/fame.jar" sourcepath="/Fame/"/>
+ 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
+ 	<classpathentry combineaccessrules="false" kind="src" path="/verveine.core"/>
+ 	<classpathentry kind="output" path="bin"/>
+Index: branches/postMoose4_3Refactoring/verveine.extractor.java/src/tests/fr/inria/verveine/extractor/java/VerveineJTest_LanModel.java
+===================================================================
+--- branches/postMoose4_3Refactoring/verveine.extractor.java/src/tests/fr/inria/verveine/extractor/java/VerveineJTest_LanModel.java	(revision 103)
++++ branches/postMoose4_3Refactoring/verveine.extractor.java/src/tests/fr/inria/verveine/extractor/java/VerveineJTest_LanModel.java	(revision 104)
+@@ -59,7 +59,7 @@
+ 	 */
+ 	@Before
+ 	public void setUp() throws Exception {
+-		/*String[] files = new String[] {
++		String[] files = new String[] {
+ 				"AbstractDestinationAddress.java",
+ 				"Node.java",
+ 				"Packet.java",
+@@ -71,15 +71,17 @@
+ 				"server/PrintServer.java"
+ 		};
+ 
++		new File(VerveineJParser.OUTPUT_FILE).delete();
++
+ 		// separate parsing of each source file --------
+ 		for (String f : files) {
+ 			parseFile(f);
+-		}*/
+-		
++		}
++
+ 		// or parsing the entire project in one pass ---
+-		VerveineJParser parser = new VerveineJParser();
+-		parser.compile(	new String[] {"test_src/LANModel/moose/lan/"});
+-		repo = parser.getFamixRepo();
++		//VerveineJParser parser = new VerveineJParser();
++		//parser.compile(	new String[] {"test_src/LANModel/moose/lan/"});
++		//repo = parser.getFamixRepo();
+ 	}
+ 
+ 	/**
+@@ -102,15 +104,10 @@
+ 		parser.outputMSE();  // to create a new one
+ 	}
+ 
+-	@After
+-	public void tearDown() {
+-		new File(VerveineJParser.OUTPUT_FILE).delete();
+-	}
+-	
+ 	@Test
+ 	public void testEntitiesNumber() {
+-		for (fr.inria.verveine.core.gen.famix.Class c : TestVerveineUtils.selectElementsOfType(repo,fr.inria.verveine.core.gen.famix.Class.class)) {
+-			//System.out.println("class -- "+c.getName());
++		for (Method c : TestVerveineUtils.selectElementsOfType(repo,Method.class)) {
++			//System.out.println("meth -- "+c.getBelongsTo()+"::"+c.getSignature());
+ 		}
+ 		assertEquals(11+14, TestVerveineUtils.selectElementsOfType(repo, fr.inria.verveine.core.gen.famix.Class.class).size()); // 11 + {Object,String,StringBuffer,AbstractStringBuilder,PrintStream,FilterOutputStream,OutputStream,System,Comparable,Serializable,Flushable,Appendable,CharSequence,Closeable}
+ 		assertEquals(3,     TestVerveineUtils.selectElementsOfType(repo, PrimitiveType.class).size());//int,boolean,void
+Index: branches/postMoose4_3Refactoring/verveine.extractor.java/src/fr/inria/verveine/extractor/java/VerveineRefVisitor.java
+===================================================================
+--- branches/postMoose4_3Refactoring/verveine.extractor.java/src/fr/inria/verveine/extractor/java/VerveineRefVisitor.java	(revision 103)
++++ branches/postMoose4_3Refactoring/verveine.extractor.java/src/fr/inria/verveine/extractor/java/VerveineRefVisitor.java	(revision 104)
+@@ -73,7 +73,7 @@
+ 	// VISITOR METHODS
+ 
+ 	public boolean visit(CompilationUnit node) {
+-		System.err.println("TRACE, RefVisiting CompilationUnit");
++//		System.err.println("TRACE, RefVisiting CompilationUnit");
+ 
+ 		PackageDeclaration pckg = node.getPackage();
+ 		Namespace fmx = null;
+@@ -129,7 +129,7 @@
+ 	}
+ 
+ 	public boolean visit(TypeDeclaration node) {
+-		System.err.println("TRACE, RefVisiting TypeDeclaration: "+node.getName().getIdentifier());
++//		System.err.println("TRACE, RefVisiting TypeDeclaration: "+node.getName().getIdentifier());
+ 		ITypeBinding bnd = node.resolveBinding();
+ 		fr.inria.verveine.core.gen.famix.Class fmx = (fr.inria.verveine.core.gen.famix.Class)dico.getEntityByKey(bnd);
+ 		if (fmx != null) {
+@@ -151,7 +151,7 @@
+ 	}
+ 
+ 	public boolean visit(ClassInstanceCreation node) {
+-		System.err.println("TRACE, RefVisiting ClassInstanceCreation");
++//		System.err.println("TRACE, RefVisiting ClassInstanceCreation");
+ 		AnonymousClassDeclaration decl = node.getAnonymousClassDeclaration(); 
+ 		if (decl != null) {
+ 			ITypeBinding bnd = decl.resolveBinding();
+@@ -178,7 +178,7 @@
+ 
+ 	@SuppressWarnings("unchecked")
+ 	public boolean visit(MethodDeclaration node) {
+-		System.err.println("TRACE, RefVisiting MethodDeclaration: "+node.getName().getIdentifier());
++//		System.err.println("TRACE, RefVisiting MethodDeclaration: "+node.getName().getIdentifier());
+ 
+ 		IMethodBinding bnd = node.resolveBinding();
+ 		Method meth = (Method) dico.getEntityByKey(bnd);
+@@ -211,7 +211,7 @@
+ 
+ 	@SuppressWarnings({ "unchecked" })
+ 	public boolean visit(FieldDeclaration node) {
+-		System.err.println("TRACE, RefVisiting FieldDeclaration: ");
++//		System.err.println("TRACE, RefVisiting FieldDeclaration: ");
+ 		for (VariableDeclarationFragment vd : (List<VariableDeclarationFragment>)node.fragments()) {
+ 			IVariableBinding bnd = vd.resolveBinding();
+ 			Attribute fmx = (Attribute) dico.getEntityByKey(bnd);
+@@ -243,7 +243,7 @@
+ 	private void methodInvocation(IMethodBinding calledBnd, String calledName, NamedEntity receiver) {
+ 		BehaviouralEntity sender = this.context.topMethod();
+ 		if (sender != null) {
+-			Method invoked = this.dico.ensureFamixMethod(calledBnd, calledName, (Collection<org.eclipse.jdt.core.dom.Type>)null, null, null);  // cast needed to desambiguate the call
++			Method invoked = this.dico.ensureFamixMethod(calledBnd, calledName, (Collection<org.eclipse.jdt.core.dom.Type>)null, /*retType*/null, /*owner*/null);  // cast needed to desambiguate the call
+ 			context.setLastInvocation( dico.ensureFamixInvocation(sender, invoked, receiver, context.getLastInvocation()) );
+ 		}
+ 	}
+@@ -384,7 +384,7 @@
+ 			else if (bnd instanceof IVariableBinding) {
+ 				String varName = ( ((Name)expr).isSimpleName() ? ((SimpleName)expr).getFullyQualifiedName() : ((QualifiedName)expr).getName().getIdentifier());
+ 				if ( ((IVariableBinding)bnd).isField() ) {
+-					ret = dico.ensureFamixAttribute(bnd, varName, null, null);//TODO should be ensureAttribute
++					ret = dico.ensureFamixAttribute((IVariableBinding)bnd, varName, null, null);//TODO should be ensureAttribute
+ 				}
+ 				else if ( ((IVariableBinding)bnd).isParameter() ) {
+ 					ret = dico.ensureFamixParameter( (IVariableBinding)bnd, varName, null, context.topMethod());
+Index: branches/postMoose4_3Refactoring/verveine.extractor.java/src/fr/inria/verveine/extractor/java/VerveineDefVisitor.java
+===================================================================
+--- branches/postMoose4_3Refactoring/verveine.extractor.java/src/fr/inria/verveine/extractor/java/VerveineDefVisitor.java	(revision 103)
++++ branches/postMoose4_3Refactoring/verveine.extractor.java/src/fr/inria/verveine/extractor/java/VerveineDefVisitor.java	(revision 104)
+@@ -84,7 +84,7 @@
+ 	// VISITOR METHODS
+ 
+ 	public boolean visit(CompilationUnit node) {
+-		System.err.println("TRACE, DefVisiting CompilationUnit: "+node.getProperty(dico.SOURCE_FILENAME_PROPERTY));
++//		System.err.println("TRACE, DefVisiting CompilationUnit: "+node.getProperty(dico.SOURCE_FILENAME_PROPERTY));
+ 		Namespace fmx = null;
+ 		PackageDeclaration pckg = node.getPackage();
+ 		if (pckg==null) {
+@@ -112,7 +112,7 @@
+ 	public boolean visit(TypeDeclaration node) {
+ 		// Can only be a class or interface declaration
+ 
+-		System.err.println("TRACE, DefVisiting TypeDeclaration: "+node.getName().getIdentifier());
++//		System.err.println("TRACE, DefVisiting TypeDeclaration: "+node.getName().getIdentifier());
+ 		ITypeBinding bnd = node.resolveBinding();
+ 		@SuppressWarnings("unchecked")
+ 		List<TypeParameter> tparams = node.typeParameters();
+@@ -127,6 +127,8 @@
+ 			
+ 			for (TypeParameter tp : tparams) {
+ 				// if there is a type parameter, then fmx will be a Famix ParameterizableClass
++				// FIXME But types created with ensureFamixType cannot be ParameterizableClasses because the bindings of JDT
++				//       don't contain the proper information (isGeneric() return false :-) )
+ 				ParameterType fmxParam = dico.ensureFamixParameterType( tp.resolveBinding(), tp.getName().getIdentifier(), (ParameterizableClass)fmx); // note owner of the ParameterType is the ParameterizableClass
+ 				if (fmxParam != null) {
+ 					fmxParam.setIsStub(false);
+@@ -146,7 +148,7 @@
+ 	}
+ 
+ 	public boolean visit(ClassInstanceCreation node) {
+-		System.err.println("TRACE, DefVisiting ClassInstanceCreation");
++//		System.err.println("TRACE, DefVisiting ClassInstanceCreation");
+ 		fr.inria.verveine.core.gen.famix.Class fmx = null;
+ 		AnonymousClassDeclaration decl = node.getAnonymousClassDeclaration(); 
+ 		if (decl != null) {
+@@ -174,7 +176,7 @@
+ 	}
+ 
+ 	public boolean visit(AnnotationTypeDeclaration node) {
+-		System.err.println("TRACE, DefVisiting AnnotationTypeDeclaration: "+node.getName().getIdentifier());
++//		System.err.println("TRACE, DefVisiting AnnotationTypeDeclaration: "+node.getName().getIdentifier());
+ 		ITypeBinding bnd = node.resolveBinding();
+ 		AnnotationType fmx = dico.ensureFamixAnnotationType(bnd, node.getName().getIdentifier(), context.top());
+ 		if (fmx != null) {
+@@ -195,7 +197,7 @@
+ 	}
+ 
+ 	public boolean visit(AnnotationTypeMemberDeclaration node) {
+-		System.err.println("TRACE, DefVisiting AnnotationTypeMemberDeclaration: "+node.getName().getIdentifier());
++//		System.err.println("TRACE, DefVisiting AnnotationTypeMemberDeclaration: "+node.getName().getIdentifier());
+ 		IMethodBinding bnd = node.resolveBinding();
+ 		AnnotationTypeAttribute fmx = dico.ensureFamixAnnotationTypeAttribute(bnd, node.getName().getIdentifier(), context.topAnnotationType());
+ 		if (fmx != null) {
+@@ -217,7 +219,7 @@
+ 
+ 	@SuppressWarnings("unchecked")
+ 	public boolean visit(EnumDeclaration node) {
+-		System.err.println("TRACE, DefVisiting EnumDeclaration: "+node.getName().getIdentifier());
++//		System.err.println("TRACE, DefVisiting EnumDeclaration: "+node.getName().getIdentifier());
+ 		fr.inria.verveine.core.gen.famix.Enum fmx = dico.ensureFamixEnum(node.resolveBinding(), node.getName().getIdentifier(), context.top());
+ 		if (fmx != null) {
+ 			fmx.setIsStub(Boolean.FALSE);
+@@ -235,7 +237,7 @@
+ 
+ 	@SuppressWarnings("unchecked")
+ 	public boolean visit(MethodDeclaration node) {
+-		System.err.println("TRACE, DefVisiting MethodDeclaration: "+node.getName().getIdentifier());
++//		System.err.println("TRACE, DefVisiting MethodDeclaration: "+node.getName().getIdentifier());
+ 		
+ 		// some info needed to create the Famix Method
+ 		IMethodBinding bnd = node.resolveBinding();
+@@ -308,7 +310,7 @@
+ 	
+ 	@SuppressWarnings({ "unchecked" })
+ 	public boolean visit(FieldDeclaration node) {
+-		System.err.println("TRACE, DefVisiting FieldDeclaration");
++//		System.err.println("TRACE, DefVisiting FieldDeclaration");
+ 
+ 		for (StructuralEntity att : visitVariablesDeclarations(node, node.getType(), (List<VariableDeclaration>)node.fragments(), context.topClass()) ) {
+ 			dico.addSourceAnchor(att, node);
+@@ -319,7 +321,7 @@
+ 
+ 	@SuppressWarnings("unchecked")
+ 	public boolean visit(VariableDeclarationExpression node) {
+-		System.err.println("TRACE, DefVisiting VariableDeclarationExpression");
++//		System.err.println("TRACE, DefVisiting VariableDeclarationExpression");
+ 
+ 		// we don't declare (local) variables that have a primitive type
+ 		// because we are assuming that the user is not interested in them 
+@@ -334,7 +336,7 @@
+ 
+ 	@SuppressWarnings("unchecked")
+ 	public boolean visit(VariableDeclarationStatement node) {
+-		System.err.println("TRACE, DefVisiting VariableDeclarationStatement");
++//		System.err.println("TRACE, DefVisiting VariableDeclarationStatement");
+ 
+ 		// we don't declare (local) variables that have a primitive type
+ 		// because we are assuming that the user is not interested in them 
+Index: branches/postMoose4_3Refactoring/verveine.extractor.java/src/fr/inria/verveine/extractor/java/JavaDictionary.java
+===================================================================
+--- branches/postMoose4_3Refactoring/verveine.extractor.java/src/fr/inria/verveine/extractor/java/JavaDictionary.java	(revision 103)
++++ branches/postMoose4_3Refactoring/verveine.extractor.java/src/fr/inria/verveine/extractor/java/JavaDictionary.java	(revision 104)
+@@ -164,7 +164,6 @@
+ 		return super.ensureFamixType(bnd, name, owner);
+ 	}
+ 
+-
+ 	/**
+ 	 * Returns a Famix Class associated with the ITypeBinding.
+ 	 * The Entity is created if it does not exist.<br>
+@@ -824,8 +823,8 @@
+ 					sig += parBnd.getName();
+ 					first = false;
+ 				}
+-				sig += ")";
+ 			}
++			sig += ")";
+ 			if (! ((Method) candidate).getSignature().equals(sig)) {
+ 				return false;
+ 			}
+@@ -887,7 +886,7 @@
+ 
+ 		ContainerEntity candidateOwner = candidate.getBelongsTo();
+ 		IMethodBinding methBnd = bnd.getDeclaringMethod();
+-		if ( (methBnd != null) && (candidateOwner  instanceof Method) ) {
++		if ( (methBnd != null) && (candidateOwner instanceof Method) ) {
+ 			if ( checkAndMapMethod(methBnd, (Method)candidateOwner) ) {
+ 				mapToKey.put(bnd, candidate);
+ 				return true;
+Index: verveine.core/lib/verveine.core.jar
+===================================================================
+Cannot display: file marked as a binary type.
+svn:mime-type = application/octet-stream
+Index: verveine.core/lib/verveine.core.jar
+===================================================================
+Cannot display: file marked as a binary type.
+svn:mime-type = application/octet-stream
+Index: verveine.extractor.java/.classpath
+===================================================================
+--- verveine.extractor.java/.classpath	(revision 28)
++++ verveine.extractor.java/.classpath	(revision 29)
+@@ -15,6 +15,5 @@
+ 	<classpathentry kind="lib" path="lib/fame.jar"/>
+ 	<classpathentry kind="lib" path="lib/famix.jar"/>
+ 	<classpathentry kind="lib" path="lib/verveine.core.jar"/>
+-	<classpathentry kind="lib" path="lib/akuhn-util-r28011.jar"/>
+ 	<classpathentry kind="output" path="bin"/>
+ </classpath>
+Index: verveine.extractor.java/lib/akuhn-util-r28011.jar
+===================================================================
+Cannot display: file marked as a binary type.
+svn:mime-type = application/octet-stream
+Index: verveine.extractor.java/lib/fame.jar
+===================================================================
+Cannot display: file marked as a binary type.
+svn:mime-type = application/octet-stream
+Index: verveine.extractor.java/lib/verveine.core.jar
+===================================================================
+Cannot display: file marked as a binary type.
+svn:mime-type = application/octet-stream
+Index: verveine.extractor.java/lib/verveine.extractor.java.jar
+===================================================================
+Cannot display: file marked as a binary type.
+svn:mime-type = application/octet-stream
+Index: verveine.extractor.java/src/tests/fr/inria/verveine/extractor/java/VerveineJTest_LanModel.java
+===================================================================
+--- verveine.extractor.java/src/tests/fr/inria/verveine/extractor/java/VerveineJTest_LanModel.java	(revision 28)
++++ verveine.extractor.java/src/tests/fr/inria/verveine/extractor/java/VerveineJTest_LanModel.java	(revision 29)
+@@ -410,7 +410,7 @@
+ 		assertNotNull(anc);
+ 		assertSame(clazz, anc.getElement());
+ 		assertSame(FileAnchor.class, anc.getClass());
+-		assertTrue("Wrong file source for class XPrinter", ((FileAnchor)anc).getFileName().endsWith("moose/lan/server/PrintServer.java"));
++		assertTrue("Wrong file source for class XPrinter", ((FileAnchor)anc).getFileName().equals("test_src/LANModel/moose/lan/server/PrintServer.java"));
+ 		assertEquals(17, ((FileAnchor)anc).getStartLine());
+ 		assertEquals(31, ((FileAnchor)anc).getEndLine());
+ 
+@@ -421,7 +421,7 @@
+ 		assertNotNull(anc);
+ 		assertSame(clazz, anc.getElement());
+ 		assertSame(FileAnchor.class, anc.getClass());
+-		assertTrue("Wrong file source for class Node", ((FileAnchor)anc).getFileName().endsWith("moose/lan/Node.java"));
++		assertTrue("Wrong file source for class Node", ((FileAnchor)anc).getFileName().equals("test_src/LANModel/moose/lan/Node.java"));
+ 		assertEquals(6, ((FileAnchor)anc).getStartLine());
+ 		assertEquals(70, ((FileAnchor)anc).getEndLine());
+ 		
+@@ -432,7 +432,7 @@
+ 		assertNotNull(anc);
+ 		assertSame(meth, anc.getElement());
+ 		assertSame(FileAnchor.class, anc.getClass());
+-		assertTrue("Wrong file source for method SingleDestinationAddress.equalsMultiple()", ((FileAnchor)anc).getFileName().endsWith("moose/lan/SingleDestinationAddress.java"));
++		assertTrue("Wrong file source for method SingleDestinationAddress.equalsMultiple()", ((FileAnchor)anc).getFileName().equals("test_src/LANModel/moose/lan/SingleDestinationAddress.java"));
+ 		assertEquals(39, ((FileAnchor)anc).getStartLine());
+ 		assertEquals(41, ((FileAnchor)anc).getEndLine());
+ 		
+@@ -443,7 +443,7 @@
+ 		assertNotNull(anc);
+ 		assertSame(att, anc.getElement());
+ 		assertSame(FileAnchor.class, anc.getClass());
+-		assertTrue("Wrong file source for field Packet.originator", ((FileAnchor)anc).getFileName().endsWith("moose/lan/Packet.java"));
++		assertTrue("Wrong file source for field Packet.originator", ((FileAnchor)anc).getFileName().equals("test_src/LANModel/moose/lan/Packet.java"));
+ 		assertEquals(15, ((FileAnchor)anc).getStartLine());
+ 		assertEquals(15, ((FileAnchor)anc).getEndLine());
+ 		
+Index: verveine.extractor.java/src/fr/inria/verveine/extractor/java/VerveineRefVisitor.java
+===================================================================
+--- verveine.extractor.java/src/fr/inria/verveine/extractor/java/VerveineRefVisitor.java	(revision 28)
++++ verveine.extractor.java/src/fr/inria/verveine/extractor/java/VerveineRefVisitor.java	(revision 29)
+@@ -104,7 +104,7 @@
+ 			importBnd = ((ITypeBinding)importBnd).getPackage();
+ 		}
+ 
+-		this.dico.ensureFamixReference(fmxSrc, dico.ensureFamixNamespace( (IPackageBinding) importBnd));
++		context.setLastAssoc( dico.ensureFamixReference(fmxSrc, dico.ensureFamixNamespace( (IPackageBinding) importBnd), context.getLastAssoc()) );
+ 		
+ 		return super.visit(node);
+ 	}
+@@ -380,7 +380,7 @@
+ 		if (accessor != null) {
+ 			Attribute accessed = this.dico.ensureFamixAttribute(bnd);
+ 			if (accessed != null) {
+-				dico.ensureFamixAccess(accessor, accessed);
++				context.setLastAssoc( dico.ensureFamixAccess(accessor, accessed, /*isWrite*/false, context.getLastAssoc()) );
+ 				if ( (accessed.getParentType() == null) && (accessed.getName().equals("length")) ) {
+ 					accessed.setParentType(dico.ensureFamixClassArray());
+ 				}
+@@ -401,9 +401,7 @@
+ 			if (invoked == null) {
+ 				invoked = this.dico.ensureFamixStubMethod(name);
+ 			}
+-			/* An example of how to include location information to an invocation
+-			 * But would require to pass the ASTNode in parameter to this method */
+-			/*dico.addSourceAnchor(*/ dico.ensureFamixInvocation(sender, invoked, receiver) /*,node)*/ ;
++			context.setLastAssoc( dico.ensureFamixInvocation(sender, invoked, receiver, context.getLastAssoc()) );
+ 		}
+ 	}
+ 
+Index: verveine.extractor.java/src/fr/inria/verveine/extractor/java/VerveineJParser.java
+===================================================================
+--- verveine.extractor.java/src/fr/inria/verveine/extractor/java/VerveineJParser.java	(revision 28)
++++ verveine.extractor.java/src/fr/inria/verveine/extractor/java/VerveineJParser.java	(revision 29)
+@@ -16,19 +16,35 @@
+ 
+ public class VerveineJParser extends VerveineParser {
+ 
++	/**
++	 * The arguments that were passed to the parser
++	 * Needed to relativize the source file names
++	 */
++	private String[] initialArgs;
++	
+ 	public static void main(String[] args) {
+ 		VerveineJParser parser = new VerveineJParser();
+ 		parser.compile(args);
+ 		parser.outputMSE();
+ 	}
++
++	private void setInitialArgs(String[] args) {
++		this.initialArgs = args;
++	}
++
++	public String[] getInitialArgs() {
++		return this.initialArgs;
++	}
+ 	
++
+ 	@Override
+ 	public boolean compile(String[] argv) {
+ 		boolean ret;
+ 		if (this.linkToExisting()) {
+ 			this.expandNamespacesNames();
+ 		}
+-		
++
++		setInitialArgs(argv);
+ 		ret = super.compile(argv);
+ 		
+ 		this.compressNamespacesNames();
+@@ -107,7 +123,7 @@
+ 		pars.createASTs(/*sourceFilePaths*/this.filenames, 
+ 				/*encodings*/this.encodings, 
+ 				/*bindingKeys*/new String[0], 
+-				/*requestor*/new FamixRequestor(getFamixRepo()), 
++				/*requestor*/new FamixRequestor(getFamixRepo(), getInitialArgs()), 
+ 				/*monitor*/null);
+ 		// NA --- end of parsing code --------------------------------------------------
+ 	}
+Index: verveine.extractor.java/src/fr/inria/verveine/extractor/java/FamixRequestor.java
+===================================================================
+--- verveine.extractor.java/src/fr/inria/verveine/extractor/java/FamixRequestor.java	(revision 28)
++++ verveine.extractor.java/src/fr/inria/verveine/extractor/java/FamixRequestor.java	(revision 29)
+@@ -10,16 +10,30 @@
+ 	protected Repository famixRepo;
+ 	
+ 	protected JavaDictionary famixDictionnary;
++
++	private String[] initialArgs;
+ 	
+-	public FamixRequestor(Repository r) {
++	public FamixRequestor(Repository r, String[] initialArgs) {
+ 		this.famixRepo = r;
++		this.initialArgs = initialArgs;
+ 		this.famixDictionnary = new JavaDictionary(famixRepo);
+ 	}
+ 
+ 	public void acceptAST(String sourceFilePath, CompilationUnit ast) {
+-		ast.setProperty(JavaDictionary.SOURCE_FILENAME_PROPERTY, sourceFilePath);
++		
++		ast.setProperty(JavaDictionary.SOURCE_FILENAME_PROPERTY, relativePath(sourceFilePath));
+ 		//System.out.println("  ******* DOING : "+sourceFilePath+" *******");
+ 		ast.accept(new VerveineDefVisitor(this.famixDictionnary));
+ 		ast.accept(new VerveineRefVisitor(this.famixDictionnary));
+ 	}
++
++	private Object relativePath(String sourceFilePath) {
++		for (String arg : initialArgs) {
++			int i = sourceFilePath.indexOf(arg);
++			if (i >= 0) {
++				return sourceFilePath.substring(i);
++			}
++		}
++		return sourceFilePath;
++	}
+ }

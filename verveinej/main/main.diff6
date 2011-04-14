@@ -1,0 +1,2941 @@
+Index: verveine.extractor.java/src/tests/fr/inria/verveine/extractor/java/VerveineJTest_Basic.java
+===================================================================
+--- verveine.extractor.java/src/tests/fr/inria/verveine/extractor/java/VerveineJTest_Basic.java	(revision 116)
++++ verveine.extractor.java/src/tests/fr/inria/verveine/extractor/java/VerveineJTest_Basic.java	(revision 117)
+@@ -11,8 +11,6 @@
+ import fr.inria.verveine.core.gen.famix.BehaviouralEntity;
+ import fr.inria.verveine.core.gen.famix.Inheritance;
+ import fr.inria.verveine.core.gen.famix.Namespace;
+-import fr.inria.verveine.core.gen.famix.ParameterizableClass;
+-import fr.inria.verveine.core.gen.famix.ParameterizedType;
+ import fr.inria.verveine.core.gen.famix.PrimitiveType;
+ import fr.inria.verveine.core.gen.famix.StructuralEntity;
+ import fr.inria.verveine.core.gen.famix.Type;
+@@ -101,27 +99,16 @@
+ 		assertTrue(serial.getIsInterface());
+ 		assertEquals(0, serial.getSuperInheritances().size());
+ 
+-		ParameterizableClass comp = TestVerveineUtils.detectElement(repo,ParameterizableClass.class, "Comparable");
+-		assertNotNull(comp);
+-		assertSame(javaLang, comp.getContainer());
+-		assertTrue(comp.getIsInterface());
+-		assertEquals(0, comp.getSuperInheritances().size());
+-
+-		ParameterizedType compStr = TestVerveineUtils.detectElement(repo,ParameterizedType.class, "Comparable");
+-		assertNotNull(compStr);
+-		assertSame(comp, compStr.getParameterizableClass());
+-		assertEquals(0, compStr.getSuperInheritances().size());
+-		
+ 		fr.inria.verveine.core.gen.famix.Class str = TestVerveineUtils.detectElement(repo,fr.inria.verveine.core.gen.famix.Class.class, "String");
+ 		assertNotNull(str);
+ 		assertSame(javaLang, str.getContainer());
+ 		assertEquals(4, str.getSuperInheritances().size());
+ 		for (Inheritance inh : str.getSuperInheritances()) {
+-			assertTrue( "Unexpected super-class for String: "+inh.getSuperclass().getName(),
++			assertTrue( "Unexpected super-class for String: "+inh.getSuperclass(),
+ 					(inh.getSuperclass() == obj) ||
+ 					(inh.getSuperclass() == charSeq) ||
+ 					(inh.getSuperclass() == serial) ||
+-					(inh.getSuperclass() == compStr) );
++					(inh.getSuperclass().getName().equals("Comparable")) );  // there are 2 'comparable' in one case, so it's best to only test the name
+ 		}
+ 
+ 		// System
+@@ -130,11 +117,15 @@
+ 		assertSame(javaLang, syst.getContainer());
+ 		assertEquals(1, syst.getSuperInheritances().size());
+ 		assertEquals(obj, syst.getSuperInheritances().iterator().next().getSuperclass());
+-		assertEquals(2, syst.getAttributes().size());
++		boolean foundOut = false;
+ 		for (Attribute att : syst.getAttributes()) {
+-			assertTrue( "Unexpected super-class for String: "+att.getName(),
+-					att.getName().equals("out") || att.getName().equals("err") );
+-
++			if (att.getName().equals("out")) {
++				foundOut = true;
++			}
++			else {
++				assertTrue( "Unexpected System attribute: "+att.getName(), att.getName().equals("err") );
++			}
+ 		}
++		assertTrue("System does not have an attribute 'out'", foundOut);
+ 	}
+ }
+\ No newline at end of file
+Index: verveine.extractor.java/src/fr/inria/verveine/extractor/java/VerveineRefVisitor.java
+===================================================================
+--- verveine.extractor.java/src/fr/inria/verveine/extractor/java/VerveineRefVisitor.java	(revision 116)
++++ verveine.extractor.java/src/fr/inria/verveine/extractor/java/VerveineRefVisitor.java	(revision 117)
+@@ -1,509 +0,0 @@
+-package fr.inria.verveine.extractor.java;
+-
+-import java.util.Collection;
+-import java.util.List;
+-
+-import org.eclipse.jdt.core.dom.ASTVisitor;
+-import org.eclipse.jdt.core.dom.AnonymousClassDeclaration;
+-import org.eclipse.jdt.core.dom.ArrayAccess;
+-import org.eclipse.jdt.core.dom.ArrayCreation;
+-import org.eclipse.jdt.core.dom.Assignment;
+-import org.eclipse.jdt.core.dom.CastExpression;
+-import org.eclipse.jdt.core.dom.CatchClause;
+-import org.eclipse.jdt.core.dom.ClassInstanceCreation;
+-import org.eclipse.jdt.core.dom.CompilationUnit;
+-import org.eclipse.jdt.core.dom.ConditionalExpression;
+-import org.eclipse.jdt.core.dom.Expression;
+-import org.eclipse.jdt.core.dom.FieldAccess;
+-import org.eclipse.jdt.core.dom.FieldDeclaration;
+-import org.eclipse.jdt.core.dom.IBinding;
+-import org.eclipse.jdt.core.dom.IMethodBinding;
+-import org.eclipse.jdt.core.dom.IPackageBinding;
+-import org.eclipse.jdt.core.dom.ITypeBinding;
+-import org.eclipse.jdt.core.dom.IVariableBinding;
+-import org.eclipse.jdt.core.dom.ImportDeclaration;
+-import org.eclipse.jdt.core.dom.InfixExpression;
+-import org.eclipse.jdt.core.dom.MethodDeclaration;
+-import org.eclipse.jdt.core.dom.MethodInvocation;
+-import org.eclipse.jdt.core.dom.Name;
+-import org.eclipse.jdt.core.dom.PackageDeclaration;
+-import org.eclipse.jdt.core.dom.ParenthesizedExpression;
+-import org.eclipse.jdt.core.dom.QualifiedName;
+-import org.eclipse.jdt.core.dom.QualifiedType;
+-import org.eclipse.jdt.core.dom.SimpleName;
+-import org.eclipse.jdt.core.dom.SimpleType;
+-import org.eclipse.jdt.core.dom.StringLiteral;
+-import org.eclipse.jdt.core.dom.SuperFieldAccess;
+-import org.eclipse.jdt.core.dom.SuperMethodInvocation;
+-import org.eclipse.jdt.core.dom.ThisExpression;
+-import org.eclipse.jdt.core.dom.ThrowStatement;
+-import org.eclipse.jdt.core.dom.Type;
+-import org.eclipse.jdt.core.dom.TypeDeclaration;
+-import org.eclipse.jdt.core.dom.TypeLiteral;
+-import org.eclipse.jdt.core.dom.VariableDeclarationFragment;
+-
+-import fr.inria.verveine.core.EntityStack;
+-import fr.inria.verveine.core.gen.famix.Attribute;
+-import fr.inria.verveine.core.gen.famix.BehaviouralEntity;
+-import fr.inria.verveine.core.gen.famix.Class;
+-import fr.inria.verveine.core.gen.famix.ContainerEntity;
+-import fr.inria.verveine.core.gen.famix.Method;
+-import fr.inria.verveine.core.gen.famix.NamedEntity;
+-import fr.inria.verveine.core.gen.famix.Namespace;
+-import fr.inria.verveine.core.gen.famix.ParameterizableClass;
+-import fr.inria.verveine.core.gen.famix.StructuralEntity;
+-
+-/**
+- * AST Visitor that defines all the (Famix) entities of interest and links betgween them
+- * Famix entities are stored in a Map along with the (AST) IBindings to which they correspond
+- */
+-public class VerveineRefVisitor extends ASTVisitor {
+-
+-	/** 
+-	 * A dictionary allowing to recover created FAMIX Entities
+-	 */
+-	protected JavaDictionary dico;
+-
+-	/**
+-	 * A stack that keeps the current definition context (package/class/method)
+-	 */
+-	protected EntityStack context;
+-
+-	public VerveineRefVisitor(JavaDictionary dico) {
+-		this.dico = dico;
+-		this.context = new EntityStack();
+-	}
+-
+-	// VISITOR METHODS
+-
+-	public boolean visit(CompilationUnit node) {
+-//		System.err.println("TRACE, RefVisiting CompilationUnit");
+-
+-		PackageDeclaration pckg = node.getPackage();
+-		Namespace fmx = null;
+-		if (pckg==null) {
+-			 fmx = dico.ensureFamixNamespaceDefault();
+-		}
+-		else {
+-			fmx = (Namespace)dico.getEntityByKey(pckg.resolveBinding());
+-		}
+-		if (pckg != null) {
+-			this.context.pushPckg(fmx);
+-			return super.visit(node);
+-		}
+-		else {
+-			this.context.pushPckg(null);
+-			return false;
+-		}
+-	}
+-
+-	public void endVisit(CompilationUnit node) {
+-		this.context.popPckg();
+-		super.endVisit(node);
+-	}
+-
+-	/**
+-	 * creating reference from package of this compilation unit to imported package
+-	 * not sure it is a good idea ?!?
+-	 */
+-	public boolean visit(ImportDeclaration node) {
+-
+-		Namespace fmxSrc = this.context.topPckg();  // could access it through recursive node.getParent() ?
+-
+-		IBinding importBnd = node.resolveBinding();
+-		String importName = node.getName().getFullyQualifiedName();
+-		if (importBnd instanceof IMethodBinding)  {
+-			importBnd = ((IMethodBinding)importBnd).getDeclaringClass().getPackage();
+-			importName = dico.removeLastName(importName);
+-			importName = dico.removeLastName(importName);
+-		}
+-		else if (importBnd instanceof IVariableBinding)  {
+-			importBnd = ((IVariableBinding)importBnd).getDeclaringClass().getPackage();
+-			importName = dico.removeLastName(importName);
+-			importName = dico.removeLastName(importName);
+-		}
+-		else if (importBnd instanceof ITypeBinding)  {
+-			importBnd = ((ITypeBinding)importBnd).getPackage();
+-			importName = dico.removeLastName(importName);
+-		}
+-		Namespace fmxDest = dico.ensureFamixNamespace( (IPackageBinding)importBnd, importName);
+-		context.setLastReference( dico.addFamixReference(fmxSrc, fmxDest, context.getLastReference()) );
+-		
+-		return super.visit(node);
+-	}
+-
+-	public boolean visit(TypeDeclaration node) {
+-//		System.err.println("TRACE, RefVisiting TypeDeclaration: "+node.getName().getIdentifier());
+-		ITypeBinding bnd = node.resolveBinding();
+-		fr.inria.verveine.core.gen.famix.Class fmx = (fr.inria.verveine.core.gen.famix.Class)dico.getEntityByKey(bnd);
+-		if (fmx != null) {
+-			this.context.pushClass(fmx );
+-
+-			dico.addFamixAnnotationInstances(bnd, fmx);
+-
+-			return super.visit(node);
+-		}
+-		else {
+-			this.context.pushClass(null);
+-			return false;
+-		}
+-	}
+-
+-	public void endVisit(TypeDeclaration node) {
+-		this.context.popClass();
+-		super.endVisit(node);
+-	}
+-
+-	public boolean visit(ClassInstanceCreation node) {
+-//		System.err.println("TRACE, RefVisiting ClassInstanceCreation");
+-		AnonymousClassDeclaration decl = node.getAnonymousClassDeclaration(); 
+-		if (decl != null) {
+-			ITypeBinding bnd = decl.resolveBinding();
+-			fr.inria.verveine.core.gen.famix.Class fmx = (fr.inria.verveine.core.gen.famix.Class)dico.getEntityByKey(bnd); 
+-			if (fmx != null) {
+-				this.context.pushClass(fmx);
+-				dico.addFamixAnnotationInstances(bnd, fmx);
+-				return super.visit(node);
+-			}
+-			else {
+-				this.context.pushClass(null );
+-				return false;
+-			}
+-		}
+-		else {// TODO appears to be a new: class reference
+-			return super.visit(node);
+-		}
+-	}
+-
+-	public void endVisit(AnonymousClassDeclaration node) {
+-		this.context.popClass();
+-		super.endVisit(node);
+-	}
+-
+-	@SuppressWarnings("unchecked")
+-	public boolean visit(MethodDeclaration node) {
+-//		System.err.println("TRACE, RefVisiting MethodDeclaration: "+node.getName().getIdentifier());
+-
+-		IMethodBinding bnd = node.resolveBinding();
+-		Method meth = (Method) dico.getEntityByKey(bnd);
+-
+-		if (meth != null) {
+-			this.context.pushMethod(meth);
+-
+-			dico.addFamixAnnotationInstances(bnd, meth);
+-
+-			// Exceptions
+-			for (Name excepName : (List<Name>)node.thrownExceptions()) {
+-				fr.inria.verveine.core.gen.famix.Class excepFmx = this.dico.ensureFamixClass(excepName.resolveTypeBinding(), excepName.getFullyQualifiedName(), /*owner*/null, /*isGeneric*/false);
+-				if (excepFmx != null) {
+-					dico.createFamixDeclaredException(meth, excepFmx);
+-				}
+-			}
+-			return super.visit(node);
+-		}
+-		else {
+-			this.context.pushMethod(null);
+-			return false;
+-		}
+-
+-	}
+-
+-	public void endVisit(MethodDeclaration node) {
+-		this.context.popMethod();
+-		super.endVisit(node);
+-	}
+-
+-	@SuppressWarnings({ "unchecked" })
+-	public boolean visit(FieldDeclaration node) {
+-//		System.err.println("TRACE, RefVisiting FieldDeclaration: ");
+-		for (VariableDeclarationFragment vd : (List<VariableDeclarationFragment>)node.fragments()) {
+-			IVariableBinding bnd = vd.resolveBinding();
+-			Attribute fmx = (Attribute) dico.getEntityByKey(bnd);
+-
+-			if (fmx != null) {
+-				dico.addFamixAnnotationInstances(bnd, fmx);
+-			}
+-		}
+-		return super.visit(node);
+-	}
+-
+-	public boolean visit(MethodInvocation node) {
+-		Expression callingExpr = node.getExpression();
+-		methodInvocation(node.resolveMethodBinding(), node.getName().getFullyQualifiedName(), getReceiver(callingExpr));
+-		if (callingExpr instanceof SimpleName) {
+-			// we might have a hidden FieldAccess here
+-			IBinding bnd = ((Name) callingExpr).resolveBinding();
+-			if ( (bnd != null) && (bnd instanceof IVariableBinding) && ((IVariableBinding)bnd).isField() ){
+-				BehaviouralEntity accessor = this.context.topMethod();
+-				// note: using a field without anything before, owner must be the currently parsed class
+-				createAccessedAttribute((IVariableBinding)bnd, ((SimpleName)callingExpr).getIdentifier(), null, /*owner*/context.topClass(), accessor);
+-			}
+-		}
+-		return super.visit(node);
+-	}
+-
+-	@SuppressWarnings({ "static-access" })
+-	public boolean visit(SuperMethodInvocation node) {
+-		methodInvocation(node.resolveMethodBinding(), node.getName().getFullyQualifiedName(), this.dico.ensureFamixImplicitVariable(dico.SUPER_NAME, this.context.topClass(), context.top()));
+-		return super.visit(node);
+-	}
+-
+-	/**
+-	 * Handles an invocation of a method by creating the corresponding Famix Entity
+-	 * @param calledBnd -- a binding for the method
+-	 * @param calledName of the method invoked
+-	 * @param receiver of the call, i.e. the object to which the message is sent
+-	 */
+-	private void methodInvocation(IMethodBinding calledBnd, String calledName, NamedEntity receiver) {
+-		BehaviouralEntity sender = this.context.topMethod();
+-		if (sender != null) {
+-			Method invoked = null;
+-			if (receiver instanceof StructuralEntity) {
+-				fr.inria.verveine.core.gen.famix.Type varTyp = ((StructuralEntity)receiver).getDeclaredType();
+-				invoked = this.dico.ensureFamixMethod(calledBnd, calledName, (Collection<org.eclipse.jdt.core.dom.Type>)null, /*retType*/null, /*owner*/varTyp);  // cast needed to desambiguate the call
+-			}
+-			else {
+-				// method static of a class called on the class
+-				invoked = this.dico.ensureFamixMethod(calledBnd, calledName, (Collection<org.eclipse.jdt.core.dom.Type>)null, /*retType*/null, /*owner*/(fr.inria.verveine.core.gen.famix.Type)receiver);  // cast needed to desambiguate the call
+-			}
+-			context.setLastInvocation( dico.addFamixInvocation(sender, invoked, receiver, context.getLastInvocation()) );
+-		}
+-	}
+-
+-	public boolean visit(FieldAccess node) {
+-		BehaviouralEntity accessor = this.context.topMethod();
+-		IVariableBinding bnd = node.resolveFieldBinding();
+-		// FIXME if bnd == null we have a problem
+-		createAccessedAttribute(bnd, node.getName().getIdentifier(), null, null, accessor);
+-
+-		return super.visit(node);
+-	}
+-
+-	/*
+-	 * Could be a FieldAccess (see JDT javadoc: class FieldAccess) 
+-	 */
+-	public boolean visit(QualifiedName node) {
+-		IBinding bnd = node.resolveBinding();
+-		if (bnd instanceof IVariableBinding) {
+-			// apparently this is a field
+-			BehaviouralEntity accessor = this.context.topMethod();
+-			createAccessedAttribute((IVariableBinding)bnd, node.getName().getIdentifier(), null, null, accessor);
+-		}
+-		return super.visit(node);
+-	}
+-
+-	/* 
+-	 * Another FieldAccess in disguise: SomeClass.class
+-	 */
+-	public boolean visit(TypeLiteral node) {
+-		fr.inria.verveine.core.gen.famix.Type javaMetaClass = dico.ensureFamixMetaClass(null); 
+-		BehaviouralEntity accessor = this.context.topMethod();
+-		createAccessedAttribute(null, "class", javaMetaClass, javaMetaClass, accessor);
+-		return super.visit(node);
+-	}
+-
+-	@Override
+-	public boolean visit(CatchClause node) {
+-		Method meth = this.context.topMethod();
+-		Type excepClass = node.getException().getType();
+-		if (meth != null) {
+-			fr.inria.verveine.core.gen.famix.Class excepFmx = null;
+-			if (excepClass instanceof SimpleType) {
+-				excepFmx = this.dico.ensureFamixClass(excepClass.resolveBinding(), ((SimpleType) excepClass).getName().getFullyQualifiedName(), /*owner*/null, /*isGeneric*/false);
+-			}
+-			else if (excepClass instanceof QualifiedType) {
+-				excepFmx = this.dico.ensureFamixClass(excepClass.resolveBinding(), ((QualifiedType) excepClass).getName().getIdentifier(), /*owner*/null, /*isGeneric*/false);
+-			}
+-			if (excepFmx != null) {
+-				dico.createFamixCaughtException(meth, excepFmx);
+-			}
+-		}
+-
+-		return super.visit(node);
+-	}
+-
+-	@Override
+-	public boolean visit(ThrowStatement node) {
+-		Method meth = this.context.topMethod();
+-		fr.inria.verveine.core.gen.famix.Class excepFmx = this.dico.ensureFamixClass(node.getExpression().resolveTypeBinding(), /*name*/(String)null, /*owner*/(ContainerEntity)null, /*isGeneric*/false);
+-		if (excepFmx != null) {
+-			dico.createFamixThrownException(meth, excepFmx);
+-		}
+-		return super.visit(node);
+-	}
+-
+-	/**
+-	 * Finds and/or create the Famix Entity receiving a message
+-	 * Can be: ImplicitVariable (this, super), GlobalVariable, LocalVariable, Attribute, UnknownVariable, Parameter
+-	 * @param expr -- the Java expression describing the receiver
+-	 * @return the Famix Entity or null if could not find it
+-	 */
+-	@SuppressWarnings("static-access")
+-	private NamedEntity getReceiver(Expression expr) {
+-		// msg(), same as ThisExpression
+-		if (expr == null) {
+-			return this.dico.ensureFamixImplicitVariable(dico.SELF_NAME, this.context.topClass(), context.top());
+-		}
+-
+-		// array[i].msg()
+-		else if (expr instanceof ArrayAccess) {
+-			return getReceiver(((ArrayAccess) expr).getArray());
+-		}
+-
+-		// new type[].msg() -- TODO similar to ClassInstanceCreation
+-		else if (expr instanceof ArrayCreation) {
+-			//System.err.println("WARNING: Ignored receiver expression in method call: ArrayCreation");
+-			return null;
+-		}
+-
+-		// (variable = value).msg()
+-		else if (expr instanceof Assignment) {
+-			return getReceiver(((Assignment) expr).getLeftHandSide());
+-		}
+-
+-		// ((type)expr).msg()
+-		else if (expr instanceof CastExpression) {
+-			return getReceiver(((CastExpression) expr).getExpression());
+-		}
+-
+-		// new Class().msg() -- TODO anonymous object of a known class ...
+-		else if (expr instanceof ClassInstanceCreation) {
+-			//System.err.println("WARNING: Ignored receiver expression in method call: ClassInstanceCreation");
+-			return null;
+-		}
+-
+-		// (cond-expr ? then-expr : else-expr).msg()
+-		else if (expr instanceof ConditionalExpression) {
+-			// can be one or the other (then-expr/else-expr) so we choose one
+-			NamedEntity ret = getReceiver(((ConditionalExpression) expr).getThenExpression());
+-			if (ret == null) {
+-				// can as well try the other
+-				ret = getReceiver(((ConditionalExpression) expr).getElseExpression());
+-			}
+-			return ret;
+-		}
+-
+-		// field.msg()
+-		else if (expr instanceof FieldAccess) {
+-			Attribute ret = createAccessedAttribute(((FieldAccess) expr).resolveFieldBinding(), ((FieldAccess) expr).getName().getIdentifier(), /*type*/null, /*owner*/null, /*accessor*/null);
+-			if ( (ret != null) && (ret.getParentType() == null) && (ret.getName().equals("length")) ) {
+-				ret.setParentType(dico.ensureFamixClassArray());
+-			}
+-
+-			return ret;
+-		}
+-
+-		// (left-expr oper right-expr).msg()
+-		else if (expr instanceof InfixExpression) {
+-			// anonymous receiver
+-			return null;
+-		}
+-
+-		// msg1().msg() -- TODO similar to ClassInstanceCreation, 'msg()' is sent to the object returned by 'msg1()'
+-		else if (expr instanceof MethodInvocation) {
+-			//System.err.println("WARNING: Ignored receiver expression in method call: MethodInvocation");
+-
+-			return null;
+-		}
+-
+-		// name.msg()
+-		else if (expr instanceof Name) {
+-			// can be a class or a variable name
+-			IBinding bnd = ((Name) expr).resolveBinding();
+-			if (bnd == null) {
+-				return null;
+-			}
+-			NamedEntity ret = null;
+-			if (bnd instanceof ITypeBinding) {
+-				// msg() is a static method of Name
+-				//TODO why returning a variable here? Should not it be the class itself?
+-				ret = dico.createFamixUnknownVariable( dico.ensureFamixType((ITypeBinding)bnd, null, null, context.top()), bnd.getName());
+-			}
+-			else if (bnd instanceof IVariableBinding) {
+-				String varName = ( ((Name)expr).isSimpleName() ? ((SimpleName)expr).getFullyQualifiedName() : ((QualifiedName)expr).getName().getIdentifier());
+-				if ( ((IVariableBinding)bnd).isField() ) {
+-					ret = createAccessedAttribute((IVariableBinding)bnd, varName, /*typ*/null, /*owner*/null, /*accessor*/null);
+-					if ( (ret != null) && (((Attribute) ret).getParentType() == null) && (ret.getName().equals("length")) ) {
+-						((Attribute) ret).setParentType(dico.ensureFamixClassArray());
+-					}
+-
+-					return ret;
+-				}
+-				else if ( ((IVariableBinding)bnd).isParameter() ) {
+-					ret = dico.ensureFamixParameter( (IVariableBinding)bnd, varName, null, context.topMethod());
+-				}
+-				else { // suppose it's a local variable
+-					ret = dico.ensureFamixLocalVariable( (IVariableBinding)bnd, varName, null, context.topMethod());
+-				}
+-			}
+-			
+-			return ret;
+-		}
+-
+-		// (expr).msg()
+-		else if (expr instanceof ParenthesizedExpression) {
+-			return getReceiver(((ParenthesizedExpression) expr).getExpression());
+-		}
+-
+-		// "string".msg() -- TODO similar to ClassInstanceCreation, anonymous String object
+-		else if (expr instanceof StringLiteral) {
+-			//System.err.println("WARNING: Ignored receiver expression in method call: StringLiteral");
+-			return null;
+-		}
+-
+-		// super.field.msg()
+-		else if (expr instanceof SuperFieldAccess) {
+-			Attribute ret = createAccessedAttribute(((SuperFieldAccess) expr).resolveFieldBinding(), ((SuperFieldAccess) expr).getName().getIdentifier(), /*typ*/null, /*owner*/null, /*accessor*/null);
+-			if ( (ret != null) && (ret.getParentType() == null) && (ret.getName().equals("length")) ) {
+-				ret.setParentType(dico.ensureFamixClassArray());
+-			}
+-
+-			return ret;
+-		}
+-
+-		// super.msg1().msg() -- TODO similar to ClassInstanceCreation, 'msg()' is sent to the object returned by 'msg1()'
+-		else if (expr instanceof SuperMethodInvocation) {
+-			//System.err.println("WARNING: Ignored receiver expression in method call: SuperMethodInvocation");
+-			
+-			return null;
+-		}
+-		
+-		// this.msg()
+-		else if (expr instanceof ThisExpression) {
+-			return this.dico.ensureFamixImplicitVariable(dico.SELF_NAME, this.context.topClass(), context.top());
+-		}
+-
+-		// type.class.msg()
+-		else if (expr instanceof TypeLiteral) {
+-			// similar to a field access
+-			Attribute ret;
+-			fr.inria.verveine.core.gen.famix.Type javaMetaClass = dico.ensureFamixMetaClass(null); 
+-			ret =  dico.ensureFamixAttribute(null, "class", javaMetaClass, javaMetaClass);
+-
+-			return ret;
+-		}
+-
+-		// ... OTHER POSSIBLE EXPRESSIONS ?
+-		else  {
+-			System.err.println("WARNING: Unexpected receiver expression: "+expr.getClass().getName()+" (method called is" + expr.getClass().getName() + ".aMethod(...))");
+-		}
+-
+-		return null;
+-	}
+-
+-	private Attribute createAccessedAttribute(IVariableBinding bnd, String attName, fr.inria.verveine.core.gen.famix.Type typ, fr.inria.verveine.core.gen.famix.Type owner, BehaviouralEntity accessor) {
+-		Attribute accessed;
+-		if (bnd != null) {
+-			bnd = bnd.getVariableDeclaration();
+-		}
+-		accessed =  dico.ensureFamixAttribute(bnd, attName, typ, owner);
+-		if ( (accessed != null) && (accessed.getParentType() == null) && (accessed.getName().equals("length")) ) {
+-			accessed.setParentType(dico.ensureFamixClassArray());
+-		}
+-		
+-		if ( (accessed != null) && (accessor != null) ) {
+-			context.setLastAccess( dico.addFamixAccess(accessor, accessed, /*isWrite*/false, context.getLastAccess()) );
+-		}
+-		return accessed;
+-	}
+-}
+Index: verveine.extractor.java/src/fr/inria/verveine/extractor/java/VerveineDefVisitor.java
+===================================================================
+--- verveine.extractor.java/src/fr/inria/verveine/extractor/java/VerveineDefVisitor.java	(revision 116)
++++ verveine.extractor.java/src/fr/inria/verveine/extractor/java/VerveineDefVisitor.java	(revision 117)
+@@ -1,500 +0,0 @@
+-package fr.inria.verveine.extractor.java;
+-
+-import java.util.ArrayList;
+-import java.util.Collection;
+-import java.util.List;
+-
+-import org.eclipse.jdt.core.dom.ASTNode;
+-import org.eclipse.jdt.core.dom.ASTVisitor;
+-import org.eclipse.jdt.core.dom.AnnotationTypeDeclaration;
+-import org.eclipse.jdt.core.dom.AnnotationTypeMemberDeclaration;
+-import org.eclipse.jdt.core.dom.AnonymousClassDeclaration;
+-import org.eclipse.jdt.core.dom.AssertStatement;
+-import org.eclipse.jdt.core.dom.Assignment;
+-import org.eclipse.jdt.core.dom.ClassInstanceCreation;
+-import org.eclipse.jdt.core.dom.CompilationUnit;
+-import org.eclipse.jdt.core.dom.ConstructorInvocation;
+-import org.eclipse.jdt.core.dom.ContinueStatement;
+-import org.eclipse.jdt.core.dom.DoStatement;
+-import org.eclipse.jdt.core.dom.EnhancedForStatement;
+-import org.eclipse.jdt.core.dom.EnumConstantDeclaration;
+-import org.eclipse.jdt.core.dom.EnumDeclaration;
+-import org.eclipse.jdt.core.dom.FieldDeclaration;
+-import org.eclipse.jdt.core.dom.ForStatement;
+-import org.eclipse.jdt.core.dom.IMethodBinding;
+-import org.eclipse.jdt.core.dom.ITypeBinding;
+-import org.eclipse.jdt.core.dom.IfStatement;
+-import org.eclipse.jdt.core.dom.MethodDeclaration;
+-import org.eclipse.jdt.core.dom.MethodInvocation;
+-import org.eclipse.jdt.core.dom.PackageDeclaration;
+-import org.eclipse.jdt.core.dom.ParameterizedType;
+-import org.eclipse.jdt.core.dom.ReturnStatement;
+-import org.eclipse.jdt.core.dom.SingleVariableDeclaration;
+-import org.eclipse.jdt.core.dom.SuperConstructorInvocation;
+-import org.eclipse.jdt.core.dom.SuperMethodInvocation;
+-import org.eclipse.jdt.core.dom.SwitchCase;
+-import org.eclipse.jdt.core.dom.SwitchStatement;
+-import org.eclipse.jdt.core.dom.SynchronizedStatement;
+-import org.eclipse.jdt.core.dom.ThrowStatement;
+-import org.eclipse.jdt.core.dom.TryStatement;
+-import org.eclipse.jdt.core.dom.Type;
+-import org.eclipse.jdt.core.dom.TypeDeclaration;
+-import org.eclipse.jdt.core.dom.TypeParameter;
+-import org.eclipse.jdt.core.dom.VariableDeclaration;
+-import org.eclipse.jdt.core.dom.VariableDeclarationExpression;
+-import org.eclipse.jdt.core.dom.VariableDeclarationStatement;
+-import org.eclipse.jdt.core.dom.WhileStatement;
+-
+-import fr.inria.verveine.core.EntityStack;
+-import fr.inria.verveine.core.gen.famix.AnnotationType;
+-import fr.inria.verveine.core.gen.famix.AnnotationTypeAttribute;
+-import fr.inria.verveine.core.gen.famix.Class;
+-import fr.inria.verveine.core.gen.famix.ContainerEntity;
+-import fr.inria.verveine.core.gen.famix.EnumValue;
+-import fr.inria.verveine.core.gen.famix.Method;
+-import fr.inria.verveine.core.gen.famix.Namespace;
+-import fr.inria.verveine.core.gen.famix.ParameterType;
+-import fr.inria.verveine.core.gen.famix.ParameterizableClass;
+-import fr.inria.verveine.core.gen.famix.StructuralEntity;
+-
+-/**
+- * AST Visitor that defines all the (Famix) entities of interest
+- * Famix entities are stored in a Map along with the IBindings to which they correspond
+- */
+-public class VerveineDefVisitor extends ASTVisitor {
+-
+-	/** 
+-	 * A dictionary allowing to recover created FAMIX Entities
+-	 */
+-	protected JavaDictionary dico;
+-
+-	/**
+-	 * A stack that keeps the current definition context (package/class/method)
+-	 */
+-	protected EntityStack context;
+-
+-	public VerveineDefVisitor(JavaDictionary dico) {
+-		this.dico = dico;
+-		this.context = new EntityStack();
+-	}
+-
+-	// VISITOR METHODS
+-
+-	public boolean visit(CompilationUnit node) {
+-//		System.err.println("TRACE, DefVisiting CompilationUnit: "+node.getProperty(dico.SOURCE_FILENAME_PROPERTY));
+-		Namespace fmx = null;
+-		PackageDeclaration pckg = node.getPackage();
+-		if (pckg==null) {
+-			fmx = dico.ensureFamixNamespaceDefault();
+-		}
+-		else {
+-			fmx = dico.ensureFamixNamespace(pckg.resolveBinding(), pckg.getName().getFullyQualifiedName());
+-			fmx.setIsStub(false);
+-		}
+-
+-		if (pckg != null) {
+-			return super.visit(node);
+-		}
+-		else {
+-			this.context.pushPckg(null);
+-			return false;
+-		}
+-	}
+-
+-	public void endVisit(CompilationUnit node) {
+-		this.context.popPckg();
+-		super.endVisit(node);
+-	}
+-
+-	/*
+-	 * Can only be a class or interface declaration
+-	 */
+-	public boolean visit(TypeDeclaration node) {
+-//		System.err.println("TRACE, DefVisiting TypeDeclaration: "+node.getName().getIdentifier());
+-		ITypeBinding bnd = node.resolveBinding();
+-		@SuppressWarnings("unchecked")
+-		List<TypeParameter> tparams = (List<TypeParameter>)node.typeParameters();
+-		fr.inria.verveine.core.gen.famix.Class fmx = dico.ensureFamixClass(bnd, /*name*/node.getName().getIdentifier(), /*owner*/context.top(), tparams.size()>0); //   /*ctxt*/context.top());
+-		if (fmx != null) {
+-			fmx.setIsStub(false);
+-
+-			this.context.pushClass(fmx);
+-
+-			dico.addSourceAnchor(fmx, node);
+-			dico.createFamixComment(node.getJavadoc(), fmx);
+-			
+-			for (TypeParameter tp : tparams) {
+-				// if there is a type parameter, then fmx will be a Famix ParameterizableClass
+-				ParameterType fmxParam = dico.ensureFamixParameterType( tp.resolveBinding(), tp.getName().getIdentifier(), (ParameterizableClass)fmx); // note: owner of the ParameterType is the ParameterizableClass
+-				if (fmxParam != null) {
+-					fmxParam.setIsStub(false);
+-				}
+-			}
+-			return super.visit(node);
+-		}
+-		else {
+-			this.context.pushClass(null);
+-			return false;
+-		}
+-	}
+-
+-	public void endVisit(TypeDeclaration node) {
+-		this.context.popClass();
+-		super.endVisit(node);
+-	}
+-
+-	public boolean visit(ClassInstanceCreation node) {
+-//		System.err.println("TRACE, DefVisiting ClassInstanceCreation");
+-		fr.inria.verveine.core.gen.famix.Class fmx = null;
+-		AnonymousClassDeclaration decl = node.getAnonymousClassDeclaration(); 
+-		if (decl != null) {
+-			fmx = (Class) this.dico.ensureFamixType(decl.resolveBinding(), /*name*/"anonymous("+dico.findTypeName(node.getType())+")", /*owner*/context.top(), /*ctxt*/context.top());  //  isGeneric = false
+-			if (fmx != null) {
+-				fmx.setIsStub(false);
+-
+-				dico.addSourceAnchor(fmx, node);
+-				this.context.pushClass(fmx);
+-				return super.visit(node);
+-			}
+-			else {
+-				this.context.pushClass(null);
+-				return false;
+-			}
+-		}
+-		return super.visit(node);
+-	}
+-
+-	public void endVisit(ClassInstanceCreation node) {
+-		if (node.getAnonymousClassDeclaration() != null) {
+-			this.context.popClass();
+-		}
+-		super.endVisit(node);
+-	}
+-
+-	public boolean visit(AnnotationTypeDeclaration node) {
+-//		System.err.println("TRACE, DefVisiting AnnotationTypeDeclaration: "+node.getName().getIdentifier());
+-		ITypeBinding bnd = node.resolveBinding();
+-		AnnotationType fmx = dico.ensureFamixAnnotationType(bnd, node.getName().getIdentifier(), context.top());
+-		if (fmx != null) {
+-			fmx.setIsStub(Boolean.FALSE);
+-			
+-			context.pushAnnotationType(fmx);
+-			return super.visit(node);
+-		}
+-		else {
+-			context.pushAnnotationType(null);
+-			return false;
+-		}
+-	}
+-
+-	public void endVisit(AnnotationTypeDeclaration node) {
+-		this.context.popAnnotationType();
+-		super.endVisit(node);
+-	}
+-
+-	public boolean visit(AnnotationTypeMemberDeclaration node) {
+-//		System.err.println("TRACE, DefVisiting AnnotationTypeMemberDeclaration: "+node.getName().getIdentifier());
+-		IMethodBinding bnd = node.resolveBinding();
+-		AnnotationTypeAttribute fmx = dico.ensureFamixAnnotationTypeAttribute(bnd, node.getName().getIdentifier(), context.topAnnotationType());
+-		if (fmx != null) {
+-			fmx.setIsStub(false);
+-			
+-			context.pushAnnotationMember(fmx);
+-			return super.visit(node);
+-		}
+-		else {
+-			context.pushAnnotationMember(null);
+-			return false;
+-		}
+-	}
+-
+-	public void endVisit(AnnotationTypeMemberDeclaration node) {
+-		this.context.popAnnotationMember();
+-		super.endVisit(node);
+-	}
+-
+-	@SuppressWarnings("unchecked")
+-	public boolean visit(EnumDeclaration node) {
+-//		System.err.println("TRACE, DefVisiting EnumDeclaration: "+node.getName().getIdentifier());
+-		fr.inria.verveine.core.gen.famix.Enum fmx = dico.ensureFamixEnum(node.resolveBinding(), node.getName().getIdentifier(), context.top());
+-		if (fmx != null) {
+-			fmx.setIsStub(Boolean.FALSE);
+-			
+-			for (EnumConstantDeclaration ecst : (List<EnumConstantDeclaration>)node.enumConstants()) {
+-				EnumValue ev = dico.ensureFamixEnumValue(ecst.resolveVariable(), ecst.getName().getIdentifier(), fmx);
+-				ev.setIsStub(Boolean.FALSE);
+-			}
+-			return super.visit(node);
+-		}
+-		else {
+-			return false;
+-		}
+-	}
+-
+-	@SuppressWarnings("unchecked")
+-	public boolean visit(MethodDeclaration node) {
+-//		System.err.println("TRACE, DefVisiting MethodDeclaration: "+node.getName().getIdentifier());
+-		
+-		// some info needed to create the Famix Method
+-		IMethodBinding bnd = node.resolveBinding();
+-
+-		Collection<Type> paramTypes = new ArrayList<Type>();
+-		for (SingleVariableDeclaration param : (List<SingleVariableDeclaration>)node.parameters()) {
+-				paramTypes.add(param.getType());
+-		}
+-
+-		// creating/recovering it
+-		// creates it with a fake return type because we might need this FamixMethod to create the return type (if it is a ParameterizedType)
+-		// we reset the return type to its proper value later
+-		Method fmx = dico.ensureFamixMethod(bnd, node.getName().getIdentifier(), paramTypes, /*retType*/dico.ensureFamixClassObject(null), context.topClass());
+-
+-		if (fmx != null) {
+-			fmx.setIsStub(false);
+-			
+-			this.context.pushMethod(fmx);
+-			fr.inria.verveine.core.gen.famix.Type fmxRetTyp = referedType(node.getReturnType2(), fmx);
+-			fmx.setDeclaredType(fmxRetTyp);
+-			if (node.getBody() != null) {
+-				context.setTopMethodCyclo(1);
+-			}
+-
+-			dico.addSourceAnchor(fmx, node);
+-			dico.createFamixComment(node.getJavadoc(), fmx);
+-
+-			// creating the method's parameters
+-			List<VariableDeclaration> paramAsVarList;
+-			for (SingleVariableDeclaration param : (List<SingleVariableDeclaration>)node.parameters()) {
+-				// Note: method and ParamTyp bindings are null for ParameterType :-(
+-				paramAsVarList = new ArrayList<VariableDeclaration>(1);
+-				paramAsVarList.add(param);
+-				fr.inria.verveine.core.gen.famix.Type varTyp = referedType(param.getType(), context.topMethod());
+-				visitVariablesDeclarations(node, varTyp, paramAsVarList, context.topMethod());
+-			}
+-			return super.visit(node);
+-		}
+-		else {
+-			this.context.pushMethod(null);
+-			return false;
+-		}
+-	}
+-
+-	public void endVisit(MethodDeclaration node) {
+-		int cyclo = 0;
+-		int nos = 0;
+-		if (context.topMethod() != null) {
+-			cyclo = context.getTopMethodCyclo();
+-			nos = context.getTopMethodNOS();
+-		}
+-		Method fmx = this.context.popMethod();
+-		if (fmx != null) {
+-			fmx.setNOS(nos);
+-			fmx.setCyclo(cyclo);
+-		}
+-		super.endVisit(node);
+-	}
+-
+-	@SuppressWarnings({ "unchecked" })
+-	public boolean visit(FieldDeclaration node) {
+-//		System.err.println("TRACE, DefVisiting FieldDeclaration");
+-
+-		fr.inria.verveine.core.gen.famix.Type varTyp = referedType(node.getType(), context.topClass());
+-		for (StructuralEntity att : visitVariablesDeclarations(node, varTyp, (List<VariableDeclaration>)node.fragments(), context.topClass()) ) {
+-			dico.addSourceAnchor(att, node);
+-			dico.createFamixComment(node.getJavadoc(), att);
+-		}
+-		return super.visit(node);
+-	}
+-
+-	@SuppressWarnings("unchecked")
+-	public boolean visit(VariableDeclarationExpression node) {
+-//		System.err.println("TRACE, DefVisiting VariableDeclarationExpression");
+-
+-		// we don't declare (local) variables that have a primitive type
+-		// because we are assuming that the user is not interested in them 
+-		if (! node.getType().isPrimitiveType()) {
+-			fr.inria.verveine.core.gen.famix.Type varTyp = referedType(node.getType(), context.topMethod());
+-			for (StructuralEntity att : visitVariablesDeclarations(node, varTyp, (List<VariableDeclaration>)node.fragments(), context.topMethod())) {
+-				dico.addSourceAnchor(att, node);
+-			}
+-		}
+-
+-		return super.visit(node);
+-	}
+-
+-	@SuppressWarnings("unchecked")
+-	public boolean visit(VariableDeclarationStatement node) {
+-//		System.err.println("TRACE, DefVisiting VariableDeclarationStatement");
+-
+-		// we don't declare (local) variables that have a primitive type
+-		// because we are assuming that the user is not interested in them 
+-		if (! node.getType().isPrimitiveType()) {
+-			fr.inria.verveine.core.gen.famix.Type varTyp = referedType(node.getType(), context.topMethod());
+-			for (StructuralEntity att : visitVariablesDeclarations(node, varTyp, (List<VariableDeclaration>)node.fragments(), context.topMethod())) {
+-				dico.addSourceAnchor(att, node);
+-			}
+-		}
+-
+-		return super.visit(node);
+-	}
+-
+-	private Collection<StructuralEntity> visitVariablesDeclarations(ASTNode node, fr.inria.verveine.core.gen.famix.Type varTyp, List<VariableDeclaration> fragments, ContainerEntity ctxt) {
+-		Collection<StructuralEntity> ret = new ArrayList<StructuralEntity>();
+-
+-		for (VariableDeclaration vd : fragments) {
+-			StructuralEntity fmx;
+-			if (node instanceof MethodDeclaration) {
+-				// creating the parameters of a method. In this case, 'fragment' is aList<SingleVariableDeclarationFragment> and 'varType' is null
+-				fmx = dico.ensureFamixParameter(vd.resolveBinding(), vd.getName().getIdentifier(), varTyp, (Method)ctxt);
+-			}
+-			else if (node instanceof FieldDeclaration) {
+-				// creating a class' field
+-				fmx = dico.ensureFamixAttribute(vd.resolveBinding(), vd.getName().getIdentifier(), varTyp, (fr.inria.verveine.core.gen.famix.Class) ctxt);
+-			}
+-			else if (node instanceof VariableDeclarationExpression) {
+-				// creating a method's local variable
+-				fmx = dico.ensureFamixLocalVariable(vd.resolveBinding(), vd.getName().getIdentifier(), varTyp, (Method) ctxt);
+-			}
+-			else if (node instanceof VariableDeclarationExpression) {
+-				// creating a method's local variable
+-				fmx = dico.ensureFamixLocalVariable(vd.resolveBinding(), vd.getName().getIdentifier(), varTyp, (Method) ctxt);
+-			}
+-			else {
+-				fmx = null;
+-			}
+-
+-			if (fmx != null) {
+-				fmx.setIsStub(false);
+-				ret.add(fmx);
+-			}
+-		}
+-
+-		return ret;
+-	}
+-
+-	@SuppressWarnings("unchecked")
+-	private fr.inria.verveine.core.gen.famix.Type referedType(Type typ, ContainerEntity ctxt) {
+-		fr.inria.verveine.core.gen.famix.Type fmxTyp = null;
+-
+-		if (typ == null) {
+-			return null;
+-		}
+-
+-		if (typ.isParameterizedType()) {
+-			ITypeBinding parameterizedBnd = typ.resolveBinding();
+-			ITypeBinding parameterizableBnd = (parameterizedBnd == null) ? null : parameterizedBnd.getErasure();
+-			String tname = dico.findTypeName(typ);
+-			ParameterizableClass generic = null;
+-			generic = (ParameterizableClass) dico.ensureFamixClass(parameterizableBnd, tname, /*owner*/null, /*isGeneric*/true);
+-
+-			fmxTyp = dico.ensureFamixParameterizedType(parameterizedBnd, tname, generic, /*owner*/ctxt);
+-			for (Type targ : (List<Type>) ((ParameterizedType)typ).typeArguments()) {
+-				fr.inria.verveine.core.gen.famix.Type fmxTArg = dico.ensureFamixType(targ.resolveBinding(), dico.findTypeName(targ), /*owner*/null, ctxt);
+-				((fr.inria.verveine.core.gen.famix.ParameterizedType)fmxTyp).addArguments(fmxTArg);
+-			}
+-		}
+-		else {
+-			fmxTyp = dico.ensureFamixType(typ.resolveBinding(), dico.findTypeName(typ), /*owner*/null, ctxt);
+-		}
+-		return fmxTyp;
+-	}
+-
+-	// METRICS: CYCLO, NOS
+-	
+-	public boolean visit(AssertStatement node) {
+-		this.context.addTopMethodNOS(1);
+-		return super.visit(node);
+-	}
+-
+-	public boolean visit(Assignment node) {
+-		this.context.addTopMethodNOS(1);
+-		return super.visit(node);
+-	}
+-
+-	public boolean visit(ConstructorInvocation node) {
+-		this.context.addTopMethodNOS(1);
+-		return super.visit(node);
+-	}
+-
+-	public boolean visit(ContinueStatement node) {
+-		this.context.addTopMethodNOS(1);
+-		return super.visit(node);
+-	}
+-
+-	public boolean visit(DoStatement node) {
+-		this.context.addTopMethodCyclo(1);
+-		this.context.addTopMethodNOS(1);
+-		return super.visit(node);
+-	}
+-
+-	public boolean visit(EnhancedForStatement node) {
+-		this.context.addTopMethodCyclo(1);
+-		this.context.addTopMethodNOS(1);
+-		return super.visit(node);
+-	}
+-
+-	public boolean visit(ForStatement node) {
+-		this.context.addTopMethodCyclo(1);
+-		this.context.addTopMethodNOS(1);
+-		return super.visit(node);
+-	}
+-
+-	public boolean visit(IfStatement node) {
+-		this.context.addTopMethodCyclo(1);
+-		this.context.addTopMethodNOS(1);
+-		return super.visit(node);
+-	}
+-
+-	public boolean visit(MethodInvocation node) {
+-		this.context.addTopMethodNOS(1);
+-		return super.visit(node);
+-	}
+-
+-	public boolean visit(ReturnStatement node) {
+-		this.context.addTopMethodNOS(1);
+-		return super.visit(node);
+-	}
+-
+-	public boolean visit(SuperConstructorInvocation node) {
+-		this.context.addTopMethodNOS(1);
+-		return super.visit(node);
+-	}
+-
+-	public boolean visit(SuperMethodInvocation node) {
+-		this.context.addTopMethodNOS(1);
+-		return super.visit(node);
+-	}
+-
+-	public boolean visit(SwitchCase node) {
+-		this.context.addTopMethodCyclo(1);
+-		this.context.addTopMethodNOS(1);
+-		return super.visit(node);
+-	}
+-
+-	public boolean visit(SwitchStatement node) {
+-		this.context.addTopMethodNOS(1);
+-		return super.visit(node);
+-	}
+-
+-	public boolean visit(SynchronizedStatement node) {
+-		this.context.addTopMethodNOS(1);
+-		return super.visit(node);
+-	}
+-
+-	public boolean visit(ThrowStatement node) {
+-		this.context.addTopMethodNOS(1);
+-		return super.visit(node);
+-	}
+-
+-	public boolean visit(TryStatement node) {
+-		this.context.addTopMethodCyclo(1);
+-		this.context.addTopMethodNOS(1);
+-		return super.visit(node);
+-	}
+-
+-	public boolean visit(WhileStatement node) {
+-		this.context.addTopMethodCyclo(1);
+-		this.context.addTopMethodNOS(1);
+-		return super.visit(node);
+-	}
+-
+-}
+\ No newline at end of file
+Index: verveine.extractor.java/src/fr/inria/verveine/extractor/java/VerveineVisitor.java
+===================================================================
+--- verveine.extractor.java/src/fr/inria/verveine/extractor/java/VerveineVisitor.java	(revision 0)
++++ verveine.extractor.java/src/fr/inria/verveine/extractor/java/VerveineVisitor.java	(revision 117)
+@@ -0,0 +1,857 @@
++package fr.inria.verveine.extractor.java;
++
++import java.util.ArrayList;
++import java.util.Collection;
++import java.util.List;
++
++import org.eclipse.jdt.core.dom.ASTNode;
++import org.eclipse.jdt.core.dom.ASTVisitor;
++import org.eclipse.jdt.core.dom.AnnotationTypeDeclaration;
++import org.eclipse.jdt.core.dom.AnnotationTypeMemberDeclaration;
++import org.eclipse.jdt.core.dom.AnonymousClassDeclaration;
++import org.eclipse.jdt.core.dom.ArrayAccess;
++import org.eclipse.jdt.core.dom.ArrayCreation;
++import org.eclipse.jdt.core.dom.AssertStatement;
++import org.eclipse.jdt.core.dom.Assignment;
++import org.eclipse.jdt.core.dom.CastExpression;
++import org.eclipse.jdt.core.dom.CatchClause;
++import org.eclipse.jdt.core.dom.ClassInstanceCreation;
++import org.eclipse.jdt.core.dom.CompilationUnit;
++import org.eclipse.jdt.core.dom.ConditionalExpression;
++import org.eclipse.jdt.core.dom.ConstructorInvocation;
++import org.eclipse.jdt.core.dom.ContinueStatement;
++import org.eclipse.jdt.core.dom.DoStatement;
++import org.eclipse.jdt.core.dom.EnhancedForStatement;
++import org.eclipse.jdt.core.dom.EnumConstantDeclaration;
++import org.eclipse.jdt.core.dom.EnumDeclaration;
++import org.eclipse.jdt.core.dom.Expression;
++import org.eclipse.jdt.core.dom.FieldAccess;
++import org.eclipse.jdt.core.dom.FieldDeclaration;
++import org.eclipse.jdt.core.dom.ForStatement;
++import org.eclipse.jdt.core.dom.IBinding;
++import org.eclipse.jdt.core.dom.IMethodBinding;
++import org.eclipse.jdt.core.dom.IPackageBinding;
++import org.eclipse.jdt.core.dom.ITypeBinding;
++import org.eclipse.jdt.core.dom.IVariableBinding;
++import org.eclipse.jdt.core.dom.IfStatement;
++import org.eclipse.jdt.core.dom.ImportDeclaration;
++import org.eclipse.jdt.core.dom.InfixExpression;
++import org.eclipse.jdt.core.dom.MethodDeclaration;
++import org.eclipse.jdt.core.dom.MethodInvocation;
++import org.eclipse.jdt.core.dom.Name;
++import org.eclipse.jdt.core.dom.PackageDeclaration;
++import org.eclipse.jdt.core.dom.ParameterizedType;
++import org.eclipse.jdt.core.dom.ParenthesizedExpression;
++import org.eclipse.jdt.core.dom.QualifiedName;
++import org.eclipse.jdt.core.dom.QualifiedType;
++import org.eclipse.jdt.core.dom.ReturnStatement;
++import org.eclipse.jdt.core.dom.SimpleName;
++import org.eclipse.jdt.core.dom.SimpleType;
++import org.eclipse.jdt.core.dom.SingleVariableDeclaration;
++import org.eclipse.jdt.core.dom.StringLiteral;
++import org.eclipse.jdt.core.dom.SuperConstructorInvocation;
++import org.eclipse.jdt.core.dom.SuperFieldAccess;
++import org.eclipse.jdt.core.dom.SuperMethodInvocation;
++import org.eclipse.jdt.core.dom.SwitchCase;
++import org.eclipse.jdt.core.dom.SwitchStatement;
++import org.eclipse.jdt.core.dom.SynchronizedStatement;
++import org.eclipse.jdt.core.dom.ThisExpression;
++import org.eclipse.jdt.core.dom.ThrowStatement;
++import org.eclipse.jdt.core.dom.TryStatement;
++import org.eclipse.jdt.core.dom.Type;
++import org.eclipse.jdt.core.dom.TypeDeclaration;
++import org.eclipse.jdt.core.dom.TypeLiteral;
++import org.eclipse.jdt.core.dom.TypeParameter;
++import org.eclipse.jdt.core.dom.VariableDeclaration;
++import org.eclipse.jdt.core.dom.VariableDeclarationExpression;
++import org.eclipse.jdt.core.dom.VariableDeclarationStatement;
++import org.eclipse.jdt.core.dom.WhileStatement;
++
++import fr.inria.verveine.core.Dictionary;
++import fr.inria.verveine.core.EntityStack;
++import fr.inria.verveine.core.gen.famix.AnnotationType;
++import fr.inria.verveine.core.gen.famix.AnnotationTypeAttribute;
++import fr.inria.verveine.core.gen.famix.Attribute;
++import fr.inria.verveine.core.gen.famix.BehaviouralEntity;
++import fr.inria.verveine.core.gen.famix.Class;
++import fr.inria.verveine.core.gen.famix.ContainerEntity;
++import fr.inria.verveine.core.gen.famix.EnumValue;
++import fr.inria.verveine.core.gen.famix.ImplicitVariable;
++import fr.inria.verveine.core.gen.famix.Method;
++import fr.inria.verveine.core.gen.famix.NamedEntity;
++import fr.inria.verveine.core.gen.famix.Namespace;
++import fr.inria.verveine.core.gen.famix.ParameterType;
++import fr.inria.verveine.core.gen.famix.ParameterizableClass;
++import fr.inria.verveine.core.gen.famix.StructuralEntity;
++
++/**
++ * AST Visitor that defines all the (Famix) entities of interest
++ * Famix entities are stored in a Map along with the IBindings to which they correspond
++ */
++public class VerveineVisitor extends ASTVisitor {
++
++	/** 
++	 * A dictionary allowing to recover created FAMIX Entities
++	 */
++	protected JavaDictionary dico;
++
++	/**
++	 * A stack that keeps the current definition context (package/class/method)
++	 */
++	protected EntityStack context;
++
++	public VerveineVisitor(JavaDictionary dico) {
++		this.dico = dico;
++		this.context = new EntityStack();
++	}
++
++	// VISITOR METHODS
++
++	public boolean visit(CompilationUnit node) {
++//		System.err.println("TRACE, DefVisiting CompilationUnit: "+node.getProperty(dico.SOURCE_FILENAME_PROPERTY));
++		Namespace fmx = null;
++		PackageDeclaration pckg = node.getPackage();
++		if (pckg==null) {
++			fmx = dico.ensureFamixNamespaceDefault();
++		}
++		else {
++			fmx = dico.ensureFamixNamespace(pckg.resolveBinding(), pckg.getName().getFullyQualifiedName());
++			fmx.setIsStub(false);
++		}
++
++		if (pckg != null) {
++			return super.visit(node);
++		}
++		else {
++			return false;
++		}
++	}
++
++	public void endVisit(CompilationUnit node) {
++		this.context.popPckg();
++		super.endVisit(node);
++	}
++
++	/**
++	 * creating reference from package of this compilation unit to imported package
++	 * not sure it is a good idea ?!?
++	 */
++	public boolean visit(ImportDeclaration node) {
++
++		Namespace fmxSrc = this.context.topPckg();  // could access it through recursive node.getParent() ?
++
++		IBinding importBnd = node.resolveBinding();
++		String importName = node.getName().getFullyQualifiedName();
++		if (importBnd instanceof IMethodBinding)  {
++			importBnd = ((IMethodBinding)importBnd).getDeclaringClass().getPackage();
++			importName = dico.removeLastName(importName);
++			importName = dico.removeLastName(importName);
++		}
++		else if (importBnd instanceof IVariableBinding)  {
++			importBnd = ((IVariableBinding)importBnd).getDeclaringClass().getPackage();
++			importName = dico.removeLastName(importName);
++			importName = dico.removeLastName(importName);
++		}
++		else if (importBnd instanceof ITypeBinding)  {
++			importBnd = ((ITypeBinding)importBnd).getPackage();
++			importName = dico.removeLastName(importName);
++		}
++		Namespace fmxDest = dico.ensureFamixNamespace( (IPackageBinding)importBnd, importName);
++		context.setLastReference( dico.addFamixReference(fmxSrc, fmxDest, context.getLastReference()) );
++		
++		return super.visit(node);
++	}
++
++	/*
++	 * Can only be a class or interface declaration
++	 */
++	public boolean visit(TypeDeclaration node) {
++//		System.err.println("TRACE, DefVisiting TypeDeclaration: "+node.getName().getIdentifier());
++		ITypeBinding bnd = node.resolveBinding();
++		@SuppressWarnings("unchecked")
++		List<TypeParameter> tparams = (List<TypeParameter>)node.typeParameters();
++		fr.inria.verveine.core.gen.famix.Class fmx = dico.ensureFamixClass(bnd, /*name*/node.getName().getIdentifier(), /*owner*/context.top(), tparams.size()>0); //   /*ctxt*/context.top());
++		if (fmx != null) {
++			fmx.setIsStub(false);
++
++			this.context.pushClass(fmx);
++
++			dico.addSourceAnchor(fmx, node);
++			dico.addFamixAnnotationInstances(bnd, fmx);
++			dico.createFamixComment(node.getJavadoc(), fmx);
++			
++			for (TypeParameter tp : tparams) {
++				// if there is a type parameter, then fmx will be a Famix ParameterizableClass
++				ParameterType fmxParam = dico.ensureFamixParameterType( tp.resolveBinding(), tp.getName().getIdentifier(), (ParameterizableClass)fmx); // note: owner of the ParameterType is the ParameterizableClass
++				if (fmxParam != null) {
++					fmxParam.setIsStub(false);
++				}
++			}
++			return super.visit(node);
++		}
++		else {
++			return false;
++		}
++	}
++
++	public void endVisit(TypeDeclaration node) {
++		this.context.popClass();
++		super.endVisit(node);
++	}
++
++	public boolean visit(ClassInstanceCreation node) {
++//		System.err.println("TRACE, DefVisiting ClassInstanceCreation");
++		fr.inria.verveine.core.gen.famix.Class fmx = null;
++		AnonymousClassDeclaration decl = node.getAnonymousClassDeclaration(); 
++		if (decl != null) {
++			ITypeBinding bnd = decl.resolveBinding();
++			fmx = (Class) this.dico.ensureFamixType(bnd, /*name*/"anonymous("+dico.findTypeName(node.getType())+")", /*owner*/context.top(), /*ctxt*/context.top());  //  isGeneric = false
++			if (fmx != null) {
++				fmx.setIsStub(false);
++
++				dico.addFamixAnnotationInstances(bnd, fmx);
++				dico.addSourceAnchor(fmx, node);
++				this.context.pushClass(fmx);
++				return super.visit(node);
++			}
++			else {
++				return false;
++			}
++		}
++		return super.visit(node);
++	}
++
++	/* 
++	 * intended to close 'visit(ClassInstanceCreation node)' for just this specific case
++	 */
++	public void endVisit(AnonymousClassDeclaration node) {
++		this.context.popClass();
++		super.endVisit(node);
++	}
++
++	public boolean visit(AnnotationTypeDeclaration node) {
++//		System.err.println("TRACE, DefVisiting AnnotationTypeDeclaration: "+node.getName().getIdentifier());
++		ITypeBinding bnd = node.resolveBinding();
++		AnnotationType fmx = dico.ensureFamixAnnotationType(bnd, node.getName().getIdentifier(), context.top());
++		if (fmx != null) {
++			fmx.setIsStub(Boolean.FALSE);
++			
++			context.pushAnnotationType(fmx);
++			return super.visit(node);
++		}
++		else {
++			context.pushAnnotationType(null);
++			return false;
++		}
++	}
++
++	public void endVisit(AnnotationTypeDeclaration node) {
++		this.context.popAnnotationType();
++		super.endVisit(node);
++	}
++
++	public boolean visit(AnnotationTypeMemberDeclaration node) {
++//		System.err.println("TRACE, DefVisiting AnnotationTypeMemberDeclaration: "+node.getName().getIdentifier());
++		IMethodBinding bnd = node.resolveBinding();
++		AnnotationTypeAttribute fmx = dico.ensureFamixAnnotationTypeAttribute(bnd, node.getName().getIdentifier(), context.topAnnotationType());
++		if (fmx != null) {
++			fmx.setIsStub(false);
++			
++			context.pushAnnotationMember(fmx);
++			return super.visit(node);
++		}
++		else {
++			context.pushAnnotationMember(null);
++			return false;
++		}
++	}
++
++	public void endVisit(AnnotationTypeMemberDeclaration node) {
++		this.context.popAnnotationMember();
++		super.endVisit(node);
++	}
++
++	@SuppressWarnings("unchecked")
++	public boolean visit(EnumDeclaration node) {
++//		System.err.println("TRACE, DefVisiting EnumDeclaration: "+node.getName().getIdentifier());
++		fr.inria.verveine.core.gen.famix.Enum fmx = dico.ensureFamixEnum(node.resolveBinding(), node.getName().getIdentifier(), context.top());
++		if (fmx != null) {
++			fmx.setIsStub(Boolean.FALSE);
++			
++			for (EnumConstantDeclaration ecst : (List<EnumConstantDeclaration>)node.enumConstants()) {
++				EnumValue ev = dico.ensureFamixEnumValue(ecst.resolveVariable(), ecst.getName().getIdentifier(), fmx);
++				ev.setIsStub(Boolean.FALSE);
++			}
++			return super.visit(node);
++		}
++		else {
++			return false;
++		}
++	}
++
++	@SuppressWarnings("unchecked")
++	public boolean visit(MethodDeclaration node) {
++//		System.err.println("TRACE, DefVisiting MethodDeclaration: "+node.getName().getIdentifier());
++		
++		// some info needed to create the Famix Method
++		IMethodBinding bnd = node.resolveBinding();
++
++		Collection<Type> paramTypes = new ArrayList<Type>();
++		for (SingleVariableDeclaration param : (List<SingleVariableDeclaration>)node.parameters()) {
++				paramTypes.add(param.getType());
++		}
++
++		// creating/recovering it
++		// creates it with a fake return type because we might need this FamixMethod to create the return type (if it is a ParameterizedType)
++		// we reset the return type to its proper value later
++		Method fmx = dico.ensureFamixMethod(bnd, node.getName().getIdentifier(), paramTypes, /*retType*/dico.ensureFamixClassObject(null), context.topClass());
++
++		if (fmx != null) {
++			fmx.setIsStub(false);
++			
++			// now will recompute the actual returnType
++			this.context.pushMethod(fmx);
++			fr.inria.verveine.core.gen.famix.Type fmxRetTyp = referedType(node.getReturnType2(), fmx);
++			fmx.setDeclaredType(fmxRetTyp);
++
++			dico.addSourceAnchor(fmx, node);
++			dico.addFamixAnnotationInstances(bnd, fmx);
++			dico.createFamixComment(node.getJavadoc(), fmx);
++
++			if (node.getBody() != null) {
++				context.setTopMethodCyclo(1);
++			}
++
++			// creating the method's parameters
++			List<VariableDeclaration> paramAsVarList;
++			for (SingleVariableDeclaration param : (List<SingleVariableDeclaration>)node.parameters()) {
++				// Note: method and ParamTyp bindings are null for ParameterType :-(
++				paramAsVarList = new ArrayList<VariableDeclaration>(1);
++				paramAsVarList.add(param);
++				fr.inria.verveine.core.gen.famix.Type varTyp = referedType(param.getType(), context.topMethod());
++				visitVariablesDeclarations(node, varTyp, paramAsVarList, context.topMethod());
++			}
++
++			// Exceptions
++			for (Name excepName : (List<Name>)node.thrownExceptions()) {
++				fr.inria.verveine.core.gen.famix.Class excepFmx = this.dico.ensureFamixClass(excepName.resolveTypeBinding(), excepName.getFullyQualifiedName(), /*owner*/null, /*isGeneric*/false);
++				if (excepFmx != null) {
++					dico.createFamixDeclaredException(fmx, excepFmx);
++				}
++			}
++
++			return super.visit(node);
++		}
++		else {
++			this.context.pushMethod(null);
++			return false;
++		}
++	}
++
++	public void endVisit(MethodDeclaration node) {
++		int cyclo = 0;
++		int nos = 0;
++		if (context.topMethod() != null) {
++			cyclo = context.getTopMethodCyclo();
++			nos = context.getTopMethodNOS();
++		}
++		Method fmx = this.context.popMethod();
++		if (fmx != null) {
++			fmx.setNOS(nos);
++			fmx.setCyclo(cyclo);
++		}
++		super.endVisit(node);
++	}
++
++	@SuppressWarnings({ "unchecked" })
++	public boolean visit(FieldDeclaration node) {
++//		System.err.println("TRACE, DefVisiting FieldDeclaration");
++
++		fr.inria.verveine.core.gen.famix.Type varTyp = referedType(node.getType(), context.topClass());
++		for (StructuralEntity att : visitVariablesDeclarations(node, varTyp, (List<VariableDeclaration>)node.fragments(), context.topClass()) ) {
++			dico.addSourceAnchor(att, node);
++			dico.createFamixComment(node.getJavadoc(), att);
++		}
++		return super.visit(node);
++	}
++
++	@SuppressWarnings("unchecked")
++	public boolean visit(VariableDeclarationExpression node) {
++//		System.err.println("TRACE, DefVisiting VariableDeclarationExpression");
++
++		// we don't declare (local) variables that have a primitive type
++		// because we are assuming that the user is not interested in them 
++		if (! node.getType().isPrimitiveType()) {
++			fr.inria.verveine.core.gen.famix.Type varTyp = referedType(node.getType(), context.topMethod());
++			for (StructuralEntity att : visitVariablesDeclarations(node, varTyp, (List<VariableDeclaration>)node.fragments(), context.topMethod())) {
++				dico.addSourceAnchor(att, node);
++			}
++		}
++
++		return super.visit(node);
++	}
++
++	@SuppressWarnings("unchecked")
++	public boolean visit(VariableDeclarationStatement node) {
++//		System.err.println("TRACE, DefVisiting VariableDeclarationStatement");
++
++		// we don't declare (local) variables that have a primitive type
++		// because we are assuming that the user is not interested in them 
++		if (! node.getType().isPrimitiveType()) {
++			fr.inria.verveine.core.gen.famix.Type varTyp = referedType(node.getType(), context.topMethod());
++			for (StructuralEntity att : visitVariablesDeclarations(node, varTyp, (List<VariableDeclaration>)node.fragments(), context.topMethod())) {
++				dico.addSourceAnchor(att, node);
++			}
++		}
++
++		return super.visit(node);
++	}
++
++	private Collection<StructuralEntity> visitVariablesDeclarations(ASTNode node, fr.inria.verveine.core.gen.famix.Type varTyp, List<VariableDeclaration> fragments, ContainerEntity ctxt) {
++		Collection<StructuralEntity> ret = new ArrayList<StructuralEntity>();
++
++		for (VariableDeclaration vd : fragments) {
++			StructuralEntity fmx;
++			IVariableBinding bnd = vd.resolveBinding();
++			String name = vd.getName().getIdentifier();
++
++			if (node instanceof MethodDeclaration) {
++				// creating the parameters of a method. In this case, 'fragment' is aList<SingleVariableDeclarationFragment> and 'varType' is null
++				fmx = dico.ensureFamixParameter(bnd, name, varTyp, (Method)ctxt);
++			}
++			else if (node instanceof FieldDeclaration) {
++				// creating a class' field
++				fmx = dico.ensureFamixAttribute(bnd, name, varTyp, (fr.inria.verveine.core.gen.famix.Class) ctxt);
++			}
++			else if (node instanceof VariableDeclarationExpression) {
++				// creating a method's local variable
++				fmx = dico.ensureFamixLocalVariable(bnd, name, varTyp, (Method) ctxt);
++			}
++			else if (node instanceof VariableDeclarationExpression) {
++				// creating a method's local variable
++				fmx = dico.ensureFamixLocalVariable(bnd, name, varTyp, (Method) ctxt);
++			}
++			else {
++				fmx = null;
++			}
++
++			if (fmx != null) {
++				fmx.setIsStub(false);
++				dico.addFamixAnnotationInstances(bnd, fmx);
++				ret.add(fmx);
++			}
++		}
++
++		return ret;
++	}
++
++	@SuppressWarnings("unchecked")
++	private fr.inria.verveine.core.gen.famix.Type referedType(Type typ, ContainerEntity ctxt) {
++		fr.inria.verveine.core.gen.famix.Type fmxTyp = null;
++
++		if (typ == null) {
++			return null;
++		}
++
++		if (typ.isParameterizedType()) {
++			ITypeBinding parameterizedBnd = typ.resolveBinding();
++			ITypeBinding parameterizableBnd = (parameterizedBnd == null) ? null : parameterizedBnd.getErasure();
++			String tname = dico.findTypeName(typ);
++			ParameterizableClass generic = null;
++			generic = (ParameterizableClass) dico.ensureFamixClass(parameterizableBnd, tname, /*owner*/null, /*isGeneric*/true);
++
++			fmxTyp = dico.ensureFamixParameterizedType(parameterizedBnd, tname, generic, /*owner*/ctxt);
++			for (Type targ : (List<Type>) ((ParameterizedType)typ).typeArguments()) {
++				fr.inria.verveine.core.gen.famix.Type fmxTArg = dico.ensureFamixType(targ.resolveBinding(), dico.findTypeName(targ), /*owner*/null, ctxt);
++				((fr.inria.verveine.core.gen.famix.ParameterizedType)fmxTyp).addArguments(fmxTArg);
++			}
++		}
++		else {
++			fmxTyp = dico.ensureFamixType(typ.resolveBinding(), dico.findTypeName(typ), /*owner*/null, ctxt);
++		}
++		return fmxTyp;
++	}
++
++	public boolean visit(MethodInvocation node) {
++		Expression callingExpr = node.getExpression();
++		methodInvocation(node.resolveMethodBinding(), node.getName().getFullyQualifiedName(), getReceiver(callingExpr));
++		if (callingExpr instanceof SimpleName) {
++			// we might have a hidden FieldAccess here
++			IBinding bnd = ((Name) callingExpr).resolveBinding();
++			if ( (bnd != null) && (bnd instanceof IVariableBinding) && ((IVariableBinding)bnd).isField() ){
++				BehaviouralEntity accessor = this.context.topMethod();
++				// note: using a field without anything before, owner must be the currently parsed class
++				createAccessedAttribute((IVariableBinding)bnd, ((SimpleName)callingExpr).getIdentifier(), null, /*owner*/context.topClass(), accessor);
++			}
++		}
++
++		this.context.addTopMethodNOS(1);
++		return super.visit(node);
++	}
++
++	public boolean visit(SuperMethodInvocation node) {
++		methodInvocation(node.resolveMethodBinding(), node.getName().getFullyQualifiedName(), this.dico.ensureFamixImplicitVariable(Dictionary.SUPER_NAME, this.context.topClass(), context.top()));
++
++		this.context.addTopMethodNOS(1);
++		return super.visit(node);
++	}
++
++	public boolean visit(ConstructorInvocation node) {
++		this.context.addTopMethodNOS(1);
++		
++		// ConstructorInvocation (i.e. 'this(...)' ) happen in constructor, so the name is the same
++		String name = context.topMethod().getName();
++		Method invoked = this.dico.ensureFamixMethod(node.resolveConstructorBinding(), name, (Collection<org.eclipse.jdt.core.dom.Type>)null, /*retType*/null, /*owner*/context.topClass());  // cast needed to desambiguate the call
++		ImplicitVariable receiver = dico.ensureFamixImplicitVariable(Dictionary.SELF_NAME, context.topClass(), context.topMethod());
++		context.setLastInvocation( dico.addFamixInvocation(context.topMethod(), invoked, receiver, context.getLastInvocation()) );
++
++		return super.visit(node);
++	}
++
++	public boolean visit(SuperConstructorInvocation node) {
++		this.context.addTopMethodNOS(1);
++		
++		// ConstructorInvocation (i.e. 'super(...)' ) happen in constructor, so the name is that of the superclass
++		Method invoked = this.dico.ensureFamixMethod(node.resolveConstructorBinding(), null, (Collection<org.eclipse.jdt.core.dom.Type>)null, /*retType*/null, /*owner*/context.topClass());  // cast needed to desambiguate the call
++		ImplicitVariable receiver = dico.ensureFamixImplicitVariable(Dictionary.SUPER_NAME, context.topClass(), context.topMethod());
++		context.setLastInvocation( dico.addFamixInvocation(context.topMethod(), invoked, receiver, context.getLastInvocation()) );
++
++		return super.visit(node);
++	}
++
++	/**
++	 * Handles an invocation of a method by creating the corresponding Famix Entity
++	 * @param calledBnd -- a binding for the method
++	 * @param calledName of the method invoked
++	 * @param receiver of the call, i.e. the object to which the message is sent
++	 */
++	private void methodInvocation(IMethodBinding calledBnd, String calledName, NamedEntity receiver) {
++		BehaviouralEntity sender = this.context.topMethod();
++		if (sender != null) {
++			Method invoked = null;
++			if (receiver instanceof StructuralEntity) {
++				fr.inria.verveine.core.gen.famix.Type varTyp = ((StructuralEntity)receiver).getDeclaredType();
++				invoked = this.dico.ensureFamixMethod(calledBnd, calledName, (Collection<org.eclipse.jdt.core.dom.Type>)null, /*retType*/null, /*owner*/varTyp);  // cast needed to desambiguate the call
++			}
++			else {
++				// method static of a class called on the class
++				invoked = this.dico.ensureFamixMethod(calledBnd, calledName, (Collection<org.eclipse.jdt.core.dom.Type>)null, /*retType*/null, /*owner*/(fr.inria.verveine.core.gen.famix.Type)receiver);  // cast needed to desambiguate the call
++			}
++			context.setLastInvocation( dico.addFamixInvocation(sender, invoked, receiver, context.getLastInvocation()) );
++		}
++	}
++
++	public boolean visit(FieldAccess node) {
++		BehaviouralEntity accessor = this.context.topMethod();
++		IVariableBinding bnd = node.resolveFieldBinding();
++		// FIXME if bnd == null we have a problem
++		createAccessedAttribute(bnd, node.getName().getIdentifier(), null, null, accessor);
++
++		return super.visit(node);
++	}
++
++	/*
++	 * Could be a FieldAccess (see JDT javadoc: class FieldAccess) 
++	 */
++	public boolean visit(QualifiedName node) {
++		IBinding bnd = node.resolveBinding();
++		if (bnd instanceof IVariableBinding) {
++			// apparently this is a field
++			BehaviouralEntity accessor = this.context.topMethod();
++			createAccessedAttribute((IVariableBinding)bnd, node.getName().getIdentifier(), null, null, accessor);
++		}
++		return super.visit(node);
++	}
++
++	/* 
++	 * Another FieldAccess in disguise: SomeClass.class
++	 */
++	public boolean visit(TypeLiteral node) {
++		fr.inria.verveine.core.gen.famix.Type javaMetaClass = dico.ensureFamixMetaClass(null); 
++		BehaviouralEntity accessor = this.context.topMethod();
++		createAccessedAttribute(null, "class", javaMetaClass, javaMetaClass, accessor);
++		return super.visit(node);
++	}
++
++	@Override
++	public boolean visit(CatchClause node) {
++		Method meth = this.context.topMethod();
++		Type excepClass = node.getException().getType();
++		if (meth != null) {
++			fr.inria.verveine.core.gen.famix.Class excepFmx = null;
++			if (excepClass instanceof SimpleType) {
++				excepFmx = this.dico.ensureFamixClass(excepClass.resolveBinding(), ((SimpleType) excepClass).getName().getFullyQualifiedName(), /*owner*/null, /*isGeneric*/false);
++			}
++			else if (excepClass instanceof QualifiedType) {
++				excepFmx = this.dico.ensureFamixClass(excepClass.resolveBinding(), ((QualifiedType) excepClass).getName().getIdentifier(), /*owner*/null, /*isGeneric*/false);
++			}
++			if (excepFmx != null) {
++				dico.createFamixCaughtException(meth, excepFmx);
++			}
++		}
++
++		return super.visit(node);
++	}
++
++	@Override
++	public boolean visit(ThrowStatement node) {
++		this.context.addTopMethodNOS(1);
++
++		Method meth = this.context.topMethod();
++		fr.inria.verveine.core.gen.famix.Class excepFmx = this.dico.ensureFamixClass(node.getExpression().resolveTypeBinding(), /*name*/(String)null, /*owner*/(ContainerEntity)null, /*isGeneric*/false);
++		if (excepFmx != null) {
++			dico.createFamixThrownException(meth, excepFmx);
++		}
++		return super.visit(node);
++	}
++
++	public boolean visit(AssertStatement node) {
++		this.context.addTopMethodNOS(1);
++		return super.visit(node);
++	}
++
++	public boolean visit(Assignment node) {
++		this.context.addTopMethodNOS(1);
++		return super.visit(node);
++	}
++
++	public boolean visit(ContinueStatement node) {
++		this.context.addTopMethodNOS(1);
++		return super.visit(node);
++	}
++
++	public boolean visit(DoStatement node) {
++		this.context.addTopMethodCyclo(1);
++		this.context.addTopMethodNOS(1);
++		return super.visit(node);
++	}
++
++	public boolean visit(EnhancedForStatement node) {
++		this.context.addTopMethodCyclo(1);
++		this.context.addTopMethodNOS(1);
++		return super.visit(node);
++	}
++
++	public boolean visit(ForStatement node) {
++		this.context.addTopMethodCyclo(1);
++		this.context.addTopMethodNOS(1);
++		return super.visit(node);
++	}
++
++	public boolean visit(IfStatement node) {
++		this.context.addTopMethodCyclo(1);
++		this.context.addTopMethodNOS(1);
++		return super.visit(node);
++	}
++
++	public boolean visit(ReturnStatement node) {
++		this.context.addTopMethodNOS(1);
++		return super.visit(node);
++	}
++
++	public boolean visit(SwitchCase node) {
++		this.context.addTopMethodCyclo(1);
++		this.context.addTopMethodNOS(1);
++		return super.visit(node);
++	}
++
++	public boolean visit(SwitchStatement node) {
++		this.context.addTopMethodNOS(1);
++		return super.visit(node);
++	}
++
++	public boolean visit(SynchronizedStatement node) {
++		this.context.addTopMethodNOS(1);
++		return super.visit(node);
++	}
++
++	public boolean visit(TryStatement node) {
++		this.context.addTopMethodCyclo(1);
++		this.context.addTopMethodNOS(1);
++		return super.visit(node);
++	}
++
++	public boolean visit(WhileStatement node) {
++		this.context.addTopMethodCyclo(1);
++		this.context.addTopMethodNOS(1);
++		return super.visit(node);
++	}
++
++	
++
++	/**
++	 * Finds and/or create the Famix Entity receiving a message
++	 * Can be: ImplicitVariable (this, super), GlobalVariable, LocalVariable, Attribute, UnknownVariable, Parameter
++	 * @param expr -- the Java expression describing the receiver
++	 * @return the Famix Entity or null if could not find it
++	 */
++	@SuppressWarnings("static-access")
++	private NamedEntity getReceiver(Expression expr) {
++		// msg(), same as ThisExpression
++		if (expr == null) {
++			return this.dico.ensureFamixImplicitVariable(dico.SELF_NAME, this.context.topClass(), context.top());
++		}
++
++		// array[i].msg()
++		else if (expr instanceof ArrayAccess) {
++			return getReceiver(((ArrayAccess) expr).getArray());
++		}
++
++		// new type[].msg() -- TODO similar to ClassInstanceCreation
++		else if (expr instanceof ArrayCreation) {
++			//System.err.println("WARNING: Ignored receiver expression in method call: ArrayCreation");
++			return null;
++		}
++
++		// (variable = value).msg()
++		else if (expr instanceof Assignment) {
++			return getReceiver(((Assignment) expr).getLeftHandSide());
++		}
++
++		// ((type)expr).msg()
++		else if (expr instanceof CastExpression) {
++			return getReceiver(((CastExpression) expr).getExpression());
++		}
++
++		// new Class().msg() -- TODO anonymous object of a known class ...
++		else if (expr instanceof ClassInstanceCreation) {
++			//System.err.println("WARNING: Ignored receiver expression in method call: ClassInstanceCreation");
++			return null;
++		}
++
++		// (cond-expr ? then-expr : else-expr).msg()
++		else if (expr instanceof ConditionalExpression) {
++			// can be one or the other (then-expr/else-expr) so we choose one
++			NamedEntity ret = getReceiver(((ConditionalExpression) expr).getThenExpression());
++			if (ret == null) {
++				// can as well try the other
++				ret = getReceiver(((ConditionalExpression) expr).getElseExpression());
++			}
++			return ret;
++		}
++
++		// field.msg()
++		else if (expr instanceof FieldAccess) {
++			Attribute ret = createAccessedAttribute(((FieldAccess) expr).resolveFieldBinding(), ((FieldAccess) expr).getName().getIdentifier(), /*type*/null, /*owner*/null, /*accessor*/null);
++			if ( (ret != null) && (ret.getParentType() == null) && (ret.getName().equals("length")) ) {
++				ret.setParentType(dico.ensureFamixClassArray());
++			}
++
++			return ret;
++		}
++
++		// (left-expr oper right-expr).msg()
++		else if (expr instanceof InfixExpression) {
++			// anonymous receiver
++			return null;
++		}
++
++		// msg1().msg() -- TODO similar to ClassInstanceCreation, 'msg()' is sent to the object returned by 'msg1()'
++		else if (expr instanceof MethodInvocation) {
++			//System.err.println("WARNING: Ignored receiver expression in method call: MethodInvocation");
++
++			return null;
++		}
++
++		// name.msg()
++		else if (expr instanceof Name) {
++			// can be a class or a variable name
++			IBinding bnd = ((Name) expr).resolveBinding();
++			if (bnd == null) {
++				return null;
++			}
++			NamedEntity ret = null;
++			if (bnd instanceof ITypeBinding) {
++				// msg() is a static method of Name
++				//TODO why returning a variable here? Should not it be the class itself?
++				ret = dico.createFamixUnknownVariable( dico.ensureFamixType((ITypeBinding)bnd, null, null, context.top()), bnd.getName());
++			}
++			else if (bnd instanceof IVariableBinding) {
++				String varName = ( ((Name)expr).isSimpleName() ? ((SimpleName)expr).getFullyQualifiedName() : ((QualifiedName)expr).getName().getIdentifier());
++				if ( ((IVariableBinding)bnd).isField() ) {
++					ret = createAccessedAttribute((IVariableBinding)bnd, varName, /*typ*/null, /*owner*/null, /*accessor*/null);
++					if ( (ret != null) && (((Attribute) ret).getParentType() == null) && (ret.getName().equals("length")) ) {
++						((Attribute) ret).setParentType(dico.ensureFamixClassArray());
++					}
++
++					return ret;
++				}
++				else if ( ((IVariableBinding)bnd).isParameter() ) {
++					ret = dico.ensureFamixParameter( (IVariableBinding)bnd, varName, null, context.topMethod());
++				}
++				else { // suppose it's a local variable
++					ret = dico.ensureFamixLocalVariable( (IVariableBinding)bnd, varName, null, context.topMethod());
++				}
++			}
++			
++			return ret;
++		}
++
++		// (expr).msg()
++		else if (expr instanceof ParenthesizedExpression) {
++			return getReceiver(((ParenthesizedExpression) expr).getExpression());
++		}
++
++		// "string".msg() -- TODO similar to ClassInstanceCreation, anonymous String object
++		else if (expr instanceof StringLiteral) {
++			//System.err.println("WARNING: Ignored receiver expression in method call: StringLiteral");
++			return null;
++		}
++
++		// super.field.msg()
++		else if (expr instanceof SuperFieldAccess) {
++			Attribute ret = createAccessedAttribute(((SuperFieldAccess) expr).resolveFieldBinding(), ((SuperFieldAccess) expr).getName().getIdentifier(), /*typ*/null, /*owner*/null, /*accessor*/null);
++			if ( (ret != null) && (ret.getParentType() == null) && (ret.getName().equals("length")) ) {
++				ret.setParentType(dico.ensureFamixClassArray());
++			}
++
++			return ret;
++		}
++
++		// super.msg1().msg() -- TODO similar to ClassInstanceCreation, 'msg()' is sent to the object returned by 'msg1()'
++		else if (expr instanceof SuperMethodInvocation) {
++			//System.err.println("WARNING: Ignored receiver expression in method call: SuperMethodInvocation");
++			
++			return null;
++		}
++		
++		// this.msg()
++		else if (expr instanceof ThisExpression) {
++			return this.dico.ensureFamixImplicitVariable(dico.SELF_NAME, this.context.topClass(), context.top());
++		}
++
++		// type.class.msg()
++		else if (expr instanceof TypeLiteral) {
++			// similar to a field access
++			Attribute ret;
++			fr.inria.verveine.core.gen.famix.Type javaMetaClass = dico.ensureFamixMetaClass(null); 
++			ret =  dico.ensureFamixAttribute(null, "class", javaMetaClass, javaMetaClass);
++
++			return ret;
++		}
++
++		// ... OTHER POSSIBLE EXPRESSIONS ?
++		else  {
++			System.err.println("WARNING: Unexpected receiver expression: "+expr.getClass().getName()+" (method called is" + expr.getClass().getName() + ".aMethod(...))");
++		}
++
++		return null;
++	}
++
++	private Attribute createAccessedAttribute(IVariableBinding bnd, String attName, fr.inria.verveine.core.gen.famix.Type typ, fr.inria.verveine.core.gen.famix.Type owner, BehaviouralEntity accessor) {
++		Attribute accessed;
++		if (bnd != null) {
++			bnd = bnd.getVariableDeclaration();
++		}
++		accessed =  dico.ensureFamixAttribute(bnd, attName, typ, owner);
++		if ( (accessed != null) && (accessed.getParentType() == null) && (accessed.getName().equals("length")) ) {
++			accessed.setParentType(dico.ensureFamixClassArray());
++		}
++		
++		if ( (accessed != null) && (accessor != null) ) {
++			context.setLastAccess( dico.addFamixAccess(accessor, accessed, /*isWrite*/false, context.getLastAccess()) );
++		}
++		return accessed;
++	}
++
++}
+\ No newline at end of file
+Index: verveine.extractor.java/src/fr/inria/verveine/extractor/java/JavaDictionary.java
+===================================================================
+--- verveine.extractor.java/src/fr/inria/verveine/extractor/java/JavaDictionary.java	(revision 116)
++++ verveine.extractor.java/src/fr/inria/verveine/extractor/java/JavaDictionary.java	(revision 117)
+@@ -628,15 +628,17 @@
+ 	 * @param fmx
+ 	 */
+ 	public void addFamixAnnotationInstances(IBinding bnd, NamedEntity fmx) {
+-		for (IAnnotationBinding annBnd : bnd.getAnnotations()) {
+-			AnnotationType annType = ensureFamixAnnotationType(annBnd.getAnnotationType(), null, null);
+-			
+-			Collection<AnnotationInstanceAttribute> annAtts = new ArrayList<AnnotationInstanceAttribute>(); 
+-			for (IMemberValuePairBinding annPV : annBnd.getDeclaredMemberValuePairs()) {
+-				annAtts.add( createFamixAnnotationInstanceAttribute(ensureFamixAnnotationTypeAttribute(annPV.getMethodBinding(), annPV.getName(), annType), annPV.getValue().toString()));
++		if (bnd != null) {
++			for (IAnnotationBinding annBnd : bnd.getAnnotations()) {
++				AnnotationType annType = ensureFamixAnnotationType(annBnd.getAnnotationType(), null, null);
++
++				Collection<AnnotationInstanceAttribute> annAtts = new ArrayList<AnnotationInstanceAttribute>(); 
++				for (IMemberValuePairBinding annPV : annBnd.getDeclaredMemberValuePairs()) {
++					annAtts.add( createFamixAnnotationInstanceAttribute(ensureFamixAnnotationTypeAttribute(annPV.getMethodBinding(), annPV.getName(), annType), annPV.getValue().toString()));
++				}
++
++				super.addFamixAnnotationInstance(fmx, annType, annAtts);
+ 			}
+-			
+-			super.addFamixAnnotationInstance(fmx, annType, annAtts);
+ 		}
+ 	}
+ 
+Index: verveine.extractor.java/src/fr/inria/verveine/extractor/java/FamixRequestor.java
+===================================================================
+--- verveine.extractor.java/src/fr/inria/verveine/extractor/java/FamixRequestor.java	(revision 116)
++++ verveine.extractor.java/src/fr/inria/verveine/extractor/java/FamixRequestor.java	(revision 117)
+@@ -28,8 +28,7 @@
+ //		System.out.println("  ******* TRACE, Requestor is visiting : "+sourceFilePath+" *******");
+ 		
+ 		ast.setProperty(JavaDictionary.SOURCE_FILENAME_PROPERTY, relativePath(sourceFilePath));
+-		ast.accept(new VerveineDefVisitor(this.famixDictionnary));
+-		ast.accept(new VerveineRefVisitor(this.famixDictionnary));
++		ast.accept(new VerveineVisitor(this.famixDictionnary));
+ 	}
+ 
+ 	private Object relativePath(String fullPath) {
+Index: verveine.extractor.java/lib/verveine.extractor.java.jar
+===================================================================
+Cannot display: file marked as a binary type.
+svn:mime-type = application/octet-stream
+Index: verveine.extractor.java/test_src/Dictionary/Dictionary.java
+===================================================================
+--- verveine.extractor.java/test_src/Dictionary/Dictionary.java	(revision 76)
++++ verveine.extractor.java/test_src/Dictionary/Dictionary.java	(revision 77)
+@@ -30,12 +30,6 @@
+ import fr.inria.verveine.core.gen.famix.StructuralEntity;
+ import fr.inria.verveine.core.gen.famix.ThrownException;
+ 
+-/**
+- * A dictionnary of Famix entities to help create them and find them back
+- * @author anquetil
+- *
+- * @param <B> The super class of all bindings. Different for JDT, PDT, ... bindings
+- */
+ public class Dictionary<B> {
+ 
+ 	public static final String DEFAULT_PCKG_NAME = "<Default Package>";
+@@ -43,39 +37,24 @@
+ 	public static final String SELF_NAME = "self";
+ 	public static final String SUPER_NAME = "super";
+ 
+-	/**
+-	 * The FAMIX repository where all FAMIX entities are created and stored
+-	 */
+ 	protected Repository famixRepo;
+ 
+-	/**
+-	 * A dictionary to map an IBinding to FAMIX Entity
+-	 */
+ 	protected Map<B,NamedEntity> mapBind;
+ 
+-	/**
+-	 * Another dictionary to map a name to FAMIX Entities with this name
+-	 */
+ 	protected Map<String,Collection<NamedEntity>> mapName;
+ 
+-	/**
+-	 * Yet another dictionary for implicit variables
+-	 * 'self' and 'super' have the same binding than their associated class so they can't be kept easily in bindFmxDico
+-	 */
+ 	protected Map<fr.inria.verveine.core.gen.famix.Class,ImplicitVars> mapImpVar;
+ 
+-	/**
+-	 * Used to keep the two possible ImplicitVariable for a given Class binding
+-	 * @author anquetil
+-	 */
+ 	protected class ImplicitVars {
+ 		public ImplicitVariable self_iv;
+ 		public ImplicitVariable super_iv;
+ 	}
++
++	/* method added to test a specific bug with constructor declaration having a null binding */
++	public Dictionary(T arg) {
++		System.out.println(arg + " is not used");
++	}
+ 	
+-	/** Constructor taking a FAMIX repository
+-	 * @param famixRepo
+-	 */
+ 	public Dictionary(Repository famixRepo) {
+ 		this.famixRepo = famixRepo;
+ 		
+@@ -160,12 +139,6 @@
+ 		mapName.put(name, l_ent);
+ 	}
+ 	
+-	/**
+-	 * Returns all the Famix Entity with the given name and class 
+-	 * @param fmxClass -- the subtype of Famix Entity we are looking for
+-	 * @param name -- the name of the entity
+-	 * @return the Collection of Famix Entities with the given name and class (possibly empty)
+-	 */
+ 	@SuppressWarnings("unchecked")
+ 	public <T extends NamedEntity> Collection<T> getEntityByName(Class<T> fmxClass, String name) {
+ 		Collection<T> ret = new LinkedList<T>();
+@@ -182,14 +155,6 @@
+ 		return ret;
+ 	}
+ 
+-	/**
+-	 * Returns the Famix Entity associated to the given binding.
+-	 * <b>Note</b>: Be careful than ImplicitVariables share the same binding than their associated Class and cannot be retrieved with this method.
+-	 * In such a case, this method will always retrieve the Class associated to the binding.
+-	 * To get an ImplicitVariable from the binding, use {@link Dictionary#getImplicitVariableByBinding(Object, String)}
+-	 * @param bnd -- the binding
+-	 * @return the Famix Entity associated to the binding or null if not found
+-	 */
+ 	public NamedEntity getEntityByBinding(B bnd) {
+ 		if (bnd == null) {
+ 			return null;
+@@ -199,13 +164,6 @@
+ 		}
+ 	}
+ 
+-	/**
+-	 * Creates and returns a FAMIX Entity of the type <b>fmxClass</b>.
+-	 * The Entity is always created (see {@link Dictionary#ensureFamixEntity(Class, Object, String)}).
+-	 * @param fmxClass -- the FAMIX class of the instance to create
+-	 * @param name -- the name of the new instance
+-	 * @return the FAMIX Entity or null in case of a FAMIX error
+-	 */
+ 	protected <T extends NamedEntity> T createFamixEntity(Class<T> fmxClass, String name) {
+ 		T fmx = null;
+ 
+@@ -229,17 +187,6 @@
+ 		return fmx;
+ 	}
+ 	
+-	/**
+-	 * Returns a FAMIX Entity of the type <b>fmxClass</b> and maps it to its binding <b>bnd</b> (if not null).
+-	 * The Entity is created if it did not exist.
+-	 * <b>Note</b>: Should not be used to create ImplicitVariables and will silently fail if one tries. Use ensureFamixImplicitVariable instead.
+-	 * @param fmxClass -- the FAMIX class of the instance to create
+-	 * @param bnd -- the binding to map to the new instance
+-	 * @param name -- the name of the new instance (used if <tt>bnd == null</tt>)
+-	 * @return the FAMIX Entity or null if <b>bnd</b> was null or in case of a FAMIX error
+-	 * 
+-	 * TODO Make public and remove ensureFamixClass(name), ensureFamixAttribute(name), ... ????
+-	 */
+ 	@SuppressWarnings("unchecked")
+ 	protected <T extends NamedEntity> T ensureFamixEntity(Class<T> fmxClass, B bnd, String name) {
+ 		T fmx = null;
+@@ -272,22 +219,10 @@
+ 		return fmx;
+ 	}
+ 
+-	/**
+-	 * Adds an already created Entity to the FAMIX repository
+-	 * Used mainly for non-NamedEntity, for example relationships
+-	 * @param e -- the FAMIX entity to add to the repository
+-	 */
+ 	public void famixRepoAdd(Entity e) {
+ 		this.famixRepo.add(e);
+ 	}
+ 
+-	///// ensure Famix Entities /////
+-	
+-	/**
+-	 * Returns a FAMIX Class with the given <b>name</b>, creating it if it does not exist yet
+-	 * @param name -- the name of the FAMIX Class
+-	 * @return the FAMIX Class or null in case of a FAMIX error
+-	 */
+ 	public fr.inria.verveine.core.gen.famix.Class ensureFamixClass(String name) {
+ 		fr.inria.verveine.core.gen.famix.Class fmx = ensureFamixEntity(fr.inria.verveine.core.gen.famix.Class.class, null, name);
+ 		if (fmx != null) {
+@@ -302,38 +237,18 @@
+ 		return fmx;
+ 	}
+ 
+-	/**
+-	 * Returns a FAMIX Method with the given <b>name</b>, creating it if it does not exist yet
+-	 * @param name -- the name of the FAMIX Method
+-	 * @return the FAMIX Method or null in case of a FAMIX error
+-	 */
+ 	public Method ensureFamixMethod(String name) {
+ 		return (Method) ensureFamixEntity(Method.class, null, name);
+ 	}
+ 
+-	/**
+-	 * Returns a FAMIX Attribute with the given <b>name</b>, creating it if it does not exist yet
+-	 * @param name -- the name of the FAMIX Attribute
+-	 * @return the FAMIX Attribute or null in case of a FAMIX error
+-	 */
+ 	public Attribute ensureFamixAttribute(String name) {
+ 		return (Attribute) ensureFamixEntity(Attribute.class, null, name);
+ 	}
+ 
+-	/**
+-	 * Returns a FAMIX LocalVariable with the given <b>name</b>, creating it if it does not exist yet
+-	 * @param name -- the name of the FAMIX LocalVariable
+-	 * @return the FAMIX LocalVariable or null in case of a FAMIX error
+-	 */
+ 	public LocalVariable ensureFamixLocalVariable(String name) {
+ 		return (LocalVariable) ensureFamixEntity(LocalVariable.class, null, name);
+ 	}
+ 
+-	/**
+-	 * Creates and returns a FAMIX Comment
+-	 * @param cmt -- the content (String) of the comment 
+-	 * @return the FAMIX Comment
+-	 */
+ 	public Comment createFamixComment(String cmt) {
+ 		Comment fmx = new Comment();
+ 		fmx.setContent(cmt);
+@@ -342,12 +257,6 @@
+ 		return fmx;
+ 	}
+ 
+-	/**
+-	 * Creates and returns a FAMIX Comment and associates it with an Entity (ex: for Javadocs)
+-	 * @param cmt -- the content (String) of the comment 
+-	 * @param owner -- the entity concerned by this comment
+-	 * @return the FAMIX Comment
+-	 */
+ 	public Comment createFamixComment(String cmt, SourcedEntity owner) {
+ 		Comment fmx = new Comment();
+ 		fmx.setContent(cmt);
+@@ -356,14 +265,7 @@
+ 		
+ 		return fmx;
+ 	}
+-	
+-	/**
+-	 * Creates and returns a FAMIX Parameter and associates it with an BehaviouralEntity
+-	 * @param identifier -- the name of the parameter
+-	 * @param owner -- the entity concerned by this parameter
+-	 * @param type -- the type of the parameter
+-	 * @return the FAMIX parameter
+-	 */
++
+ 	public Parameter createFamixParameter(String identifier, BehaviouralEntity owner, String type) {
+ 		Parameter fmx = new Parameter();
+ 		fmx.setName(identifier);
+@@ -374,14 +276,6 @@
+ 		return fmx;
+ 	}
+ 	
+-	///// ensure Famix Relationships /////
+-
+-	/**
+-	 * Returns a Famix Inheritance relationship between two Famix Classes creating it if needed
+-	 * @param sup -- the super class
+-	 * @param sub -- the sub class
+-	 * @return the Inheritance relationship
+-	 */
+ 	public Inheritance ensureFamixInheritance(fr.inria.verveine.core.gen.famix.Class sup, fr.inria.verveine.core.gen.famix.Class sub) {
+ 		return ensureFamixInheritance(sup, sub, null);
+ 	}
+@@ -400,12 +294,6 @@
+ 		return inh;
+ 	}
+ 
+-	/**
+-	 * Returns a Famix Reference between two Famix Entities creating it if needed
+-	 * @param src -- source of the reference
+-	 * @param tgt -- target of the reference
+-	 * @return the Reference
+-	 */
+ 	public Reference ensureFamixReference(ContainerEntity src, ContainerEntity tgt) {
+ 		return ensureFamixReference(src, tgt, null);
+ 	}
+@@ -420,13 +308,6 @@
+ 		return ref;
+ 	}
+ 
+-	/**
+-	 * Returns a Famix Invocation between two Famix Entities creating it if needed
+-	 * @param sender of the invocation
+-	 * @param invoked -- method invoked
+-	 * @param receiver of the invocation
+-	 * @return the Invocation
+-	 */
+ 	public Invocation ensureFamixInvocation(BehaviouralEntity sender, BehaviouralEntity invoked, NamedEntity receiver) {
+ 		return ensureFamixInvocation(sender, invoked, receiver, null);
+ 	}
+@@ -444,7 +325,6 @@
+ 	}
+ 
+ 	public Access ensureFamixAccess(BehaviouralEntity accessor, StructuralEntity var, boolean isWrite, Association prev) {
+-		/* We keep multiple accesses from one method to a field */
+ 		Access acc = new Access();
+ 		acc.setAccessor(accessor);
+ 		acc.setVariable(var);
+@@ -468,13 +348,7 @@
+ 			next.setPrevious(prev);  // not yet implemented in importer
+ 		}
+ 	}
+-	
+-	/**
+-	 * Returns a Famix DeclaredException between a method and an Exception that it declares to throw
+-	 * @param meth -- the method throwing the exception
+-	 * @param excep -- the exception declared to be thrown
+-	 * @return the DeclaredException
+-	 */
++
+ 	public DeclaredException ensureFamixDeclaredException(Method meth, fr.inria.verveine.core.gen.famix.Class excep) {
+ 		DeclaredException decl = new DeclaredException();
+ 		decl.setExceptionClass(excep);
+@@ -483,12 +357,6 @@
+ 		return decl;
+ 	}
+ 
+-	/**
+-	 * Returns a Famix CaughtException between a method and an Exception that is caught
+-	 * @param meth -- the method catching the exception
+-	 * @param excep -- the exception caught
+-	 * @return the CaughtException
+-	 */
+ 	public CaughtException ensureFamixCaughtException(Method meth, fr.inria.verveine.core.gen.famix.Class excep) {
+ 		CaughtException decl = new CaughtException();
+ 		decl.setExceptionClass(excep);
+@@ -497,14 +365,6 @@
+ 		return decl;
+ 	}
+ 
+-	/**
+-	 * Returns a Famix ThrownException between a method and an Exception that it (actually) throws.
+-	 * Note: DeclaredException indicates that the method declares it can throw the exception,
+-	 * here we state that the exception is actually thrown
+-	 * @param meth -- the method throwing the exception
+-	 * @param excep -- the exception thrown
+-	 * @return the ThrownException
+-	 */
+ 	public ThrownException ensureFamixThrownException(Method meth, fr.inria.verveine.core.gen.famix.Class excep) {
+ 		ThrownException decl = new ThrownException();
+ 		decl.setExceptionClass(excep);
+@@ -513,24 +373,10 @@
+ 		return decl;
+ 	}
+ 
+-	///// Special Case: ImplicitVariables /////
+-
+-	/**
+-	 * Returns the Famix ImplicitVariable associated to the given binding and name (self or super).
+-	 * See also {@link Dictionary#getEntityByBinding(Object)}
+-	 * @param bnd -- the binding
+-	 * @return the Famix Entity associated to the binding or null if not found
+-	 */
+ 	public ImplicitVariable getImplicitVariableByBinding(B bnd, String iv_name) {
+ 		return getImplicitVariableByClass((fr.inria.verveine.core.gen.famix.Class)getEntityByBinding(bnd), iv_name);
+ 	}
+-	
+-	/**
+-	 * Returns the Famix ImplicitVariable associated to the given Famix Class.
+-	 * @param clazz -- the FamixClass
+-	 * @param name -- name of the ImplicitVariable (should be Dictionary.SELF_NAME or Dictionary.SUPER_NAME)
+-	 * @return the Famix ImplicitVariable associated to the Class or null if not found
+-	 */
++
+ 	public ImplicitVariable getImplicitVariableByClass(fr.inria.verveine.core.gen.famix.Class clazz, String name) {
+ 		ImplicitVars iv = mapImpVar.get(clazz);
+ 		ImplicitVariable ret = null;
+@@ -549,13 +395,6 @@
+ 		return ret;
+ 	}
+ 
+-	/**
+-	 * Returns a FAMIX ImplicitVariable with the given <b>name</b> (self or super) and corresponding to the <b>clazz</b>.
+-	 * If this ImplicitVariable does not exist yet, it is created
+-	 * @param clazz -- the Famix Class for this ImplicitVariable (should not be null)
+-	 * @param name -- the name of the FAMIX ImplicitVariable (should be Dictionary.SELF_NAME or Dictionary.SUPER_NAME)
+-	 * @return the FAMIX ImplicitVariable or null in case of a FAMIX error
+-	 */
+ 	public ImplicitVariable ensureFamixImplicitVariable(fr.inria.verveine.core.gen.famix.Class clazz, String name) {
+ 		ImplicitVariable fmx = getImplicitVariableByClass(clazz, name);
+ 		
+@@ -584,17 +423,6 @@
+ 		return fmx;
+ 	}
+ 
+-	///// Special Case: "Uniq" Entities /////
+-
+-	/**
+-	 * Creates or recovers a Famix Named Entity uniq for the given name.
+-	 * For some specific entities we don't allow two of them with the same name.
+-	 * This is the case e.g. for the default package, or the Java class "Object" and its package "java.lang".
+-	 * @param fmxClass -- the FAMIX class of the instance to create
+-	 * @param bnd -- a potential binding for the entity
+-	 * @param name -- the name of the new instance (used if <tt>bnd == null</tt>)
+-	 * @return the uniq Famix Entity for this binding and/or name
+-	 */
+ 	@SuppressWarnings("unchecked")
+ 	public <T extends NamedEntity> T ensureFamixUniqEntity(Class<T> fmxClass, B bnd, String name) {
+ 		T fmx = null;
+@@ -621,42 +449,20 @@
+ 		return fmx;
+ 	}
+ 
+-	/**
+-	 * Returns a FAMIX Namespace with the given <b>name</b>, creating it if it does not exist yet
+-	 * We assume that Namespaces must be uniq for a given name
+-	 * @param name -- the name of the FAMIX Namespace
+-	 * @return the FAMIX Namespace or null in case of a FAMIX error
+-	 */
+ 	public Namespace ensureFamixNamespace(String name) {
+ 		return  ensureFamixUniqEntity(Namespace.class, null, name);
+ 	}
+ 
+-	/**
+-	 * Creates or recovers a default Famix Namespace.
+-	 * Because this package does not really exist, it has no binding.
+-	 * @return a Famix Namespace
+-	 */
+ 	public Namespace ensureFamixNamespaceDefault() {
+ 		Namespace fmx =  ensureFamixUniqEntity(Namespace.class, null, DEFAULT_PCKG_NAME);
+ 
+ 		return fmx;
+ 	}
+ 
+-	/**
+-	 * Returns a FAMIX PrimitiveType with the given <b>name</b>, creating it if it does not exist yet
+-	 * We assume that PrimitiveType must be uniq for a given name
+-	 * @param name -- the name of the FAMIX PrimitiveType
+-	 * @return the FAMIX PrimitiveType or null in case of a FAMIX error
+-	 */
+ 	public PrimitiveType ensureFamixPrimitiveType(String name) {
+ 		return  ensureFamixUniqEntity(PrimitiveType.class, null, name);
+ 	}
+-	
+-	/**
+-	 * Creates or recovers a Famix Class to contain the methods stubs (for which we ignore the real owner).
+-	 * Because this package does not really exist, it has no binding.
+-	 * @return a Famix class
+-	 */
++
+ 	public fr.inria.verveine.core.gen.famix.Class ensureFamixClassStubOwner() {
+ 		fr.inria.verveine.core.gen.famix.Class fmx =  ensureFamixUniqEntity(fr.inria.verveine.core.gen.famix.Class.class, null, STUB_METHOD_CONTAINER_NAME);
+ 		if (fmx != null) {
+Index: verveine.extractor.java/src/tests/fr/inria/verveine/extractor/java/VerveineJTest_Dictionary.java
+===================================================================
+--- verveine.extractor.java/src/tests/fr/inria/verveine/extractor/java/VerveineJTest_Dictionary.java	(revision 76)
++++ verveine.extractor.java/src/tests/fr/inria/verveine/extractor/java/VerveineJTest_Dictionary.java	(revision 77)
+@@ -128,7 +128,6 @@
+ 		assertSame(TestVerveineUtils.detectElement(repo, Type.class, "ImplicitVars"), it.next());
+ 	}
+ 
+-
+ 	@Test
+ 	public void testMethodParameterArgumentTypes() {
+ 		Method fmxMethod = TestVerveineUtils.detectElement(repo, Method.class, "getEntityByName");
+Index: verveine.extractor.java/src/fr/inria/verveine/extractor/java/VerveineDefVisitor.java
+===================================================================
+--- verveine.extractor.java/src/fr/inria/verveine/extractor/java/VerveineDefVisitor.java	(revision 76)
++++ verveine.extractor.java/src/fr/inria/verveine/extractor/java/VerveineDefVisitor.java	(revision 77)
+@@ -176,11 +176,10 @@
+ 			System.err.println("         Method="+node.getName().getIdentifier());
+ 			fmx = dico.ensureFamixMethod(node.getName().getIdentifier());
+ 			fmx.setParentType(context.topClass());
+-			//fmx.setSignature(fmx.getName()+" (???)");
+ 			fmx.setSignature(dico.stubMethodSignature(node));
+-			//fmx.setDeclaredType( dico.ensureFamixClassObject(null));
+-			// Has no binding? It might be a Generic type
+-			fmx.setDeclaredType(dico.ensureFamixUniqEntity(fr.inria.verveine.core.gen.famix.Class.class, null, node.getReturnType2().toString()));
++			if (! node.isConstructor()) {
++				fmx.setDeclaredType(dico.ensureFamixUniqEntity(fr.inria.verveine.core.gen.famix.Class.class, null, node.getReturnType2().toString()));
++			}
+ 		}
+ 		if (node.getReturnType2() != null && node.getReturnType2().isParameterizedType()) {
+ 			fmx.setDeclaredArgumentTypes(dico.ensureFamixTypes(((ParameterizedType)node.getReturnType2()).typeArguments()));
+Index: verveine.extractor.java/src/fr/inria/verveine/extractor/java/JavaDictionary.java
+===================================================================
+--- verveine.extractor.java/src/fr/inria/verveine/extractor/java/JavaDictionary.java	(revision 76)
++++ verveine.extractor.java/src/fr/inria/verveine/extractor/java/JavaDictionary.java	(revision 77)
+@@ -393,12 +393,10 @@
+ 		owner = this.ensureFamixClass(bnd.getDeclaringClass());
+ 
+ 		// return type
+-		if (bnd.isConstructor()) {
+-			// TODO what to put in metamodel?
+-		}
+-		else {
++		if (! bnd.isConstructor()) {
+ 			rettyp = this.ensureFamixType(bnd.getReturnType());
+ 		}
++		// TODO   else what?
+ 
+ 		// method signature
+ 		sig = bnd.getName() + "(";
+Index: verveine.extractor.java/lib/verveine.core.jar
+===================================================================
+Cannot display: file marked as a binary type.
+svn:mime-type = application/octet-stream
+
+Property changes on: verveine.extractor.java/lib/verveine.core.jar
+___________________________________________________________________
+Added: svn:mime-type
+   + application/octet-stream
+
+Index: verveine.core/lib/famix.jar
+===================================================================
+Cannot display: file marked as a binary type.
+svn:mime-type = application/octet-stream
+Index: verveine.core/lib/verveine.core.jar
+===================================================================
+Cannot display: file marked as a binary type.
+svn:mime-type = application/octet-stream
+Index: verveine.core/src/fr/inria/verveine/core/EntityStack.java
+===================================================================
+--- verveine.core/src/fr/inria/verveine/core/EntityStack.java	(revision 13)
++++ verveine.core/src/fr/inria/verveine/core/EntityStack.java	(revision 14)
+@@ -10,8 +10,12 @@
+  * @author anquetil
+  */
+ public class EntityStack {
++	public static final int EMPTY_CYCLO = 0;
++	public static final int EMPTY_NOS = 0;
++	
+ 	private Namespace fmxPckg;
+ 	private Stack<ClassStack> fmxClass;
++	private String lastComment = null;
+ 	
+ 	// for debugging
+ 	private boolean tracing = false;;
+@@ -22,25 +26,76 @@
+ 	public class ClassStack {
+ 		private fr.inria.verveine.core.gen.famix.Class fmxClass;
+ 		private Method fmxMethod;
++		private int metric_cyclo = EMPTY_CYCLO;  // Cyclomatic Complexity
++		private int metric_nos = EMPTY_NOS;    // Number Of Statements
+ 		
+-		public ClassStack(fr.inria.verveine.core.gen.famix.Class e) {
++ 		public ClassStack(fr.inria.verveine.core.gen.famix.Class e) {
+ 			fmxClass = e;
+-			fmxMethod = null;
++			clearFmxMethod();
+ 		}
+ 
+ 		public fr.inria.verveine.core.gen.famix.Class getFmxClass() {
+ 			return fmxClass;
+ 		}
+ 
++		/**
++		 * Returns the Famix  Method on top of the context stack
++		 */
+ 		public Method getFmxMethod() {
+ 			return fmxMethod;
+ 		}
+ 
++		/**
++		 * Returns the Cyclomatic complexity of the Famix Method on top of the context stack
++		 */
++		public int getFmxMethodCyclo() {
++			return metric_cyclo;
++		}
++
++		/**
++		 * Returns the Number of Statements of the Famix Method on top of the context stack
++		 */
++		public int getFmxMethodNOS() {
++			return metric_nos;
++		}
++		
++		/**
++		 * Reset the Famix Method on top of the context stack
++		 */
+ 		public void setFmxMethod(Method fmxMethod) {
++			clearFmxMethod();
+ 			this.fmxMethod = fmxMethod;
+ 		}
+ 
+ 		/**
++		 * Sets the Cyclomatic complexity of the Famix Method on top of the context stack
++		 */
++		public void setFmxMethodCyclo(int c) {
++			metric_cyclo = c;
++		}
++
++		/**
++		 * Sets to the Number of Statements of the Famix Method on top of the context stack
++		 */
++		public void setFmxMethodNOS(int n) {
++			metric_nos = n;
++		}
++		
++		/**
++		 * Adds to the Cyclomatic complexity of the Famix Method on top of the context stack
++		 */
++		public void addFmxMethodCyclo(int c) {
++			metric_cyclo += c;
++		}
++
++		/**
++		 * Adds to the Number of Statements of the Famix Method on top of the context stack
++		 */
++		public void addFmxMethodNOS(int n) {
++			metric_nos += n;
++		}
++		
++		/**
+ 		 * Empties the context stack of Famix classes
+ 		 */
+ 		public void clearFmxClass() {
+@@ -49,10 +104,12 @@
+ 		}
+ 		
+ 		/**
+-		 * Empties the context stack of Famix Methods
++		 * Empties the Famix Method on top of the context stack
+ 		 */
+ 		public void clearFmxMethod() {
+ 			fmxMethod = null;
++			metric_cyclo = EMPTY_CYCLO;
++			metric_nos = EMPTY_NOS;
+ 		}
+ 
+ 	}
+@@ -69,6 +126,29 @@
+ 		this.tracing = tracing;
+ 	}
+ 
++	public void setLastComment(String lastComment) {
++		this.lastComment = lastComment;
++	}
++
++	public void clearLastComment() {
++		this.lastComment = null;
++	}
++
++	public String getLastComment() {
++		return lastComment;
++	}
++
++	private ClassStack getTopClass() {
++		if (fmxClass.isEmpty()) {
++			return null;
++		}
++		else {
++			return fmxClass.peek();
++		}
++	}
++
++	// WRITE ON THE STACK
++	
+ 	/**
+ 	 * Pushes an entity on top of the "context stack"
+ 	 * @param e -- the entity
+@@ -86,14 +166,16 @@
+ 	}
+ 
+ 	/**
+-	 * Pushes a Famix method on top of the "context stack" for the current Famix class
++	 * Sets the Famix namespace on top of the "context stack"
++	 * Not really a push, but keep the same convention as the others
+ 	 * @param e -- the Famix method
+ 	 */
+-	public void pushMethod(Method e) {
++	public void pushPckg(Namespace e) {
+ 		if (this.tracing) {
+-			System.out.println("TRACE: pushMethod "+e.getName());
++			System.out.println("TRACE: pushPckg "+e.getName());
+ 		}
+-		getTopClass().setFmxMethod(e);
++		clearClasses();
++		fmxPckg = e;
+ 	}
+ 
+ 	/**
+@@ -108,30 +190,44 @@
+ 	}
+ 
+ 	/**
+-	 * Sets the Famix namespace on top of the "context stack"
+-	 * Not really a push, but keep the same convention as the others
++	 * Pushes a Famix method on top of the "context stack" for the current Famix class
+ 	 * @param e -- the Famix method
+ 	 */
+-	public void pushPckg(Namespace e) {
++	public void pushMethod(Method e) {
+ 		if (this.tracing) {
+-			System.out.println("TRACE: pushPckg "+e.getName());
++			System.out.println("TRACE: pushMethod "+e.getName());
+ 		}
++		getTopClass().setFmxMethod(e);
++	}
++
++	/**
++	 * Empties the context stack of package and associated classes
++	 */
++	public void clearPckg() {
+ 		clearClasses();
+-		fmxPckg = e;
++		fmxPckg = null;
+ 	}
+ 
+ 	/**
+-	 * Pops the top Famix method of the current class on top of the "context stack"
+-	 * Note: does not check that there is such a class or method, so could possibly throw an Exception
++	 * Empties the context stack of Famix classes
++	 */
++	public void clearClasses() {
++		fmxClass = new Stack<ClassStack>();
++	}
++	
++	// READ FROM THE STACK
++
++	/**
++	 * Removes and returns the Famix package from the "context stack"
++	 * Also empties the class stack (which was presumably associated to this package)
++	 * Note: does not check that there is such a namespace
+ 	 * @return the Famix method
+ 	 */
+-	public Method popMethod() {
+-		ClassStack tmp = getTopClass();
+-		Method ret = tmp.getFmxMethod();
+-		tmp.clearFmxMethod();
+-		
++	public Namespace popPckg() {
++		Namespace ret = fmxPckg;
++		clearPckg();
+ 		if (this.tracing) {
+-			System.out.println("TRACE: popMethod "+ret.getName());
++			System.out.println("TRACE: popPckg "+ret.getName());
+ 		}
+ 		return ret;
+ 	}
+@@ -150,44 +246,51 @@
+ 	}
+ 
+ 	/**
+-	 * Removes and returns the Famix package from the "context stack"
+-	 * Also empties the class stack (which was presumably associated to this package)
+-	 * Note: does not check that there is such a namespace
++	 * Pops the top Famix method of the current class on top of the "context stack"
++	 * Note: does not check that there is such a class or method, so could possibly throw an Exception
+ 	 * @return the Famix method
+ 	 */
+-	public Namespace popPckg() {
+-		Namespace ret = fmxPckg;
+-		clearPckg();
++	public Method popMethod() {
++		ClassStack tmp = getTopClass();
++		Method ret = tmp.getFmxMethod();
++		tmp.clearFmxMethod();
++		
+ 		if (this.tracing) {
+-			System.out.println("TRACE: popPckg "+ret.getName());
++			System.out.println("TRACE: popMethod "+ret.getName());
+ 		}
+ 		return ret;
+ 	}
+ 
+ 	/**
+-	 * Empties the context stack of Famix classes
+-	 */
+-	public void clearClasses() {
+-		fmxClass = new Stack<ClassStack>();
+-	}
+-	
+-	/**
+-	 * Empties the context stack of package and associated classes
++	 * Returns the Famix entity on top of the "context stack"
++	 * Note: does not check that there is such an entity
++	 * @return the Famix entity
+ 	 */
+-	public void clearPckg() {
+-		clearClasses();
+-		fmxPckg = null;
++	public ContainerEntity top() {
++		ContainerEntity ret = null;
++		ClassStack topc = getTopClass();
++		if (topc != null) {
++			ret = topc.getFmxMethod();
++			if (ret == null) {
++				ret = topc.getFmxClass();
++			}
++		}
++		else {
++			ret = topPckg();
++		}
++
++		return ret;
+ 	}
+-	
++
+ 	/**
+-	 * Returns the Famix method  of the Famix class on top of the "context stack"
+-	 * Note: does not check that there is such a class or method, so could possibly throw an EmptyStackException
+-	 * @return the Famix method
++	 * Returns the Famix package on top of the "context stack"
++	 * Note: does not check that there is such a package
++	 * @return the Famix namespace
+ 	 */
+-	public Method topMethod() {
+-		return getTopClass().getFmxMethod();
++	public Namespace topPckg() {
++		return fmxPckg;
+ 	}
+-	
++
+ 	/**
+ 	 * Returns the Famix class on top of the "context stack"
+ 	 * Note: does not check that there is such a class, so could possibly throw an EmptyStackException
+@@ -198,42 +301,75 @@
+ 	}
+ 	
+ 	/**
+-	 * Returns the Famix package on top of the "context stack"
+-	 * Note: does not check that there is such a package
+-	 * @return the Famix namespace
++	 * Returns the Famix method  of the Famix class on top of the "context stack"
++	 * Note: does not check that there is such a class or method, so could possibly throw an EmptyStackException
++	 * @return the Famix method
+ 	 */
+-	public Namespace topPckg() {
+-		return fmxPckg;
++	public Method topMethod() {
++		return getTopClass().getFmxMethod();
+ 	}
+ 
++	// PROPERTIES OF THE TOP METHOD
++
+ 	/**
+-	 * Returns the Famix entity on top of the "context stack"
+-	 * Note: does not check that there is such an entity
+-	 * @return the Famix entity
++	 * Returns the Cyclomatic complexity of the Famix Method on top of the context stack
+ 	 */
+-	public ContainerEntity top() {
+-		ContainerEntity ret = null;
+-		ClassStack topc = getTopClass();
+-		if (topc != null) {
+-			ret = topc.getFmxMethod();
+-			if (ret == null) {
+-				ret = topc.getFmxClass();
+-			}
++	public int getTopMethodCyclo() {
++		if (getTopClass() != null) {
++			return getTopClass().getFmxMethodCyclo();
+ 		}
+ 		else {
+-			ret = topPckg();
++			return EMPTY_CYCLO;
+ 		}
+-
+-		return ret;
+ 	}
+ 
+-	private ClassStack getTopClass() {
+-		if (fmxClass.isEmpty()) {
+-			return null;
++	/**
++	 * Returns the Number of Statements of the Famix Method on top of the context stack
++	 */
++	public int getTopMethodNOS() {
++		if (getTopClass() != null) {
++			return getTopClass().getFmxMethodNOS();
+ 		}
+ 		else {
+-			return fmxClass.peek();
++			return EMPTY_NOS;
+ 		}
+ 	}
++
++	/**
++	 * Sets the Cyclomatic complexity of the Famix Method on top of the context stack
++	 */
++	public void setTopMethodCyclo(int c) {
++		if (getTopClass() != null) {
++			getTopClass().setFmxMethodCyclo(c);
++		}
++	}
++
++	/**
++	 * Sets to the Number of Statements of the Famix Method on top of the context stack
++	 */
++	public void setTopMethodNOS(int n) {
++		if (getTopClass() != null) {
++			getTopClass().setFmxMethodNOS(n);
++		}
++	}
++	
++	/**
++	 * Adds to the Cyclomatic complexity of the Famix Method on top of the context stack
++	 */
++	public void addTopMethodCyclo(int c) {
++		if (getTopClass() != null) {
++			getTopClass().addFmxMethodCyclo(c);
++		}
++	}
++
++	/**
++	 * Adds to the Number of Statements of the Famix Method on top of the context stack
++	 */
++	public void addTopMethodNOS(int n) {
++		if (getTopClass() != null) {
++			getTopClass().addFmxMethodNOS(n);
++		}
++	}
++	
+ }
+ 
+Index: verveine.core/src/fr/inria/verveine/core/Dictionary.java
+===================================================================
+--- verveine.core/src/fr/inria/verveine/core/Dictionary.java	(revision 13)
++++ verveine.core/src/fr/inria/verveine/core/Dictionary.java	(revision 14)
+@@ -10,6 +10,7 @@
+ import fr.inria.verveine.core.gen.famix.Access;
+ import fr.inria.verveine.core.gen.famix.Attribute;
+ import fr.inria.verveine.core.gen.famix.BehaviouralEntity;
++import fr.inria.verveine.core.gen.famix.Comment;
+ import fr.inria.verveine.core.gen.famix.ContainerEntity;
+ import fr.inria.verveine.core.gen.famix.Entity;
+ import fr.inria.verveine.core.gen.famix.ImplicitVariable;
+@@ -21,6 +22,7 @@
+ import fr.inria.verveine.core.gen.famix.Namespace;
+ import fr.inria.verveine.core.gen.famix.PrimitiveType;
+ import fr.inria.verveine.core.gen.famix.Reference;
++import fr.inria.verveine.core.gen.famix.SourcedEntity;
+ import fr.inria.verveine.core.gen.famix.StructuralEntity;
+ 
+ /**
+@@ -242,6 +244,15 @@
+ 		return (LocalVariable) ensureFamixEntity(LocalVariable.class, null, name);
+ 	}
+ 
++	public Comment createFamixComment(String cmt, SourcedEntity owner) {
++		Comment fmx = new Comment();
++		fmx.setContent(cmt);
++		fmx.setContainer(owner);
++		this.famixRepo.add(fmx);
++		
++		return fmx;
++	}
++	
+ 	///// ensure Famix Relationships /////
+ 
+ 	/**
+Index: verveine.core/src/fr/inria/verveine/core/gen/famix/BehaviouralEntity.java
+===================================================================
+--- verveine.core/src/fr/inria/verveine/core/gen/famix/BehaviouralEntity.java	(revision 13)
++++ verveine.core/src/fr/inria/verveine/core/gen/famix/BehaviouralEntity.java	(revision 14)
+@@ -13,6 +13,9 @@
+ public class BehaviouralEntity extends ContainerEntity {
+ 
+ 
++	private int cyclo = 0;  // metric: Cyclomatic complexity
++	private int nos = 0;    // metric Number Of Statement
++
+ 
+     private Collection<Access> accesses; 
+ 
+@@ -304,6 +307,24 @@
+     public void setSignature(String signature) {
+         this.signature = signature;
+     }
++
++    public void setCyclo(int cyclo) {
++		this.cyclo = cyclo;
++	}
++
++	@FameProperty(name = "CYCLO")
++	public int getCyclo() {
++		return cyclo;
++	}
++
++    @FameProperty(name = "NOS")
++	public int getNOS() {
++		return nos;
++	}
++
++	public void setNOS(int nos) {
++		this.nos = nos;
++	}
+     
+ 
+ 

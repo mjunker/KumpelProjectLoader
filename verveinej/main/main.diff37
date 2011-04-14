@@ -1,0 +1,601 @@
+Index: verveine.core/src/fr/inria/verveine/core/VerveineParser.java
+===================================================================
+--- verveine.core/src/fr/inria/verveine/core/VerveineParser.java	(revision 85)
++++ verveine.core/src/fr/inria/verveine/core/VerveineParser.java	(revision 86)
+@@ -14,6 +14,7 @@
+ import ch.akuhn.fame.Repository;
+ import fr.inria.verveine.core.gen.famix.Entity;
+ import fr.inria.verveine.core.gen.famix.FAMIXModel;
++import fr.inria.verveine.core.gen.famix.SourceLanguage;
+ 
+ public class VerveineParser extends Main {
+ 
+@@ -21,6 +22,8 @@
+ 	
+ 	private Repository famixRepo;
+ 
++	SourceLanguage myLgge = null;
++
+ 	public VerveineParser() {
+ 		this(new PrintWriter(System.out),
+ 				new PrintWriter(System.err),
+@@ -37,7 +40,11 @@
+ 				customDefaultOptions,
+ 				compilationProgress);
+ 		
+-		setFamixRepo(new Repository(FAMIXModel.metamodel()));
++		Repository repo = new Repository(FAMIXModel.metamodel());
++		setFamixRepo(repo);
++		if (myLgge != null) {
++			repo.add( myLgge);
++		}
+ 	}
+ 
+ 	public boolean linkToExisting() {
+Index: verveine.core/src/fr/inria/verveine/core/EntityStack.java
+===================================================================
+--- verveine.core/src/fr/inria/verveine/core/EntityStack.java	(revision 85)
++++ verveine.core/src/fr/inria/verveine/core/EntityStack.java	(revision 86)
+@@ -3,11 +3,13 @@
+ import java.util.Stack;
+ 
+ import fr.inria.verveine.core.gen.famix.Access;
+-import fr.inria.verveine.core.gen.famix.Association;
++import fr.inria.verveine.core.gen.famix.AnnotationType;
++import fr.inria.verveine.core.gen.famix.AnnotationTypeAttribute;
++import fr.inria.verveine.core.gen.famix.Class;
+ import fr.inria.verveine.core.gen.famix.ContainerEntity;
+-import fr.inria.verveine.core.gen.famix.Inheritance;
+ import fr.inria.verveine.core.gen.famix.Invocation;
+ import fr.inria.verveine.core.gen.famix.Method;
++import fr.inria.verveine.core.gen.famix.NamedEntity;
+ import fr.inria.verveine.core.gen.famix.Namespace;
+ import fr.inria.verveine.core.gen.famix.Reference;
+ 
+@@ -19,35 +21,60 @@
+ 	public static final int EMPTY_NOS = 0;
+ 	
+ 	private Namespace fmxPckg;
+-	private Stack<ClassStack> fmxClass;
+-	
+-	// for debugging
+-	private boolean tracing = false;;
++	private Stack<ClassStack> fmxType;
+ 
+ 	/**
+ 	 * A structure to hold a Famix class and its current method
+ 	 */
+ 	public class ClassStack {
+-		private fr.inria.verveine.core.gen.famix.Class fmxClass;
+-		private Method fmxMethod;
++		private NamedEntity fmxType;  // can be a FamixClass or a FamixAnnotationType
++		private NamedEntity fmxMember; // can be a FamixMethod or a FamixAnnotationAttribute
+ 		private int metric_cyclo = EMPTY_CYCLO;  // Cyclomatic Complexity
+-		private int metric_nos = EMPTY_NOS;    // Number Of Statements
++		private int metric_nos = EMPTY_NOS;      // Number Of Statements
+ 		
+ 		
+- 		public ClassStack(fr.inria.verveine.core.gen.famix.Class e) {
+-			fmxClass = e;
+-			clearFmxMethod();
++ 		public ClassStack(NamedEntity e) {
++			fmxType = e;
++			clearFmxMember();
+ 		}
+ 
+ 		public fr.inria.verveine.core.gen.famix.Class getFmxClass() {
+-			return fmxClass;
++			if (fmxType instanceof fr.inria.verveine.core.gen.famix.Class) {
++				return (fr.inria.verveine.core.gen.famix.Class) fmxType;
++			}
++			else {
++				return null;
++			}
++		}
++
++		public AnnotationType getFmxAnnotationType() {
++			if (fmxType instanceof AnnotationType) {
++				return (AnnotationType) fmxType;
++			}
++			else {
++				return null;
++			}
+ 		}
+ 
+ 		/**
+ 		 * Returns the Famix  Method on top of the context stack
+ 		 */
+ 		public Method getFmxMethod() {
+-			return fmxMethod;
++			if (fmxMember instanceof Method) {
++				return (Method) fmxMember;
++			}
++			else {
++				return null;
++			}
++		}
++
++		public AnnotationTypeAttribute getFmxAnnotationAttribute() {
++			if (fmxMember instanceof AnnotationTypeAttribute) {
++				return (AnnotationTypeAttribute) fmxMember;
++			}
++			else {
++				return null;
++			}
+ 		}
+ 
+ 		/**
+@@ -68,8 +95,13 @@
+ 		 * Reset the Famix Method on top of the context stack
+ 		 */
+ 		public void setFmxMethod(Method fmxMethod) {
+-			clearFmxMethod();
+-			this.fmxMethod = fmxMethod;
++			clearFmxMember();
++			this.fmxMember = fmxMethod;
++		}
++
++		public void setFmxAnnotationAttribute(AnnotationTypeAttribute fmxAtt) {
++			clearFmxMember();
++			this.fmxMember = fmxAtt;
+ 		}
+ 
+ 		/**
+@@ -103,16 +135,16 @@
+ 		/**
+ 		 * Empties the context stack of Famix classes
+ 		 */
+-		public void clearFmxClass() {
+-			fmxClass = null;
+-			clearFmxMethod();
++		public void clearFmxType() {
++			fmxType = null;
++			clearFmxMember();
+ 		}
+ 		
+ 		/**
+ 		 * Empties the Famix Method on top of the context stack
+ 		 */
+-		public void clearFmxMethod() {
+-			fmxMethod = null;
++		public void clearFmxMember() {
++			fmxMember = null;
+ 			metric_cyclo = EMPTY_CYCLO;
+ 			metric_nos = EMPTY_NOS;
+ 			setLastInvocation(null);
+@@ -164,20 +196,12 @@
+ 		clearPckg();  // initializes (to empty) Pckgs, classes and methods
+ 	}
+ 
+-	public boolean isTracing() {
+-		return tracing;
+-	}
+-
+-	public void setTracing(boolean tracing) {
+-		this.tracing = tracing;
+-	}
+-
+-	private ClassStack getTopClass() {
+-		if (fmxClass.isEmpty()) {
++	private ClassStack getTopType() {
++		if (fmxType.isEmpty()) {
+ 			return null;
+ 		}
+ 		else {
+-			return fmxClass.peek();
++			return fmxType.peek();
+ 		}
+ 	}
+ 
+@@ -187,13 +211,19 @@
+ 	 * Pushes an entity on top of the "context stack"
+ 	 * @param e -- the entity
+ 	 */
+-	public void push(ContainerEntity e) {
++	public void push(NamedEntity e) {
+ 		if (e instanceof Method) {
+ 			pushMethod((Method) e);
+ 		}
+ 		else if (e instanceof fr.inria.verveine.core.gen.famix.Class) {
+ 			pushClass((fr.inria.verveine.core.gen.famix.Class) e);
+ 		}
++		else if (e instanceof AnnotationTypeAttribute) {
++			pushAnnotationMember((AnnotationTypeAttribute) e);
++		}
++		else if (e instanceof AnnotationType) {
++			pushAnnotationType((AnnotationType) e);
++		}
+ 		else if (e instanceof Namespace) {
+ 			pushPckg((Namespace) e);
+ 		}
+@@ -205,11 +235,7 @@
+ 	 * @param e -- the Famix method
+ 	 */
+ 	public void pushPckg(Namespace e) {
+-		if (this.tracing) {
+-			System.out.println("TRACE: pushPckg "+e.getName());
+-		}
+-		clearClasses();
+-		//setLastAssoc(null);
++		clearTypes();
+ 		fmxPckg = e;
+ 	}
+ 
+@@ -218,10 +244,11 @@
+ 	 * @param e -- the Famix class
+ 	 */
+ 	public void pushClass(fr.inria.verveine.core.gen.famix.Class e) {
+-		if (this.tracing) {
+-			System.out.println("TRACE: pushClass "+e.getName());
+-		}
+-		fmxClass.push(new ClassStack(e));
++		fmxType.push(new ClassStack(e));
++	}
++
++	public void pushAnnotationType(AnnotationType e) {
++		fmxType.push(new ClassStack(e));
+ 	}
+ 
+ 	/**
+@@ -229,26 +256,26 @@
+ 	 * @param e -- the Famix method
+ 	 */
+ 	public void pushMethod(Method e) {
+-		if (this.tracing) {
+-			System.out.println("TRACE: pushMethod "+e.getName());
+-		}
+-		getTopClass().setFmxMethod(e);
+-		
++		getTopType().setFmxMethod(e);
+ 	}
+ 
++	public void pushAnnotationMember(AnnotationTypeAttribute fmx) {
++		getTopType().setFmxAnnotationAttribute(fmx);	
++	}
++	
+ 	/**
+ 	 * Empties the context stack of package and associated classes
+ 	 */
+ 	public void clearPckg() {
+-		clearClasses();
++		clearTypes();
+ 		fmxPckg = null;
+ 	}
+ 
+ 	/**
+ 	 * Empties the context stack of Famix classes
+ 	 */
+-	public void clearClasses() {
+-		fmxClass = new Stack<ClassStack>();
++	public void clearTypes() {
++		fmxType = new Stack<ClassStack>();
+ 	}
+ 	
+ 	// READ FROM THE STACK
+@@ -262,9 +289,6 @@
+ 	public Namespace popPckg() {
+ 		Namespace ret = fmxPckg;
+ 		clearPckg();
+-		if (this.tracing) {
+-			System.out.println("TRACE: popPckg "+ret.getName());
+-		}
+ 		return ret;
+ 	}
+ 
+@@ -274,12 +298,14 @@
+ 	 * @return the Famix class
+ 	 */
+ 	public fr.inria.verveine.core.gen.famix.Class popClass() {
+-		ClassStack tmp = fmxClass.pop();
+-		if (this.tracing) {
+-			System.out.println("TRACE: popClass "+tmp.getFmxClass().getName());
+-		}
++		ClassStack tmp = fmxType.pop();
+ 		return tmp.getFmxClass();
+ 	}
++	
++	public AnnotationType popAnnotationType() {
++		ClassStack tmp = fmxType.pop();
++		return tmp.getFmxAnnotationType();
++	}
+ 
+ 	/**
+ 	 * Pops the top Famix method of the current class on top of the "context stack"
+@@ -287,13 +313,16 @@
+ 	 * @return the Famix method
+ 	 */
+ 	public Method popMethod() {
+-		ClassStack tmp = getTopClass();
++		ClassStack tmp = getTopType();
+ 		Method ret = tmp.getFmxMethod();
+-		tmp.clearFmxMethod();
+-		
+-		if (this.tracing) {
+-			System.out.println("TRACE: popMethod "+ret.getName());
+-		}
++		tmp.clearFmxMember();
++		return ret;
++	}
++	
++	public AnnotationTypeAttribute popAnnotationMember() {
++		ClassStack tmp = getTopType();
++		AnnotationTypeAttribute ret = tmp.getFmxAnnotationAttribute();
++		tmp.clearFmxMember();
+ 		return ret;
+ 	}
+ 
+@@ -304,7 +333,7 @@
+ 	 */
+ 	public ContainerEntity top() {
+ 		ContainerEntity ret = null;
+-		ClassStack topc = getTopClass();
++		ClassStack topc = getTopType();
+ 		if (topc != null) {
+ 			ret = topc.getFmxMethod();
+ 			if (ret == null) {
+@@ -333,7 +362,11 @@
+ 	 * @return the Famix class
+ 	 */
+ 	public fr.inria.verveine.core.gen.famix.Class topClass() {
+-		return getTopClass().getFmxClass();
++		return getTopType().getFmxClass();
++	}
++
++	public AnnotationType topAnnotationType() {
++		return getTopType().getFmxAnnotationType();
+ 	}
+ 	
+ 	/**
+@@ -342,7 +375,11 @@
+ 	 * @return the Famix method
+ 	 */
+ 	public Method topMethod() {
+-		return getTopClass().getFmxMethod();
++		return getTopType().getFmxMethod();
++	}
++
++	public AnnotationTypeAttribute topAnnotationMember() {
++		return getTopType().getFmxAnnotationAttribute();
+ 	}
+ 
+ 	// PROPERTIES OF THE TOP METHOD
+@@ -351,8 +388,8 @@
+ 	 * Returns the Cyclomatic complexity of the Famix Method on top of the context stack
+ 	 */
+ 	public int getTopMethodCyclo() {
+-		if (getTopClass() != null) {
+-			return getTopClass().getFmxMethodCyclo();
++		if (getTopType() != null) {
++			return getTopType().getFmxMethodCyclo();
+ 		}
+ 		else {
+ 			return EMPTY_CYCLO;
+@@ -363,8 +400,8 @@
+ 	 * Returns the Number of Statements of the Famix Method on top of the context stack
+ 	 */
+ 	public int getTopMethodNOS() {
+-		if (getTopClass() != null) {
+-			return getTopClass().getFmxMethodNOS();
++		if (getTopType() != null) {
++			return getTopType().getFmxMethodNOS();
+ 		}
+ 		else {
+ 			return EMPTY_NOS;
+@@ -375,8 +412,8 @@
+ 	 * Sets the Cyclomatic complexity of the Famix Method on top of the context stack
+ 	 */
+ 	public void setTopMethodCyclo(int c) {
+-		if (getTopClass() != null) {
+-			getTopClass().setFmxMethodCyclo(c);
++		if (getTopType() != null) {
++			getTopType().setFmxMethodCyclo(c);
+ 		}
+ 	}
+ 
+@@ -384,8 +421,8 @@
+ 	 * Sets to the Number of Statements of the Famix Method on top of the context stack
+ 	 */
+ 	public void setTopMethodNOS(int n) {
+-		if (getTopClass() != null) {
+-			getTopClass().setFmxMethodNOS(n);
++		if (getTopType() != null) {
++			getTopType().setFmxMethodNOS(n);
+ 		}
+ 	}
+ 	
+@@ -393,8 +430,8 @@
+ 	 * Adds to the Cyclomatic complexity of the Famix Method on top of the context stack
+ 	 */
+ 	public void addTopMethodCyclo(int c) {
+-		if (getTopClass() != null) {
+-			getTopClass().addFmxMethodCyclo(c);
++		if (getTopType() != null) {
++			getTopType().addFmxMethodCyclo(c);
+ 		}
+ 	}
+ 
+@@ -402,10 +439,10 @@
+ 	 * Adds to the Number of Statements of the Famix Method on top of the context stack
+ 	 */
+ 	public void addTopMethodNOS(int n) {
+-		if (getTopClass() != null) {
+-			getTopClass().addFmxMethodNOS(n);
++		if (getTopType() != null) {
++			getTopType().addFmxMethodNOS(n);
+ 		}
+ 	}
+-	
++
+ }
+ 
+Index: verveine.core/src/fr/inria/verveine/core/Dictionary.java
+===================================================================
+--- verveine.core/src/fr/inria/verveine/core/Dictionary.java	(revision 85)
++++ verveine.core/src/fr/inria/verveine/core/Dictionary.java	(revision 86)
+@@ -5,11 +5,12 @@
+ import java.util.LinkedList;
+ import java.util.Map;
+ 
+-import org.eclipse.jdt.core.dom.ITypeBinding;
+-
+ import ch.akuhn.fame.Repository;
+ import fr.inria.verveine.core.gen.famix.Access;
++import fr.inria.verveine.core.gen.famix.AnnotationInstance;
++import fr.inria.verveine.core.gen.famix.AnnotationInstanceAttribute;
+ import fr.inria.verveine.core.gen.famix.AnnotationType;
++import fr.inria.verveine.core.gen.famix.AnnotationTypeAttribute;
+ import fr.inria.verveine.core.gen.famix.Association;
+ import fr.inria.verveine.core.gen.famix.Attribute;
+ import fr.inria.verveine.core.gen.famix.BehaviouralEntity;
+@@ -31,7 +32,6 @@
+ import fr.inria.verveine.core.gen.famix.ParameterizableClass;
+ import fr.inria.verveine.core.gen.famix.PrimitiveType;
+ import fr.inria.verveine.core.gen.famix.Reference;
+-import fr.inria.verveine.core.gen.famix.SourceLanguage;
+ import fr.inria.verveine.core.gen.famix.SourcedEntity;
+ import fr.inria.verveine.core.gen.famix.StructuralEntity;
+ import fr.inria.verveine.core.gen.famix.ThrownException;
+@@ -51,8 +51,6 @@
+ 	public static final String SELF_NAME = "self";
+ 	public static final String SUPER_NAME = "super";
+ 
+-	private SourceLanguage myLgge = null;
+-	
+ 	/**
+ 	 * The FAMIX repository where all FAMIX entities are created and stored
+ 	 */
+@@ -87,9 +85,8 @@
+ 	/** Constructor taking a FAMIX repository
+ 	 * @param famixRepo
+ 	 */
+-	public Dictionary(Repository famixRepo, SourceLanguage lgge) {
++	public Dictionary(Repository famixRepo) {
+ 		this.famixRepo = famixRepo;
+-		this.myLgge = lgge;
+ 
+ 		this.mapToKey = new Hashtable<B,NamedEntity>();
+ 		this.mapName = new Hashtable<String,Collection<NamedEntity>>();
+@@ -195,7 +192,6 @@
+ 		if (fmx != null) {
+ 			fmx.setName(name);
+ 			fmx.setIsStub(Boolean.TRUE);
+-			fmx.setDeclaredSourceLanguage(myLgge);
+ 
+ 			mapEntityToName(name, fmx);
+ 			
+@@ -312,6 +308,35 @@
+ 		return fmx;
+ 	}
+ 
++	public AnnotationTypeAttribute ensureFamixAnnotationTypeAttribute(B key, String name, AnnotationType owner) {
++		AnnotationTypeAttribute fmx = ensureFamixNamedEntity(AnnotationTypeAttribute.class, key, name);
++		fmx.setParentAnnotationType(owner);
++		return fmx;
++	}
++
++	public AnnotationInstance createFamixAnnotationInstance(AnnotationType annType) {
++		AnnotationInstance fmx = new AnnotationInstance();
++		fmx.setAnnotationType(annType);
++		famixRepo.add(fmx);
++		return fmx;
++	}
++
++	public void addFamixAnnotationInstance(NamedEntity fmx, AnnotationType annType, Collection<AnnotationInstanceAttribute> annAtts) {
++		AnnotationInstance annInst = createFamixAnnotationInstance(annType);
++		if (annAtts != null) {
++			annInst.addAttributes(annAtts);
++		}
++		fmx.addAnnotationInstances( annInst);
++	}
++	
++	public AnnotationInstanceAttribute createFamixAnnotationInstanceAttribute(AnnotationTypeAttribute att, String val) {
++		AnnotationInstanceAttribute fmx = new AnnotationInstanceAttribute();
++		fmx.setAnnotationTypeAttribute(att);
++		fmx.setValue(val);
++		famixRepo.add(fmx);
++		return fmx;
++	}
++
+ 	/**
+ 	 * Returns a FAMIX Method with the given <b>name</b>, creating it if it does not exist yet
+ 	 * @param key to which the entity will be mapped (may be null, but then it will be difficult to recover the entity)
+Index: verveine.core/src/fr/inria/verveine/core/gen/famix/AnnotationTypeAttribute.java
+===================================================================
+--- verveine.core/src/fr/inria/verveine/core/gen/famix/AnnotationTypeAttribute.java	(revision 85)
++++ verveine.core/src/fr/inria/verveine/core/gen/famix/AnnotationTypeAttribute.java	(revision 86)
+@@ -32,6 +32,11 @@
+         return parentAnnotationType;
+     }
+ 
++    @Override
++	public ContainerEntity getBelongsTo() {
++		return null;
++	}
++
+     public void setParentAnnotationType(AnnotationType parentAnnotationType) {
+         if (this.parentAnnotationType != null) {
+             if (this.parentAnnotationType.equals(parentAnnotationType)) return;
+Index: verveine.core/src/fr/inria/verveine/core/gen/famix/NamedEntity.java
+===================================================================
+--- verveine.core/src/fr/inria/verveine/core/gen/famix/NamedEntity.java	(revision 85)
++++ verveine.core/src/fr/inria/verveine/core/gen/famix/NamedEntity.java	(revision 86)
+@@ -216,7 +216,7 @@
+     @FameProperty(name = "belongsTo", derived = true)
+     public ContainerEntity getBelongsTo() {
+         // TODO: this is a derived property, implement this method manually.
+-        throw new UnsupportedOperationException("NamedEntity.getBelongsTo() Not implemented in this class, use the proper subclass!"); 
++        throw new UnsupportedOperationException("NamedEntity.getBelongsTo() Not implemented in this class, use the proper subclass ("+this.getClass().getName()+")"); 
+     }
+     
+     private Boolean isFinal;
+Index: verveine.extractor.java/src/fr/inria/verveine/extractor/java/JavaDictionary.java
+===================================================================
+--- verveine.extractor.java/src/fr/inria/verveine/extractor/java/JavaDictionary.java	(revision 32)
++++ verveine.extractor.java/src/fr/inria/verveine/extractor/java/JavaDictionary.java	(revision 33)
+@@ -17,6 +17,7 @@
+ import fr.inria.verveine.core.gen.famix.Attribute;
+ import fr.inria.verveine.core.gen.famix.ContainerEntity;
+ import fr.inria.verveine.core.gen.famix.FileAnchor;
++import fr.inria.verveine.core.gen.famix.Inheritance;
+ import fr.inria.verveine.core.gen.famix.LocalVariable;
+ import fr.inria.verveine.core.gen.famix.Method;
+ import fr.inria.verveine.core.gen.famix.NamedEntity;
+@@ -154,6 +155,7 @@
+ 		String identifier = null;
+ 		boolean wasBound = false;
+ 		
++		
+ 		if (bnd == null) {
+ 			System.err.println("Warning: Unexpected null binding, cannot create Famix Class");
+ 			return null;
+@@ -221,11 +223,17 @@
+ 			// superclass
+ 			if (! bnd.isInterface()) {
+ 				ITypeBinding supbnd = bnd.getSuperclass();
+-				if (supbnd == null) {
++				ITypeBinding[] intsbnd = bnd.getInterfaces();
++				if (supbnd == null && intsbnd.length == 0) {
+ 					sups.add( ensureFamixClassObject(null));
+ 				}
+ 				else {
+-					sups.add( ensureFamixClass(supbnd));
++					if (supbnd != null) {
++						sups.add(ensureFamixClass(supbnd));
++					}
++					for (ITypeBinding intbnd : intsbnd) {
++						sups.add( ensureFamixClass(intbnd));
++					}
+ 				}
+ 			}
+ 			else {
+@@ -288,8 +296,9 @@
+ 			fmx.setContainer(owner);
+ 			if (sups.size() > 0) {
+ 				// some types don't have superclass
++				Inheritance lastInheritance = null;
+ 				for (fr.inria.verveine.core.gen.famix.Class sup : sups) {
+-					ensureFamixInheritance(sup, fmx);
++					lastInheritance = ensureFamixInheritance(sup, fmx, lastInheritance);
+ 				}
+ 			}
+ 			setNamedEntityModifiers(fmx, bnd.getDeclaredModifiers());

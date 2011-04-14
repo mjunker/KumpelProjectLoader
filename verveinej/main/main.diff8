@@ -1,0 +1,460 @@
+Index: verveine.extractor.java/src/tests/fr/inria/verveine/extractor/java/VerveineJTest_LanModel.java
+===================================================================
+--- verveine.extractor.java/src/tests/fr/inria/verveine/extractor/java/VerveineJTest_LanModel.java	(revision 114)
++++ verveine.extractor.java/src/tests/fr/inria/verveine/extractor/java/VerveineJTest_LanModel.java	(revision 115)
+@@ -38,8 +38,6 @@
+ import fr.inria.verveine.core.gen.famix.Parameter;
+ import fr.inria.verveine.core.gen.famix.PrimitiveType;
+ import fr.inria.verveine.core.gen.famix.SourceAnchor;
+-import fr.inria.verveine.core.gen.famix.StructuralEntity;
+-import fr.inria.verveine.core.gen.famix.Type;
+ import fr.inria.verveine.extractor.java.JavaDictionary;
+ import fr.inria.verveine.extractor.java.VerveineJParser;
+ 
+@@ -48,16 +46,10 @@
+  * @since May 28, 2010
+  *
+  */
+-public class VerveineJTest_LanModel {
++public class VerveineJTest_LanModel extends VerveineJTest_Basic {
+ 
+ 	private static final String A_CLASS_NAME = "--aClassName--";
+ 
+-	private Repository repo;
+-
+-	public VerveineJTest_LanModel() {
+-		new File(VerveineJParser.OUTPUT_FILE).delete();
+-	}
+-	
+ 	/**
+ 	 * @throws java.lang.Exception
+ 	 */
+@@ -104,7 +96,7 @@
+ 				};
+ 		
+ 		VerveineJParser parser = new VerveineJParser();
+-		this.repo = parser.getFamixRepo();
++		repo = parser.getFamixRepo();
+ 		parser.setOptions(args);
+ 		parser.parse();
+ 		
+@@ -129,21 +121,6 @@
+ 	}
+ 
+ 	@Test
+-	public void testBelongsTo() {
+-		for ( Type e : repo.all(Type.class) ) {
+-			if (! (e instanceof PrimitiveType) ) {
+-				assertNotNull("a Type '"+e.getName()+"' does not belong to anything", e.getBelongsTo());
+-			}
+-		}
+-		for ( BehaviouralEntity e : repo.all(BehaviouralEntity.class) ) {
+-			assertNotNull("a BehaviouralEntity '"+e.getName()+"' does not belong to anything", e.getBelongsTo());
+-		}
+-		for ( StructuralEntity e : repo.all(StructuralEntity.class) ) {
+-			assertNotNull("a StructuralEntity '"+e.getName()+"' does not belong to anything", e.getBelongsTo());
+-		}
+-	}
+-
+-	@Test
+ 	public void testClassProperties() {
+ 		fr.inria.verveine.core.gen.famix.Class nodeClass = TestVerveineUtils.detectElement(repo,fr.inria.verveine.core.gen.famix.Class.class, "Node");
+ 		assertNotNull(nodeClass);
+Index: verveine.extractor.java/src/tests/fr/inria/verveine/extractor/java/VerveineJTest_AdHoc.java
+===================================================================
+--- verveine.extractor.java/src/tests/fr/inria/verveine/extractor/java/VerveineJTest_AdHoc.java	(revision 114)
++++ verveine.extractor.java/src/tests/fr/inria/verveine/extractor/java/VerveineJTest_AdHoc.java	(revision 115)
+@@ -14,7 +14,6 @@
+ import org.junit.Test;
+ 
+ import test.fr.inria.verveine.core.TestVerveineUtils;
+-import ch.akuhn.fame.Repository;
+ import fr.inria.verveine.core.gen.famix.Access;
+ import fr.inria.verveine.core.gen.famix.AnnotationInstance;
+ import fr.inria.verveine.core.gen.famix.AnnotationInstanceAttribute;
+@@ -41,9 +40,7 @@
+  * @since November 25, 2010
+  *
+  */
+-public class VerveineJTest_AdHoc {
+-
+-	private Repository repo;
++public class VerveineJTest_AdHoc extends VerveineJTest_Basic {
+ 
+ 	/**
+ 	 * @throws java.lang.Exception
+@@ -52,10 +49,25 @@
+ 	public void setUp() throws Exception {
+ 		new File(VerveineJParser.OUTPUT_FILE).delete();
+ 		VerveineJParser parser = new VerveineJParser();
+-		this.repo = parser.getFamixRepo();
++		repo = parser.getFamixRepo();
+ 		parser.setOptions(new String[] {"test_src/ad_hoc"});
+ 		parser.parse();
+-		repo.exportMSE(new FileWriter(VerveineJParser.OUTPUT_FILE));
++		parser.outputMSE();
++	}
++
++	@Test
++	public void testDictionary() {
++		fr.inria.verveine.core.gen.famix.Class dico = TestVerveineUtils.detectElement(repo, fr.inria.verveine.core.gen.famix.Class.class, "Dictionary");
++		assertNotNull(dico);
++
++		assertEquals(3, dico.getAttributes().size());
++		//fails because FieldDeclaration and FieldAccess have different bindings (so they are created twice) :-(
++		for (Attribute a : dico.getAttributes()) {
++			assertEquals(dico, a.getBelongsTo());
++			Type t = a.getDeclaredType();
++			assertEquals("Map", t.getName());
++			assertEquals(ParameterizedType.class, t.getClass());
++		}
+ 	}
+ 
+ 	@Test
+Index: verveine.extractor.java/src/tests/fr/inria/verveine/extractor/java/VerveineJTest_Basic.java
+===================================================================
+--- verveine.extractor.java/src/tests/fr/inria/verveine/extractor/java/VerveineJTest_Basic.java	(revision 0)
++++ verveine.extractor.java/src/tests/fr/inria/verveine/extractor/java/VerveineJTest_Basic.java	(revision 115)
+@@ -0,0 +1,58 @@
++package tests.fr.inria.verveine.extractor.java;
++
++import static org.junit.Assert.*;
++
++import org.junit.Test;
++
++import test.fr.inria.verveine.core.TestVerveineUtils;
++import ch.akuhn.fame.Repository;
++import fr.inria.verveine.core.gen.famix.Association;
++import fr.inria.verveine.core.gen.famix.BehaviouralEntity;
++import fr.inria.verveine.core.gen.famix.PrimitiveType;
++import fr.inria.verveine.core.gen.famix.StructuralEntity;
++import fr.inria.verveine.core.gen.famix.Type;
++import fr.inria.verveine.extractor.java.VerveineJParser;
++
++public abstract class VerveineJTest_Basic {
++
++	protected Repository repo;
++	protected VerveineJParser parser;
++
++	@Test
++	public void testAssociation() {
++		for (Association ass : TestVerveineUtils.selectElementsOfType(repo, Association.class) ) {
++			assertNotNull(ass.getClass().getSimpleName()+(ass.getTo()==null?"":" to: "+ass.getTo().getName())+" as no From", ass.getFrom());
++			assertNotNull(ass.getClass().getSimpleName()+" from: "+ass.getFrom().getName()+" as no To", ass.getTo());
++		}
++		
++		for (Association ass : TestVerveineUtils.selectElementsOfType(repo, Association.class) ) {
++			Association n = ass.getNext();
++			if (n!=null) {
++				assertSame(ass, n.getPrevious());
++			}
++		}
++		
++		for (Association ass : TestVerveineUtils.selectElementsOfType(repo, Association.class) ) {
++			Association p = ass.getPrevious();
++			if (p!=null) {
++				assertSame(ass, p.getNext());
++			}
++		}
++	}
++
++	@Test
++	public void testBelongsTo() {
++		for ( Type e : repo.all(Type.class) ) {
++			if (! (e instanceof PrimitiveType) ) {
++				assertNotNull("a Type '"+e.getName()+"' does not belong to anything", e.getBelongsTo());
++			}
++		}
++		for ( BehaviouralEntity e : repo.all(BehaviouralEntity.class) ) {
++			assertNotNull("a BehaviouralEntity '"+e.getName()+"' does not belong to anything", e.getBelongsTo());
++		}
++		for ( StructuralEntity e : repo.all(StructuralEntity.class) ) {
++			assertNotNull("a StructuralEntity '"+e.getName()+"' does not belong to anything", e.getBelongsTo());
++		}
++	}
++
++}
+\ No newline at end of file
+Index: verveine.extractor.java/src/fr/inria/verveine/extractor/java/VerveineRefVisitor.java
+===================================================================
+--- verveine.extractor.java/src/fr/inria/verveine/extractor/java/VerveineRefVisitor.java	(revision 114)
++++ verveine.extractor.java/src/fr/inria/verveine/extractor/java/VerveineRefVisitor.java	(revision 115)
+@@ -50,6 +50,7 @@
+ import fr.inria.verveine.core.gen.famix.Method;
+ import fr.inria.verveine.core.gen.famix.NamedEntity;
+ import fr.inria.verveine.core.gen.famix.Namespace;
++import fr.inria.verveine.core.gen.famix.ParameterizableClass;
+ import fr.inria.verveine.core.gen.famix.StructuralEntity;
+ 
+ /**
+@@ -234,11 +235,8 @@
+ 			IBinding bnd = ((Name) callingExpr).resolveBinding();
+ 			if ( (bnd != null) && (bnd instanceof IVariableBinding) && ((IVariableBinding)bnd).isField() ){
+ 				BehaviouralEntity accessor = this.context.topMethod();
+-				Attribute accessed = this.dico.ensureFamixAttribute((IVariableBinding)bnd, ((SimpleName)callingExpr).getIdentifier(), null, /*owner*/context.topClass());
+-				// cast needed to ensure calling the proper ensureFamixAttribute() (in JavaDictionnary)
+-				// 'owner' note: using a field without anything before, it must belongs to the currently parsed class
+-				
+-				context.setLastAccess( dico.addFamixAccess(accessor, accessed, /*isWrite*/false, context.getLastAccess()) );
++				// note: using a field without anything before, owner must be the currently parsed class
++				createAccessedAttribute((IVariableBinding)bnd, ((SimpleName)callingExpr).getIdentifier(), null, /*owner*/context.topClass(), accessor);
+ 			}
+ 		}
+ 		return super.visit(node);
+@@ -274,11 +272,9 @@
+ 
+ 	public boolean visit(FieldAccess node) {
+ 		BehaviouralEntity accessor = this.context.topMethod();
+-		Attribute accessed = this.dico.ensureFamixAttribute(node.resolveFieldBinding(), node.getName().getIdentifier(), null, null);
+-		if ( (accessed != null) && (accessed.getParentType() == null) && (accessed.getName().equals("length")) ) {
+-			accessed.setParentType(dico.ensureFamixClassArray());
+-		}
+-		context.setLastAccess( dico.addFamixAccess(accessor, accessed, /*isWrite*/false, context.getLastAccess()) );
++		IVariableBinding bnd = node.resolveFieldBinding();
++		// FIXME if bnd == null we have a problem
++		createAccessedAttribute(bnd, node.getName().getIdentifier(), null, null, accessor);
+ 
+ 		return super.visit(node);
+ 	}
+@@ -291,11 +287,7 @@
+ 		if (bnd instanceof IVariableBinding) {
+ 			// apparently this is a field
+ 			BehaviouralEntity accessor = this.context.topMethod();
+-			Attribute accessed = this.dico.ensureFamixAttribute((IVariableBinding)bnd, node.getName().getIdentifier(), null, null);  // cast needed to access the proper method
+-			if ( (accessed != null) && (accessed.getParentType() == null) && (accessed.getName().equals("length")) ) {
+-				accessed.setParentType(dico.ensureFamixClassArray());
+-			}
+-			context.setLastAccess( dico.addFamixAccess(accessor, accessed, /*isWrite*/false, context.getLastAccess()) );
++			createAccessedAttribute((IVariableBinding)bnd, node.getName().getIdentifier(), null, null, accessor);
+ 		}
+ 		return super.visit(node);
+ 	}
+@@ -304,15 +296,9 @@
+ 	 * Another FieldAccess in disguise: SomeClass.class
+ 	 */
+ 	public boolean visit(TypeLiteral node) {
+-		Attribute accessed;
+ 		fr.inria.verveine.core.gen.famix.Type javaMetaClass = dico.ensureFamixMetaClass(null); 
+ 		BehaviouralEntity accessor = this.context.topMethod();
+-		accessed =  dico.ensureFamixAttribute(null, "class", javaMetaClass, javaMetaClass);
+-		if ( (accessed != null) && (accessed.getParentType() == null) && (accessed.getName().equals("length")) ) {
+-			accessed.setParentType(dico.ensureFamixClassArray());
+-		}
+-		context.setLastAccess( dico.addFamixAccess(accessor, accessed, /*isWrite*/false, context.getLastAccess()) );
+-
++		createAccessedAttribute(null, "class", javaMetaClass, javaMetaClass, accessor);
+ 		return super.visit(node);
+ 	}
+ 
+@@ -399,7 +385,7 @@
+ 
+ 		// field.msg()
+ 		else if (expr instanceof FieldAccess) {
+-			Attribute ret = dico.ensureFamixAttribute(((FieldAccess) expr).resolveFieldBinding(), ((FieldAccess) expr).getName().getIdentifier(), null, null);
++			Attribute ret = createAccessedAttribute(((FieldAccess) expr).resolveFieldBinding(), ((FieldAccess) expr).getName().getIdentifier(), /*type*/null, /*owner*/null, /*accessor*/null);
+ 			if ( (ret != null) && (ret.getParentType() == null) && (ret.getName().equals("length")) ) {
+ 				ret.setParentType(dico.ensureFamixClassArray());
+ 			}
+@@ -436,7 +422,7 @@
+ 			else if (bnd instanceof IVariableBinding) {
+ 				String varName = ( ((Name)expr).isSimpleName() ? ((SimpleName)expr).getFullyQualifiedName() : ((QualifiedName)expr).getName().getIdentifier());
+ 				if ( ((IVariableBinding)bnd).isField() ) {
+-					ret = dico.ensureFamixAttribute((IVariableBinding)bnd, varName, null, null);
++					ret = createAccessedAttribute((IVariableBinding)bnd, varName, /*typ*/null, /*owner*/null, /*accessor*/null);
+ 					if ( (ret != null) && (((Attribute) ret).getParentType() == null) && (ret.getName().equals("length")) ) {
+ 						((Attribute) ret).setParentType(dico.ensureFamixClassArray());
+ 					}
+@@ -467,7 +453,7 @@
+ 
+ 		// super.field.msg()
+ 		else if (expr instanceof SuperFieldAccess) {
+-			Attribute ret = dico.ensureFamixAttribute(((SuperFieldAccess) expr).resolveFieldBinding(), ((SuperFieldAccess) expr).getName().getIdentifier(), null, null);
++			Attribute ret = createAccessedAttribute(((SuperFieldAccess) expr).resolveFieldBinding(), ((SuperFieldAccess) expr).getName().getIdentifier(), /*typ*/null, /*owner*/null, /*accessor*/null);
+ 			if ( (ret != null) && (ret.getParentType() == null) && (ret.getName().equals("length")) ) {
+ 				ret.setParentType(dico.ensureFamixClassArray());
+ 			}
+@@ -505,4 +491,19 @@
+ 		return null;
+ 	}
+ 
++	private Attribute createAccessedAttribute(IVariableBinding bnd, String attName, fr.inria.verveine.core.gen.famix.Type typ, fr.inria.verveine.core.gen.famix.Type owner, BehaviouralEntity accessor) {
++		Attribute accessed;
++		if (bnd != null) {
++			bnd = bnd.getVariableDeclaration();
++		}
++		accessed =  dico.ensureFamixAttribute(bnd, attName, typ, owner);
++		if ( (accessed != null) && (accessed.getParentType() == null) && (accessed.getName().equals("length")) ) {
++			accessed.setParentType(dico.ensureFamixClassArray());
++		}
++		
++		if ( (accessed != null) && (accessor != null) ) {
++			context.setLastAccess( dico.addFamixAccess(accessor, accessed, /*isWrite*/false, context.getLastAccess()) );
++		}
++		return accessed;
++	}
+ }
+Index: verveine.core/.classpath
+===================================================================
+--- verveine.core/.classpath	(revision 27)
++++ verveine.core/.classpath	(revision 28)
+@@ -5,6 +5,5 @@
+ 	<classpathentry kind="lib" path="lib/fame.jar"/>
+ 	<classpathentry kind="var" path="ECLIPSE_HOME/plugins/org.junit_4.8.1.v4_8_1_v20100427-1100/junit.jar"/>
+ 	<classpathentry kind="lib" path="lib/org.eclipse.jdt.core_3.6.0.v_A58.jar"/>
+-	<classpathentry kind="lib" path="lib/akuhn-util-r28011.jar"/>
+ 	<classpathentry kind="output" path="bin"/>
+ </classpath>
+Index: verveine.core/lib/akuhn-util-r28011.jar
+===================================================================
+Cannot display: file marked as a binary type.
+svn:mime-type = application/octet-stream
+Index: verveine.core/lib/fame.jar
+===================================================================
+Cannot display: file marked as a binary type.
+svn:mime-type = application/octet-stream
+Index: verveine.core/lib/verveine.core.jar
+===================================================================
+Cannot display: file marked as a binary type.
+svn:mime-type = application/octet-stream
+Index: verveine.core/src/fr/inria/verveine/core/EntityStack.java
+===================================================================
+--- verveine.core/src/fr/inria/verveine/core/EntityStack.java	(revision 27)
++++ verveine.core/src/fr/inria/verveine/core/EntityStack.java	(revision 28)
+@@ -2,6 +2,7 @@
+ 
+ import java.util.Stack;
+ 
++import fr.inria.verveine.core.gen.famix.Association;
+ import fr.inria.verveine.core.gen.famix.ContainerEntity;
+ import fr.inria.verveine.core.gen.famix.Method;
+ import fr.inria.verveine.core.gen.famix.Namespace;
+@@ -113,6 +114,19 @@
+ 
+ 	}
+ 	
++	/**
++	 * last Association registered to set the previous/next
++	 */
++	Association lastAssoc = null;
++	
++	public Association getLastAssoc() {
++		return lastAssoc;
++	}
++
++	public void setLastAssoc(Association lastAssoc) {
++		this.lastAssoc = lastAssoc;
++	}
++
+ 	public EntityStack() {
+ 		clearPckg();  // initializes (to empty) Pckgs, classes and methods
+ 	}
+@@ -162,6 +176,7 @@
+ 			System.out.println("TRACE: pushPckg "+e.getName());
+ 		}
+ 		clearClasses();
++		setLastAssoc(null);
+ 		fmxPckg = e;
+ 	}
+ 
+Index: verveine.core/src/fr/inria/verveine/core/Dictionary.java
+===================================================================
+--- verveine.core/src/fr/inria/verveine/core/Dictionary.java	(revision 27)
++++ verveine.core/src/fr/inria/verveine/core/Dictionary.java	(revision 28)
+@@ -8,6 +8,7 @@
+ import ch.akuhn.fame.Repository;
+ 
+ import fr.inria.verveine.core.gen.famix.Access;
++import fr.inria.verveine.core.gen.famix.Association;
+ import fr.inria.verveine.core.gen.famix.Attribute;
+ import fr.inria.verveine.core.gen.famix.BehaviouralEntity;
+ import fr.inria.verveine.core.gen.famix.CaughtException;
+@@ -383,22 +384,20 @@
+ 	 * @return the Reference
+ 	 */
+ 	public Reference ensureFamixReference(ContainerEntity src, ContainerEntity tgt) {
+-		/* We want to keep multiple references between the same entities...
+-		   for (Reference r : src.getOutgoingReferences()) {
+-			if (r.getTarget() == tgt) {
+-				return r;
+-			}
+-		}
+-		*/
+-
++		return ensureFamixReference(src, tgt, null);
++	}
++	
++	public Reference ensureFamixReference(ContainerEntity src, ContainerEntity tgt, Association prev) {
+ 		Reference ref = new Reference();
+ 		ref.setTarget(tgt);
+ 		ref.setSource(src);
++		chainPrevNext(prev,ref);
+ 		famixRepoAdd(ref);
+ 		
+ 		return ref;
+ 	}
+ 
++
+ 	/**
+ 	 * Returns a Famix Invocation between two Famix Entities creating it if needed
+ 	 * @param sender of the invocation
+@@ -407,41 +406,47 @@
+ 	 * @return the Invocation
+ 	 */
+ 	public Invocation ensureFamixInvocation(BehaviouralEntity sender, BehaviouralEntity invoked, NamedEntity receiver) {
+-		/* We keep multiple invocations from one method to another
+-		   for (Invocation i : sender.getOutgoingInvocations()) {
+-			if  (i.getReceiver() == receiver) {
+-				if (i.getCandidates().contains(invoked)) {
+-					return i;
+-				}				
+-			}
+-		}
+-		*/
+-		
++		return ensureFamixInvocation(sender, invoked, receiver, null);
++	}
++
++	public Invocation ensureFamixInvocation(BehaviouralEntity sender, BehaviouralEntity invoked, NamedEntity receiver, Association prev) {
+ 		Invocation invok = new Invocation();
+ 		invok.setReceiver(receiver);
+ 		invok.setSender(sender);
+ 		invok.setSignature(invoked.getSignature());
+ 		invok.addCandidates(invoked);
++		chainPrevNext(prev,invok);
+ 		famixRepoAdd(invok);
+ 		
+ 		return invok;
+ 	}
+-	
+-	public Access ensureFamixAccess(BehaviouralEntity accessor, StructuralEntity var, boolean isWrite) {
++
++	public Access ensureFamixAccess(BehaviouralEntity accessor, StructuralEntity var, boolean isWrite, Association prev) {
+ 		/* We keep multiple accesses from one method to a field */
+ 		Access acc = new Access();
+ 		acc.setAccessor(accessor);
+ 		acc.setVariable(var);
+ 		acc.setIsWrite(new Boolean(isWrite));
++		chainPrevNext(prev, acc);
+ 		famixRepoAdd(acc);
+ 		
+ 		return acc;
+ 	}
++
++	public Access ensureFamixAccess(BehaviouralEntity accessor, StructuralEntity var, boolean isWrite) {
++		return ensureFamixAccess(accessor, var, isWrite, null);
++	}
+ 	
+ 	public Access ensureFamixAccess(BehaviouralEntity accessor, StructuralEntity var) {
+-		return ensureFamixAccess(accessor, var, false);  // must be some default and this one seems safer than the opposite
++		return ensureFamixAccess(accessor, var, false, null);  // must set some default for isWrite and this one seems safer than the opposite
+ 	}
+ 
++	private void chainPrevNext(Association prev, Association next) {
++		if (prev != null) {
++			// next.setPrevious(prev);  // not yet implemented in importer
++		}
++	}
++	
+ 	/**
+ 	 * Returns a Famix DeclaredException between a method and an Exception that it declares to throw
+ 	 * @param meth -- the method throwing the exception

@@ -1,0 +1,186 @@
+Index: branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/Dictionary.java
+===================================================================
+--- branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/Dictionary.java	(revision 101)
++++ branches/postMoose4_3Refactoring/verveine.core/src/fr/inria/verveine/core/Dictionary.java	(revision 102)
+@@ -5,10 +5,7 @@
+ import java.util.LinkedList;
+ import java.util.Map;
+ 
+-import org.eclipse.jdt.core.dom.ITypeBinding;
+-
+ import ch.akuhn.fame.Repository;
+-
+ import fr.inria.verveine.core.gen.famix.Access;
+ import fr.inria.verveine.core.gen.famix.AnnotationInstance;
+ import fr.inria.verveine.core.gen.famix.AnnotationInstanceAttribute;
+@@ -338,14 +335,16 @@
+ 		AnnotationInstanceAttribute fmx = new AnnotationInstanceAttribute();
+ 		fmx.setAnnotationTypeAttribute(att);
+ 		fmx.setValue(value);
++		this.famixRepo.add(fmx);
+ 		return fmx;
+ 	}
+ 
+ 	public AnnotationInstance addFamixAnnotationInstance(NamedEntity fmx, AnnotationType annType, Collection<AnnotationInstanceAttribute> annAtts) {
+ 		AnnotationInstance inst = new AnnotationInstance();
+-		inst.setAnnotatedEntity(annType);
++		inst.setAnnotationType(annType);
+ 		inst.setAnnotatedEntity(fmx);
+ 		inst.addAttributes(annAtts);
++		this.famixRepo.add(inst);
+ 		return inst;
+ 	}
+ 
+Index: verveine.extractor.java/lib/verveine.core.jar
+===================================================================
+Cannot display: file marked as a binary type.
+svn:mime-type = application/octet-stream
+
+Property changes on: verveine.extractor.java/lib/verveine.core.jar
+___________________________________________________________________
+Added: svn:mime-type
+   + application/octet-stream
+
+Index: verveine.extractor.java/.classpath
+===================================================================
+--- verveine.extractor.java/.classpath	(revision 15)
++++ verveine.extractor.java/.classpath	(revision 16)
+@@ -13,7 +13,7 @@
+ 	<classpathentry kind="var" path="ECLIPSE_HOME/plugins/org.junit_4.8.1.v4_8_1_v20100427-1100/junit.jar"/>
+ 	<classpathentry kind="var" path="ECLIPSE_HOME/plugins/org.hamcrest.core_1.1.0.v20090501071000.jar"/>
+ 	<classpathentry kind="lib" path="lib/fame.jar"/>
+-	<classpathentry kind="lib" path="lib/verveine.core.jar"/>
++	<classpathentry kind="lib" path="lib/verveine.core.jar" sourcepath="/verveine.core"/>
+ 	<classpathentry kind="lib" path="lib/famix.jar"/>
+ 	<classpathentry kind="output" path="bin"/>
+ </classpath>
+Index: verveine.extractor.java/lib/verveine.core.jar
+===================================================================
+Cannot display: file marked as a binary type.
+svn:mime-type = application/octet-stream
+Index: verveine.extractor.java/lib/verveine.extractor.java.jar
+===================================================================
+Cannot display: file marked as a binary type.
+svn:mime-type = application/octet-stream
+Index: verveine.extractor.java/src/tests/fr/inria/verveine/extractor/java/VerveineExtractorJavaTest.java
+===================================================================
+--- verveine.extractor.java/src/tests/fr/inria/verveine/extractor/java/VerveineExtractorJavaTest.java	(revision 15)
++++ verveine.extractor.java/src/tests/fr/inria/verveine/extractor/java/VerveineExtractorJavaTest.java	(revision 16)
+@@ -25,7 +25,7 @@
+ import fr.inria.verveine.core.gen.famix.Access;
+ import fr.inria.verveine.core.gen.famix.Attribute;
+ import fr.inria.verveine.core.gen.famix.BehaviouralEntity;
+-import fr.inria.verveine.core.gen.famix.Class;
++import fr.inria.verveine.core.gen.famix.Comment;
+ import fr.inria.verveine.core.gen.famix.FileAnchor;
+ import fr.inria.verveine.core.gen.famix.Inheritance;
+ import fr.inria.verveine.core.gen.famix.Invocation;
+@@ -447,6 +447,27 @@
+ 	}
+ 
+ 	@Test
++	public void testComment() {	
++		fr.inria.verveine.core.gen.famix.Class clazz = TestVerveineUtils.detectElement(repo, fr.inria.verveine.core.gen.famix.Class.class, "SingleDestinationAddress");
++		assertNotNull(clazz);
++		Collection<Comment> cmts = clazz.getComments();
++		assertEquals(1, cmts.size());
++		SourceAnchor anc = cmts.iterator().next().getSourceAnchor();
++		assertEquals(6, ((FileAnchor)anc).getStartLine());
++		assertEquals(10, ((FileAnchor)anc).getEndLine());
++
++		Method meth = TestVerveineUtils.detectElement(repo, Method.class, "equalsSingle");
++		assertNotNull(meth);
++		cmts = meth.getComments();
++		assertEquals(1, cmts.size());
++		anc = cmts.iterator().next().getSourceAnchor();
++		assertEquals(31, ((FileAnchor)anc).getStartLine());
++		assertEquals(34, ((FileAnchor)anc).getEndLine());
++
++	}
++	
++
++	@Test
+ 	public void testMetric() {	
+ 		for (Method m : TestVerveineUtils.listElements(repo, Method.class, "accept")) {
+ 			assertNotNull(m);
+Index: verveine.extractor.java/src/fr/inria/verveine/extractor/java/VerveineDefVisitor.java
+===================================================================
+--- verveine.extractor.java/src/fr/inria/verveine/extractor/java/VerveineDefVisitor.java	(revision 15)
++++ verveine.extractor.java/src/fr/inria/verveine/extractor/java/VerveineDefVisitor.java	(revision 16)
+@@ -27,7 +27,6 @@
+ import org.eclipse.jdt.core.dom.SwitchCase;
+ import org.eclipse.jdt.core.dom.SwitchStatement;
+ import org.eclipse.jdt.core.dom.SynchronizedStatement;
+-import org.eclipse.jdt.core.dom.TagElement;
+ import org.eclipse.jdt.core.dom.ThrowStatement;
+ import org.eclipse.jdt.core.dom.TryStatement;
+ import org.eclipse.jdt.core.dom.Type;
+@@ -39,6 +38,7 @@
+ 
+ import fr.inria.verveine.core.EntityStack;
+ import fr.inria.verveine.core.gen.famix.Attribute;
++import fr.inria.verveine.core.gen.famix.Comment;
+ import fr.inria.verveine.core.gen.famix.LocalVariable;
+ import fr.inria.verveine.core.gen.famix.Method;
+ import fr.inria.verveine.core.gen.famix.Namespace;
+@@ -109,9 +109,10 @@
+ 			fmx.setContainer( context.top());
+ 		}
+ 		dico.addSourceAnchor(fmx, node);
+-		if (context.getLastComment() != null) {
+-			dico.createFamixComment(context.getLastComment(), fmx);
+-			context.clearLastComment();
++		Javadoc jdoc = node.getJavadoc();
++		if (jdoc != null) {
++			Comment cmt = dico.createFamixComment(jdoc.toString(), fmx);
++			dico.addSourceAnchor(cmt, jdoc);
+ 		}
+ 		this.context.pushClass(fmx);
+ 		return super.visit(node);
+@@ -172,9 +173,10 @@
+ 			}
+ 			
+ 			dico.addSourceAnchor(fmx, node);
+-			if (context.getLastComment() != null) {
+-				dico.createFamixComment(context.getLastComment(), fmx);
+-				context.clearLastComment();
++			Javadoc jdoc = node.getJavadoc();
++			if (jdoc != null) {
++				Comment cmt = dico.createFamixComment(jdoc.toString(), fmx);
++				dico.addSourceAnchor(cmt, jdoc);
+ 			}
+ 			this.context.pushMethod(fmx);
+ 			if (node.getBody() != null) {
+@@ -212,9 +214,10 @@
+ 			}
+ 			
+ 			dico.addSourceAnchor(fmx, node);
+-			if (context.getLastComment() != null) {
+-				dico.createFamixComment(context.getLastComment(), fmx);
+-				context.clearLastComment();
++			Javadoc jdoc = node.getJavadoc();
++			if (jdoc != null) {
++				Comment cmt = dico.createFamixComment(jdoc.toString(), fmx);
++				dico.addSourceAnchor(cmt, jdoc);
+ 			}
+ 		}
+ 		return super.visit(node);
+@@ -256,18 +259,6 @@
+ 		}
+ 	}
+ 
+-	@Override
+-	@SuppressWarnings("unchecked")
+-	public boolean visit(Javadoc node) {
+-		String comment = "/** ";
+-		for (TagElement tag : (List<TagElement>)node.tags()) {
+-			comment += tag.toString();
+-		}
+-		comment += "\n */";
+-		this.context.setLastComment(comment);
+-		return super.visit(node);
+-	}
+-
+ 
+ 	// METRICS: CYCLO, NOS
+ 	

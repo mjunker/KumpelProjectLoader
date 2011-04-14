@@ -1,0 +1,169 @@
+Index: verveine.extractor.java/lib/verveine.extractor.java.jar
+===================================================================
+Cannot display: file marked as a binary type.
+svn:mime-type = application/octet-stream
+Index: verveine.extractor.java/src/fr/inria/verveine/extractor/java/VerveineVisitor.java
+===================================================================
+--- verveine.extractor.java/src/fr/inria/verveine/extractor/java/VerveineVisitor.java	(revision 121)
++++ verveine.extractor.java/src/fr/inria/verveine/extractor/java/VerveineVisitor.java	(revision 122)
+@@ -512,12 +512,7 @@
+ 		Method invoked = this.dico.ensureFamixMethod(node.resolveConstructorBinding(), name, (Collection<org.eclipse.jdt.core.dom.Type>)null, /*retType*/null, /*owner*/context.topClass());  // cast needed to desambiguate the call
+ 		ImplicitVariable receiver = dico.ensureFamixImplicitVariable(Dictionary.SELF_NAME, context.topClass(), context.topMethod());
+ 		Invocation invok = dico.addFamixInvocation(context.topMethod(), invoked, receiver, context.getLastInvocation());
+-		if (invok == null) {
+-			System.err.println("Could not create invocation:'"+context.topMethod()+"' / '"+receiver+"' / '"+invoked+"'");
+-		}
+-		else {
+-			context.setLastInvocation( invok );
+-		}
++		context.setLastInvocation( invok );
+ 
+ 		return super.visit(node);
+ 	}
+@@ -529,12 +524,7 @@
+ 		Method invoked = this.dico.ensureFamixMethod(node.resolveConstructorBinding(), null, (Collection<org.eclipse.jdt.core.dom.Type>)null, /*retType*/null, /*owner*/context.topClass());  // cast needed to desambiguate the call
+ 		ImplicitVariable receiver = dico.ensureFamixImplicitVariable(Dictionary.SUPER_NAME, context.topClass(), context.topMethod());
+ 		Invocation invok = dico.addFamixInvocation(context.topMethod(), invoked, receiver, context.getLastInvocation());
+-		if (invok == null) {
+-			System.err.println("Could not create invocation:'"+context.topMethod()+"' / '"+receiver+"' / '"+invoked+"'");
+-		}
+-		else {
+-			context.setLastInvocation( invok );
+-		}
++		context.setLastInvocation( invok );
+ 
+ 		return super.visit(node);
+ 	}
+@@ -558,12 +548,7 @@
+ 				invoked = this.dico.ensureFamixMethod(calledBnd, calledName, (Collection<org.eclipse.jdt.core.dom.Type>)null, /*retType*/null, /*owner*/(fr.inria.verveine.core.gen.famix.Type)receiver);  // cast needed to desambiguate the call
+ 			}
+ 			Invocation invok = dico.addFamixInvocation(sender, invoked, receiver, context.getLastInvocation());
+-			if (invok == null) {
+-				System.err.println("Could not create invocation:'"+sender+"' / '"+receiver+"' / '"+invoked+"'");
+-			}
+-			else {
+-				context.setLastInvocation( invok );
+-			}
++			context.setLastInvocation( invok );
+ 		}
+ 	}
+ 
+Index: verveine.extractor.java/lib/verveine.core.jar
+===================================================================
+Cannot display: file marked as a binary type.
+svn:mime-type = application/octet-stream
+Index: verveine.extractor.java/src/fr/inria/verveine/extractor/java/VerveineRefVisitor.java
+===================================================================
+--- verveine.extractor.java/src/fr/inria/verveine/extractor/java/VerveineRefVisitor.java	(revision 54)
++++ verveine.extractor.java/src/fr/inria/verveine/extractor/java/VerveineRefVisitor.java	(revision 55)
+@@ -136,6 +136,9 @@
+ 	@SuppressWarnings("unchecked")
+ 	public boolean visit(MethodDeclaration node) {
+ 		Method meth = dico.ensureFamixMethod(node.resolveBinding());
++		if (meth == null) {
++			meth = dico.ensureFamixMethod(node, context.topClass());
++		}
+ 		this.context.pushMethod(meth);
+ 		for (Name excepName : (List<Name>)node.thrownExceptions()) {
+ 			fr.inria.verveine.core.gen.famix.Class excepFmx = this.dico.ensureFamixClass(excepName.resolveTypeBinding());
+@@ -155,14 +158,13 @@
+ 	}
+ 
+ 	public boolean visit(MethodInvocation node) {
+-		methodInvocation(node.resolveMethodBinding(), node.getName().getFullyQualifiedName(), getReceiver(node.getExpression()));
+-
++		methodInvocation(node.resolveMethodBinding(), node.getName().getFullyQualifiedName(), getReceiver(node.getExpression()), node.arguments().size());
+ 		return super.visit(node);
+ 	}
+ 
+ 	@SuppressWarnings("static-access")
+ 	public boolean visit(SuperMethodInvocation node) {
+-		methodInvocation(node.resolveMethodBinding(), node.getName().getFullyQualifiedName(), this.dico.ensureFamixImplicitVariable(this.context.topClass(), dico.SUPER_NAME));
++		methodInvocation(node.resolveMethodBinding(), node.getName().getFullyQualifiedName(), this.dico.ensureFamixImplicitVariable(this.context.topClass(), dico.SUPER_NAME), node.arguments().size());
+ 		return super.visit(node);
+ 	}
+ 
+@@ -394,11 +396,18 @@
+ 	 * @param name of the method invoked
+ 	 * @param receiver of the call, i.e. the object to which the message is sent
+ 	 */
+-	private void methodInvocation(IMethodBinding bnd, String name, NamedEntity receiver) {
++	private void methodInvocation(IMethodBinding bnd, String name, NamedEntity receiver, int numberOfArguments) {
+ 		BehaviouralEntity sender = this.context.topMethod();
+ 		if (sender != null) {
+ 			Method invoked = this.dico.ensureFamixMethod(bnd);
+ 			if (invoked == null) {
++				if (receiver != null && receiver.getName().equals("self")) {
++					receiver = this.context.topClass();
++				}
++				invoked = this.dico.ensureFamixMethod(name, receiver, numberOfArguments);
++				//invoked = this.dico.ensureFamixStubMethod(name);
++			}
++			if (invoked == null) {
+ 				invoked = this.dico.ensureFamixStubMethod(name);
+ 			}
+ 			context.setLastInvocation( dico.ensureFamixInvocation(sender, invoked, receiver, context.getLastInvocation()) );
+Index: verveine.extractor.java/.classpath
+===================================================================
+--- verveine.extractor.java/.classpath	(revision 18)
++++ verveine.extractor.java/.classpath	(revision 19)
+@@ -13,7 +13,7 @@
+ 	<classpathentry kind="var" path="ECLIPSE_HOME/plugins/org.junit_4.8.1.v4_8_1_v20100427-1100/junit.jar"/>
+ 	<classpathentry kind="var" path="ECLIPSE_HOME/plugins/org.hamcrest.core_1.1.0.v20090501071000.jar"/>
+ 	<classpathentry kind="lib" path="lib/fame.jar"/>
+-	<classpathentry kind="lib" path="lib/verveine.core.jar" sourcepath="/verveine.core"/>
+-	<classpathentry kind="lib" path="lib/famix.jar" sourcepath="/verveine.core"/>
++	<classpathentry kind="lib" path="lib/famix.jar"/>
++	<classpathentry kind="lib" path="lib/verveine.core.jar"/>
+ 	<classpathentry kind="output" path="bin"/>
+ </classpath>
+Index: verveine.extractor.java/lib/verveine.core.jar
+===================================================================
+Cannot display: file marked as a binary type.
+svn:mime-type = application/octet-stream
+Index: verveine.extractor.java/lib/verveine.extractor.java.jar
+===================================================================
+Cannot display: file marked as a binary type.
+svn:mime-type = application/octet-stream
+Index: verveine.extractor.java/src/fr/inria/verveine/extractor/java/JavaDictionary.java
+===================================================================
+--- verveine.extractor.java/src/fr/inria/verveine/extractor/java/JavaDictionary.java	(revision 18)
++++ verveine.extractor.java/src/fr/inria/verveine/extractor/java/JavaDictionary.java	(revision 19)
+@@ -637,7 +637,16 @@
+ 	public fr.inria.verveine.core.gen.famix.Class ensureFamixClassObject(ITypeBinding bnd) {
+ 		fr.inria.verveine.core.gen.famix.Class fmx =  ensureFamixUniqEntity(fr.inria.verveine.core.gen.famix.Class.class, bnd, OBJECT_NAME);
+ 		
+-		fmx.setContainer( ensureFamixNamespaceJavaLang(null));
++		if (fmx != null) {
++			fmx.setContainer( ensureFamixNamespaceJavaLang(null));
++			
++			fmx.setIsAbstract(Boolean.FALSE);
++			fmx.setIsFinal(Boolean.FALSE);
++			fmx.setIsInterface(Boolean.FALSE);
++			fmx.setIsPrivate(Boolean.FALSE);
++			fmx.setIsProtected(Boolean.FALSE);
++			fmx.setIsPublic(Boolean.TRUE);
++		}
+ 		// Note: "Object" has no superclass
+ 
+ 		return fmx;
+@@ -662,8 +671,17 @@
+ 	 */
+ 	public fr.inria.verveine.core.gen.famix.Class ensureFamixClassArray() {
+ 		fr.inria.verveine.core.gen.famix.Class fmx = ensureFamixUniqEntity(fr.inria.verveine.core.gen.famix.Class.class, null, ARRAYS_NAME);
+-		ensureFamixInheritance(ensureFamixClassObject(null), fmx);
+-		fmx.setContainer( ensureFamixNamespaceDefault());
++		if (fmx != null) {
++			ensureFamixInheritance(ensureFamixClassObject(null), fmx);
++			fmx.setContainer( ensureFamixNamespaceDefault());
++			
++			fmx.setIsAbstract(Boolean.FALSE);
++			fmx.setIsFinal(Boolean.FALSE);
++			fmx.setIsInterface(Boolean.FALSE);
++			fmx.setIsPrivate(Boolean.FALSE);
++			fmx.setIsProtected(Boolean.FALSE);
++			fmx.setIsPublic(Boolean.TRUE);
++		}
+ 
+ 		return fmx;
+ 	}

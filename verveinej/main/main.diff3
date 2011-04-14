@@ -1,0 +1,362 @@
+Index: verveine.core/.classpath
+===================================================================
+--- verveine.core/.classpath	(revision 118)
++++ verveine.core/.classpath	(revision 119)
+@@ -4,6 +4,6 @@
+ 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+ 	<classpathentry kind="lib" path="lib/akuhn-util-r28011.jar"/>
+ 	<classpathentry kind="lib" path="lib/fame.jar" sourcepath="/Fame/src"/>
+-	<classpathentry combineaccessrules="false" kind="src" path="/org.eclipse.jdt.core"/>
++	<classpathentry kind="lib" path="lib/org.eclipse.jdt.core_3.6.0.v_A58.jar"/>
+ 	<classpathentry kind="output" path="bin"/>
+ </classpath>
+Index: verveine.core/lib/famix.jar
+===================================================================
+Cannot display: file marked as a binary type.
+svn:mime-type = application/octet-stream
+Index: verveine.core/lib/verveine.core.jar
+===================================================================
+Cannot display: file marked as a binary type.
+svn:mime-type = application/octet-stream
+Index: verveine.core/src/fr/inria/verveine/core/Dictionary.java
+===================================================================
+--- verveine.core/src/fr/inria/verveine/core/Dictionary.java	(revision 118)
++++ verveine.core/src/fr/inria/verveine/core/Dictionary.java	(revision 119)
+@@ -345,8 +345,8 @@
+ 		AnnotationInstance inst = null;
+ 		if ( (fmx != null) && (annType != null) ) {
+ 			inst = new AnnotationInstance();
+-			inst.setAnnotationType(annType);
+ 			inst.setAnnotatedEntity(fmx);
++			inst.setAnnotationType(annType);
+ 			inst.addAttributes(annAtts);
+ 			this.famixRepo.add(inst);
+ 		}
+Index: verveine.core/src/fr/inria/verveine/core/gen/famix/EnumValue.java
+===================================================================
+--- verveine.core/src/fr/inria/verveine/core/gen/famix/EnumValue.java	(revision 118)
++++ verveine.core/src/fr/inria/verveine/core/gen/famix/EnumValue.java	(revision 119)
+@@ -19,6 +19,11 @@
+         return parentEnum;
+     }
+ 
++    @Override
++	public ContainerEntity getBelongsTo() {
++		return getParentEnum();
++	}
++
+     public void setParentEnum(Enum parentEnum) {
+         if (this.parentEnum != null) {
+             if (this.parentEnum.equals(parentEnum)) return;
+Index: verveine.extractor.java/.classpath
+===================================================================
+--- verveine.extractor.java/.classpath	(revision 118)
++++ verveine.extractor.java/.classpath	(revision 119)
+@@ -9,10 +9,10 @@
+ 	<classpathentry kind="lib" path="lib/org.eclipse.osgi_3.6.0.v20100517.jar"/>
+ 	<classpathentry kind="lib" path="lib/org.eclipse.equinox.common_3.6.0.v20100503.jar"/>
+ 	<classpathentry kind="lib" path="lib/org.eclipse.equinox.preferences_3.3.0.v20100503.jar"/>
+-	<classpathentry kind="lib" path="lib/fame.jar" sourcepath="/Fame/"/>
+ 	<classpathentry combineaccessrules="false" kind="src" path="/verveine.core"/>
+ 	<classpathentry kind="lib" path="lib/org.hamcrest.core_1.1.0.v20090501071000.jar"/>
+ 	<classpathentry kind="lib" path="lib/junit.jar"/>
+-	<classpathentry combineaccessrules="false" kind="src" path="/org.eclipse.jdt.core"/>
++	<classpathentry kind="lib" path="lib/fame.jar"/>
++	<classpathentry kind="lib" path="lib/org.eclipse.jdt.core_3.6.0.v_A58.jar"/>
+ 	<classpathentry kind="output" path="bin"/>
+ </classpath>
+Index: verveine.extractor.java/test_src/ad_hoc/Card.java
+===================================================================
+--- verveine.extractor.java/test_src/ad_hoc/Card.java	(revision 118)
++++ verveine.extractor.java/test_src/ad_hoc/Card.java	(revision 119)
+@@ -2,10 +2,10 @@
+ 
+ import java.util.ArrayList;
+ import java.util.List;
+-/*
+-public class Card {
++
++public enum Suit { CLUBS, DIAMONDS, HEARTS, SPADES };
+ 
+-	public enum Suit { CLUBS, DIAMONDS, HEARTS, SPADES };
++public class Card {
+ 
+ 	public enum Rank { DEUCE, THREE, FOUR, FIVE, SIX,
+         SEVEN, EIGHT, NINE, TEN, JACK, QUEEN, KING, ACE }
+@@ -22,7 +22,7 @@
+     public String toString() { return rank + " of " + suit; }
+ 
+     private static final List<Card> protoDeck = new ArrayList<Card>();
+-
++/*
+     // Initialize prototype deck
+     static {
+         for (Suit s : Suit.values())
+@@ -33,9 +33,9 @@
+             	protoDeck.add(new Card(r, s));
+             }
+     }
+-
++*/
+     public static ArrayList<Card> newDeck() {
+         return new ArrayList<Card>(protoDeck); // Return copy of prototype deck
+     }
+- */
++
+ }
+Index: verveine.extractor.java/test_src/ad_hoc/Element.java
+===================================================================
+--- verveine.extractor.java/test_src/ad_hoc/Element.java	(revision 118)
++++ verveine.extractor.java/test_src/ad_hoc/Element.java	(revision 119)
+@@ -18,31 +18,10 @@
+ 
+ package ad_hoc;
+ 
++import ad_hoc.FameProperty;
+ /**
+  * Abstract superclass of MSE metamodel.
+- * 
+- * This is an abstract class with attributes </p>
+- * <ul>
+- * <li>Element <code>owner</code> (derived)</li>
+- * <li>String <code>fullname</code> (derived)</li>
+- * <li>String <code>name</code></li>
+- * </ul>
+- * <p>
+- * with these constraints
+- * </p>
+- * <ul>
+- * <li> <code>name</code> must be alphanumeric</li>
+- * <li> <code>fullname</code> is derived recursively, concatenating
+- * <code>owner.fullname</code> and <code>name</code></li>
+- * <li> <code>fullname</code> is separated by dots, eg
+- * <code>MSE.Class.attributes</code></li>
+- * </ul>
+- * 
+- * @author Adrian Kuhn
+- * 
+  */
+-@FamePackage("FM3")
+-@FameDescription("Element")
+ public abstract class Element {
+ 
+     private String name;
+Index: verveine.extractor.java/src/tests/fr/inria/verveine/extractor/java/VerveineJTest_AdHoc.java
+===================================================================
+--- verveine.extractor.java/src/tests/fr/inria/verveine/extractor/java/VerveineJTest_AdHoc.java	(revision 118)
++++ verveine.extractor.java/src/tests/fr/inria/verveine/extractor/java/VerveineJTest_AdHoc.java	(revision 119)
+@@ -99,39 +99,16 @@
+ 	
+ 	@Test
+ 	public void testAnnotation() {
+-		Collection<AnnotationType> l_FmProp = TestVerveineUtils.listElements(repo,AnnotationType.class, "FameProperty");
+-		assertEquals(1, l_FmProp.size());
+-
+-		AnnotationType fmProp = l_FmProp.iterator().next();
++		AnnotationType fmProp = TestVerveineUtils.detectElement(repo,AnnotationType.class, "FameProperty");
+ 		assertNotNull(fmProp);
+ 		assertEquals("FameProperty", fmProp.getName());
+ 		// FIXME assertFalse(fmProp.getIsStub());
+-		
+-		AnnotationType fmPckg = TestVerveineUtils.detectElement(repo,AnnotationType.class, "FamePackage");
+-		assertNotNull(fmPckg);
+-		assertEquals("FamePackage", fmPckg.getName());
+-		assertTrue(fmPckg.getIsStub());
+-		
+-		AnnotationType fmDesc = TestVerveineUtils.detectElement(repo,AnnotationType.class, "FameDescription");
+-		assertNotNull(fmDesc);
+-		assertEquals("FameDescription", fmDesc.getName());
+-		assertTrue(fmDesc.getIsStub());
+ 
+-		// class annotations 
+ 		fr.inria.verveine.core.gen.famix.Class clazz = TestVerveineUtils.detectElement(repo,fr.inria.verveine.core.gen.famix.Class.class, "Element");
+ 		assertNotNull(clazz);
+-		Collection<AnnotationInstance> annInstances = clazz.getAnnotationInstances();
+-		assertEquals(2, annInstances.size());
+-		for (AnnotationInstance annotationInstance : annInstances) {
+-			assertSame(clazz, annotationInstance.getAnnotatedEntity());
+-			if (annotationInstance.getAnnotationType().getName().equals("FamePackage")) {
+-				assertSame(fmPckg, annotationInstance.getAnnotationType());
+-			} else {
+-				assertEquals("FameDescription", annotationInstance.getAnnotationType().getName());
+-				assertSame(fmDesc, annotationInstance.getAnnotationType());
+-			}
+-		}
++		assertEquals(3, fmProp.getInstances().size());
+ 
++		assertEquals(5, fmProp.getAttributes().size());
+ 		AnnotationTypeAttribute decl = null;
+ 		for (AnnotationTypeAttribute a : TestVerveineUtils.listElements(repo, AnnotationTypeAttribute.class, "derived")) {
+ 			if (a.getParentAnnotationType() == fmProp) {
+@@ -139,11 +116,11 @@
+ 				break;
+ 			}
+ 		}
+-		assertNotNull(decl);
++		assertNotNull("FameProperty missing AnnotationTypeAttribute: derived", decl);
+ 		
+ 		// Method annotations
+ 		for (Method meth : clazz.getMethods()) {
+-			annInstances = meth.getAnnotationInstances();
++			Collection<AnnotationInstance> annInstances = meth.getAnnotationInstances();
+ 			if (meth.getName().equals("getFullname") || meth.getName().equals("getName") || meth.getName().equals("getOwner")) {
+ 				assertEquals(1, annInstances.size());
+ 				AnnotationInstance annInst = annInstances.iterator().next();
+@@ -357,29 +334,47 @@
+ 
+ 	@Test
+ 	public void testEnumDecl() {
++		fr.inria.verveine.core.gen.famix.Class card = TestVerveineUtils.detectElement(repo, fr.inria.verveine.core.gen.famix.Class.class, "Card");
++		assertNotNull(card);
++
+ 		fr.inria.verveine.core.gen.famix.Enum rk = TestVerveineUtils.detectElement(repo, fr.inria.verveine.core.gen.famix.Enum.class, "Rank");
+ 		assertNotNull(rk);
+ 		assertEquals("Rank", rk.getName());
+-		//assertEquals(13, card.getValues().size());
+-		assertSame(TestVerveineUtils.detectElement(repo, fr.inria.verveine.core.gen.famix.Class.class, "Card"), rk.getBelongsTo());
++		assertEquals(13, rk.getValues().size());
++		assertSame(card, rk.getBelongsTo());
+ 
+ 		EnumValue nine = TestVerveineUtils.detectElement(repo, EnumValue.class, "NINE");
+ 		assertNotNull(nine);
+ 		assertEquals("NINE", nine.getName());
+ 		assertSame(rk, nine.getParentEnum());
+-		assertSame(rk, nine.getBelongsTo());
+ 
+ 		fr.inria.verveine.core.gen.famix.Enum st = TestVerveineUtils.detectElement(repo, fr.inria.verveine.core.gen.famix.Enum.class, "Suit");
+ 		assertNotNull(st);
+ 		assertEquals("Suit", st.getName());
+-		//assertEquals(4, card.getValues().size());
++		assertEquals(4, st.getValues().size());
+ 		assertSame(TestVerveineUtils.detectElement(repo, Namespace.class, "ad_hoc"), st.getBelongsTo());
+ 
+ 		EnumValue hrt = TestVerveineUtils.detectElement(repo, EnumValue.class, "HEARTS");
+ 		assertNotNull(hrt);
+ 		assertEquals("HEARTS", hrt.getName());
+ 		assertSame(st, hrt.getParentEnum());
+-		assertSame(st, hrt.getBelongsTo());
++
++		assertEquals(3, card.getAttributes().size());
++		for (Attribute a : card.getAttributes()) {
++			if (a.getName().equals("rank")) {
++				assertEquals(rk, a.getDeclaredType());
++			}
++			else if (a.getName().equals("suit")) {
++				assertEquals(st, a.getDeclaredType());
++			}
++			else {
++				assertEquals("protoDeck", a.getName());
++			}
++		}
+ 	}
+ 
++	@Test
++	public void testStaticInitializationBlock() {
++		fail("must test static initialization block in Card.java");
++	}
+ }
+\ No newline at end of file
+Index: verveine.extractor.java/src/fr/inria/verveine/extractor/java/VerveineVisitor.java
+===================================================================
+--- verveine.extractor.java/src/fr/inria/verveine/extractor/java/VerveineVisitor.java	(revision 118)
++++ verveine.extractor.java/src/fr/inria/verveine/extractor/java/VerveineVisitor.java	(revision 119)
+@@ -687,8 +687,6 @@
+ 		return super.visit(node);
+ 	}
+ 
+-	
+-
+ 	/**
+ 	 * Finds and/or create the Famix Entity receiving a message
+ 	 * Can be: ImplicitVariable (this, super), GlobalVariable, LocalVariable, Attribute, UnknownVariable, Parameter
+Index: verveine.core/src/fr/inria/verveine/core/gen/famix/Method.java
+===================================================================
+--- verveine.core/src/fr/inria/verveine/core/gen/famix/Method.java	(revision 65)
++++ verveine.core/src/fr/inria/verveine/core/gen/famix/Method.java	(revision 66)
+@@ -3,6 +3,7 @@
+ 
+ import ch.akuhn.fame.internal.MultivalueSet;
+ import java.util.*;
++
+ import ch.akuhn.fame.FameProperty;
+ import ch.akuhn.fame.FameDescription;
+ import ch.akuhn.fame.FamePackage;
+@@ -215,7 +216,14 @@
+         parentType.getMethods().add(this);
+     }
+     
+-
+-
+-}
++    private Collection<Type> declaredArgumentTypes;
++    
++    @FameProperty(name = "declaredArgumentTypes")
++    public Collection<Type> getDeclaredArgumentTypes() {
++        return declaredArgumentTypes;
++    }
+ 
++    public void setDeclaredArgumentTypes(Collection<Type> declaredArgumentTypes) {
++        this.declaredArgumentTypes = declaredArgumentTypes;
++    }
++}
+\ No newline at end of file
+Index: verveine.core/lib/verveine.core.jar
+===================================================================
+Cannot display: file marked as a binary type.
+svn:mime-type = application/octet-stream
+Index: verveine.extractor.java/lib/verveine.extractor.java.jar
+===================================================================
+Cannot display: file marked as a binary type.
+svn:mime-type = application/octet-stream
+Index: verveine.extractor.java/src/tests/fr/inria/verveine/extractor/java/VerveineExtractorJavaTest.java
+===================================================================
+--- verveine.extractor.java/src/tests/fr/inria/verveine/extractor/java/VerveineExtractorJavaTest.java	(revision 10)
++++ verveine.extractor.java/src/tests/fr/inria/verveine/extractor/java/VerveineExtractorJavaTest.java	(revision 11)
+@@ -367,6 +367,7 @@
+ 		assertSame(FileAnchor.class, anc.getClass());
+ 		assertTrue("Wrong file source for class XPrinter", ((FileAnchor)anc).getFileName().endsWith("moose/lan/server/PrintServer.java"));
+ 		assertEquals(17, ((FileAnchor)anc).getStartLine());
++		assertEquals(31, ((FileAnchor)anc).getEndLine());
+ 		
+ 		Method meth = TestVerveineUtils.detectElement(repo, Method.class, "equalsMultiple");
+ 		assertNotNull(meth);
+@@ -377,6 +378,7 @@
+ 		assertSame(FileAnchor.class, anc.getClass());
+ 		assertTrue("Wrong file source for method SingleDestinationAddress.equalsMultiple()", ((FileAnchor)anc).getFileName().endsWith("moose/lan/SingleDestinationAddress.java"));
+ 		assertEquals(39, ((FileAnchor)anc).getStartLine());
++		assertEquals(41, ((FileAnchor)anc).getEndLine());
+ 		
+ 		Attribute att = TestVerveineUtils.detectElement(repo, Attribute.class, "originator");
+ 		assertNotNull(meth);
+@@ -387,6 +389,7 @@
+ 		assertSame(FileAnchor.class, anc.getClass());
+ 		assertTrue("Wrong file source for field Packet.originator", ((FileAnchor)anc).getFileName().endsWith("moose/lan/Packet.java"));
+ 		assertEquals(15, ((FileAnchor)anc).getStartLine());
++		assertEquals(15, ((FileAnchor)anc).getEndLine());
+ 		
+ 	}
+ 
+Index: verveine.extractor.java/src/fr/inria/verveine/extractor/java/JavaDictionary.java
+===================================================================
+--- verveine.extractor.java/src/fr/inria/verveine/extractor/java/JavaDictionary.java	(revision 10)
++++ verveine.extractor.java/src/fr/inria/verveine/extractor/java/JavaDictionary.java	(revision 11)
+@@ -575,7 +575,8 @@
+ 		
+ 		if ( (fmx != null) && (ast != null) ) {
+ 			// position in source file
+-			int pos = ast.getStartPosition();
++			int beg = ast.getStartPosition();
++			int end = beg + ast.getLength();
+ 			// find source file
+ 			while ( ! (ast instanceof CompilationUnit) ) {
+ 				ASTNode tmp = ast.getParent();
+@@ -590,7 +591,8 @@
+ 			// now create the Famix SourceAnchor
+ 			fa = new FileAnchor();
+ 			fa.setFileName((String) ((CompilationUnit)ast).getProperty(SOURCE_FILENAME_PROPERTY));
+-			fa.setStartLine(((CompilationUnit)ast).getLineNumber(pos));
++			fa.setStartLine(((CompilationUnit)ast).getLineNumber(beg));
++			fa.setEndLine(((CompilationUnit)ast).getLineNumber(end));
+ 			fmx.setSourceAnchor(fa);
+ 			famixRepo.add(fa);
+ 		}
