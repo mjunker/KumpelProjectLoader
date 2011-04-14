@@ -1,1625 +1,0 @@
-Index: verveine.core/.classpath
-===================================================================
---- verveine.core/.classpath	(revision 77)
-+++ verveine.core/.classpath	(revision 78)
-@@ -2,7 +2,8 @@
- <classpath>
- 	<classpathentry kind="src" path="src"/>
- 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
--	<classpathentry kind="lib" path="lib/fame.jar"/>
-+	<classpathentry kind="lib" path="lib/fame.jar" sourcepath="/Fame"/>
- 	<classpathentry kind="lib" path="lib/org.eclipse.jdt.core_3.6.0.v_A58.jar"/>
-+	<classpathentry kind="lib" path="lib/akuhn-util-r28011.jar"/>
- 	<classpathentry kind="output" path="bin"/>
- </classpath>
-Index: verveine.core/mse/famix30_complete.mse
-===================================================================
---- verveine.core/mse/famix30_complete.mse	(revision 77)
-+++ verveine.core/mse/famix30_complete.mse	(revision 78)
-@@ -1,831 +1,987 @@
--(+ ( 	(FM3.Package (id: 1)-		(name 'FAMIX')+		(name 'FILE') 		(classes 			(FM3.Class (id: 2)-				(name 'LocalVariable')+				(name 'FileGroup') 				(package (ref: 1))-				(superclass (ref: 3))-				(attributes-					(FM3.Property (id: 4)-						(name 'parentBehaviouralEntity')-						(class (ref: 2))-						(opposite (ref: 5))-						(type (ref: 6)))))+				(superclass (ref: 3)))+			(FM3.Class (id: 4)+				(name 'Folder')+				(package (ref: 1))+				(superclass (ref: 5)))+			(FM3.Class (id: 6)+				(name 'File')+				(package (ref: 1))+				(superclass (ref: 5))) 			(FM3.Class (id: 7)-				(name 'GlobalVariableGroup')+				(name 'FolderGroup') 				(package (ref: 1))-				(superclass (ref: 8)))-			(FM3.Class (id: 9)-				(name 'SourceAnchor')+				(superclass (ref: 3)))+			(FM3.Class (id: 5)+				(name 'AbstractFile') 				(package (ref: 1))-				(superclass (ref: 10))+				(superclass (ref: 8)) 				(attributes-					(FM3.Property (id: 11)-						(name 'element')-						(class (ref: 9))-						(opposite (ref: 12))-						(type (ref: 13)))))-			(FM3.Class (id: 14)-				(name 'PrimitiveType')-				(package (ref: 1))-				(superclass (ref: 15)))-			(FM3.Class (id: 16)+					(FM3.Property (id: 9)+						(name 'name')+						(class (ref: 5))+						(type (ref: String)))))))+	(FM3.Package (id: 10)+		(name 'FAMIX')+		(classes+			(FM3.Class (id: 11)+				(name 'ClassGroup')+				(package (ref: 10))+				(superclass (ref: 3)))+			(FM3.Class (id: 12) 				(name 'Parameter')-				(package (ref: 1))-				(superclass (ref: 3))+				(package (ref: 10))+				(superclass (ref: 13)) 				(attributes-					(FM3.Property (id: 17)+					(FM3.Property (id: 14) 						(name 'parentBehaviouralEntity')-						(class (ref: 16))-						(opposite (ref: 18))-						(type (ref: 6)))))-			(FM3.Class (id: 10)-				(name 'Entity')-				(package (ref: 1))-				(superclass (ref: Object))+						(class (ref: 12))+						(opposite (ref: 15))+						(type (ref: 16)))))+			(FM3.Class (id: 16)+				(name 'BehaviouralEntity')+				(package (ref: 10))+				(superclass (ref: 17)) 				(attributes-					(FM3.Property (id: 19)-						(name 'annotationInstances')-						(class (ref: 10))+					(FM3.Property (id: 18)+						(name 'declaredType')+						(class (ref: 16))+						(type (ref: 19)))+					(FM3.Property (id: 20)+						(name 'outgoingInvocations')+						(class (ref: 16)) 						(derived true) 						(multivalued true)-						(opposite (ref: 20))-						(type (ref: 21)))))-			(FM3.Class (id: 22)-				(name 'ImplicitVariable')-				(package (ref: 1))-				(superclass (ref: 3))-				(attributes+						(opposite (ref: 21))+						(type (ref: 22))) 					(FM3.Property (id: 23)-						(name 'container')-						(class (ref: 22))-						(type (ref: 15)))))-			(FM3.Class (id: 24)-				(name 'MethodGroup')-				(package (ref: 1))-				(superclass (ref: 8)))-			(FM3.Class (id: 25)-				(name 'Inheritance')-				(package (ref: 1))-				(superclass (ref: 26))-				(attributes+						(name 'signature')+						(class (ref: 16))+						(type (ref: String)))+					(FM3.Property (id: 24)+						(name 'localVariables')+						(class (ref: 16))+						(derived true)+						(multivalued true)+						(opposite (ref: 25))+						(type (ref: 26))) 					(FM3.Property (id: 27)-						(name 'superclass')-						(class (ref: 25))+						(name 'accesses')+						(class (ref: 16))+						(derived true)+						(multivalued true) 						(opposite (ref: 28))-						(type (ref: 15)))-					(FM3.Property (id: 29)-						(name 'subclass')-						(class (ref: 25))-						(opposite (ref: 30))-						(type (ref: 15)))))-			(FM3.Class (id: 3)-				(name 'StructuralEntity')-				(package (ref: 1))-				(superclass (ref: 31))+						(type (ref: 29)))+					(FM3.Property (id: 30)+						(name 'incomingInvocations')+						(class (ref: 16))+						(derived true)+						(multivalued true)+						(opposite (ref: 31))+						(type (ref: 22)))+					(FM3.Property (id: 15)+						(name 'parameters')+						(class (ref: 16))+						(derived true)+						(multivalued true)+						(opposite (ref: 14))+						(type (ref: 12)))))+			(FM3.Class (id: 32)+				(name 'ParameterizableClass')+				(package (ref: 10))+				(superclass (ref: 33)) 				(attributes-					(FM3.Property (id: 32)-						(name 'incomingAccesses')-						(class (ref: 3))+					(FM3.Property (id: 34)+						(name 'parameters')+						(class (ref: 32)) 						(derived true) 						(multivalued true)-						(opposite (ref: 33))-						(type (ref: 34)))-					(FM3.Property (id: 35)-						(name 'declaredType')-						(class (ref: 3))-						(type (ref: 15)))))+						(type (ref: 35))))) 			(FM3.Class (id: 36)-				(name 'Attribute')-				(package (ref: 1))-				(superclass (ref: 3))+				(name 'PrimitiveType')+				(package (ref: 10))+				(superclass (ref: 19)))+			(FM3.Class (id: 8)+				(name 'Entity')+				(package (ref: 10))+				(superclass (ref: Object)) 				(attributes 					(FM3.Property (id: 37)-						(name 'parentType')-						(class (ref: 36))+						(name 'annotationInstances')+						(class (ref: 8))+						(derived true)+						(multivalued true) 						(opposite (ref: 38))-						(type (ref: 15)))-					(FM3.Property (id: 39)-						(name 'hasClassScope')-						(class (ref: 36))-						(type (ref: Boolean)))))+						(type (ref: 39))))) 			(FM3.Class (id: 40)-				(name 'Invocation')-				(package (ref: 1))-				(superclass (ref: 26))+				(name 'Comment')+				(package (ref: 10))+				(superclass (ref: 41)) 				(attributes-					(FM3.Property (id: 41)-						(name 'signature')-						(class (ref: 40))-						(type (ref: String))) 					(FM3.Property (id: 42)-						(name 'receiverSourceCode')+						(name 'content') 						(class (ref: 40)) 						(type (ref: String))) 					(FM3.Property (id: 43)-						(name 'candidates')+						(name 'container') 						(class (ref: 40))-						(multivalued true) 						(opposite (ref: 44))-						(type (ref: 6)))-					(FM3.Property (id: 45)-						(name 'sender')-						(class (ref: 40))-						(opposite (ref: 46))-						(type (ref: 6)))+						(type (ref: 41)))))+			(FM3.Class (id: 35)+				(name 'ParameterType')+				(package (ref: 10))+				(superclass (ref: 19)))+			(FM3.Class (id: 45)+				(name 'NamespaceGroup')+				(package (ref: 10))+				(superclass (ref: 3)))+			(FM3.Class (id: 46)+				(name 'ParameterizedType')+				(package (ref: 10))+				(superclass (ref: 19))+				(attributes 					(FM3.Property (id: 47)-						(name 'receiver')-						(class (ref: 40))-						(opposite (ref: 48))-						(type (ref: 49)))))-			(FM3.Class (id: 50)-				(name 'Reference')-				(package (ref: 1))-				(superclass (ref: 26))+						(name 'arguments')+						(class (ref: 46))+						(multivalued true)+						(type (ref: 19)))+					(FM3.Property (id: 48)+						(name 'parameterizableClass')+						(class (ref: 46))+						(type (ref: 32)))))+			(FM3.Class (id: 49)+				(name 'AnnotationType')+				(package (ref: 10))+				(superclass (ref: 50)) 				(attributes 					(FM3.Property (id: 51)-						(name 'target')-						(class (ref: 50))+						(name 'container')+						(class (ref: 49)) 						(opposite (ref: 52))-						(type (ref: 53)))-					(FM3.Property (id: 54)-						(name 'source')-						(class (ref: 50))-						(opposite (ref: 55))-						(type (ref: 53)))))-			(FM3.Class (id: 56)-				(name 'DeclaredException')-				(package (ref: 1))-				(superclass (ref: 57))-				(attributes-					(FM3.Property (id: 58)-						(name 'definingMethod')-						(class (ref: 56))-						(opposite (ref: 59))-						(type (ref: 60)))))-			(FM3.Class (id: 61)-				(name 'ScopingEntity')-				(package (ref: 1))-				(superclass (ref: 53))-				(attributes-					(FM3.Property (id: 62)-						(name 'functions')-						(class (ref: 61))+						(type (ref: 17)))+					(FM3.Property (id: 53)+						(name 'instances')+						(class (ref: 49)) 						(derived true) 						(multivalued true)-						(opposite (ref: 63))-						(type (ref: 64)))-					(FM3.Property (id: 65)-						(name 'childScopes')-						(class (ref: 61))+						(opposite (ref: 54))+						(type (ref: 39)))+					(FM3.Property (id: 55)+						(name 'attributes')+						(class (ref: 49)) 						(derived true) 						(multivalued true)-						(opposite (ref: 66))-						(type (ref: 61)))-					(FM3.Property (id: 66)-						(name 'parentScope')-						(class (ref: 61))+						(opposite (ref: 56))+						(type (ref: 57)))))+			(FM3.Class (id: 58)+				(name 'Attribute')+				(package (ref: 10))+				(superclass (ref: 13))+				(attributes+					(FM3.Property (id: 59)+						(name 'hasClassScope')+						(class (ref: 58))+						(type (ref: Boolean)))+					(FM3.Property (id: 60)+						(name 'parentType')+						(class (ref: 58))+						(opposite (ref: 61))+						(type (ref: 19)))))+			(FM3.Class (id: 62)+				(name 'DeclaredException')+				(package (ref: 10))+				(superclass (ref: 63))+				(attributes+					(FM3.Property (id: 64)+						(name 'definingMethod')+						(class (ref: 62)) 						(opposite (ref: 65))-						(type (ref: 61)))-					(FM3.Property (id: 67)-						(name 'globalVariables')-						(class (ref: 61))-						(derived true)-						(multivalued true)-						(opposite (ref: 68))-						(type (ref: 69)))))-			(FM3.Class (id: 53)-				(name 'ContainerEntity')-				(package (ref: 1))-				(superclass (ref: 49))+						(type (ref: 66)))))+			(FM3.Class (id: 67)+				(name 'UnknownVariable')+				(package (ref: 10))+				(superclass (ref: 13)))+			(FM3.Class (id: 68)+				(name 'Inheritance')+				(package (ref: 10))+				(superclass (ref: 69)) 				(attributes-					(FM3.Property (id: 52)-						(name 'incomingReferences')-						(class (ref: 53))+					(FM3.Property (id: 70)+						(name 'superclass')+						(class (ref: 68))+						(opposite (ref: 71))+						(type (ref: 19)))+					(FM3.Property (id: 72)+						(name 'subclass')+						(class (ref: 68))+						(opposite (ref: 73))+						(type (ref: 19)))))+			(FM3.Class (id: 69)+				(name 'Association')+				(package (ref: 10))+				(superclass (ref: 41))+				(attributes+					(FM3.Property (id: 74)+						(name 'from')+						(class (ref: 69)) 						(derived true)-						(multivalued true)-						(opposite (ref: 51)) 						(type (ref: 50)))-					(FM3.Property (id: 70)-						(name 'definedAnnotationTypes')-						(class (ref: 53))+					(FM3.Property (id: 75)+						(name 'next')+						(class (ref: 69)) 						(derived true)-						(multivalued true)-						(opposite (ref: 71))-						(type (ref: 72)))-					(FM3.Property (id: 73)-						(name 'types')-						(class (ref: 53))+						(opposite (ref: 76))+						(type (ref: 69)))+					(FM3.Property (id: 77)+						(name 'to')+						(class (ref: 69)) 						(derived true)-						(multivalued true)-						(opposite (ref: 74))-						(type (ref: 15)))-					(FM3.Property (id: 55)-						(name 'outgoingReferences')-						(class (ref: 53))+						(type (ref: 50)))+					(FM3.Property (id: 76)+						(name 'previous')+						(class (ref: 69))+						(opposite (ref: 75))+						(type (ref: 69)))))+			(FM3.Class (id: 13)+				(name 'StructuralEntity')+				(package (ref: 10))+				(superclass (ref: 78))+				(attributes+					(FM3.Property (id: 79)+						(name 'declaredType')+						(class (ref: 13))+						(type (ref: 19)))+					(FM3.Property (id: 80)+						(name 'incomingAccesses')+						(class (ref: 13)) 						(derived true) 						(multivalued true)-						(opposite (ref: 54))-						(type (ref: 50)))))-			(FM3.Class (id: 75)-				(name 'Package')-				(package (ref: 1))-				(superclass (ref: 61))+						(opposite (ref: 81))+						(type (ref: 29)))))+			(FM3.Class (id: 82)+				(name 'SmalltalkSourceLanguage')+				(package (ref: 10))+				(superclass (ref: 83)))+			(FM3.Class (id: 39)+				(name 'AnnotationInstance')+				(package (ref: 10))+				(superclass (ref: 8)) 				(attributes-					(FM3.Property (id: 76)-						(name 'childNamedEntities')-						(class (ref: 75))+					(FM3.Property (id: 84)+						(name 'attributes')+						(class (ref: 39)) 						(derived true) 						(multivalued true)-						(opposite (ref: 77))+						(type (ref: 85)))+					(FM3.Property (id: 38)+						(name 'annotatedEntity')+						(class (ref: 39))+						(opposite (ref: 37))+						(type (ref: 8)))+					(FM3.Property (id: 54)+						(name 'annotationType')+						(class (ref: 39))+						(opposite (ref: 53)) 						(type (ref: 49)))))-			(FM3.Class (id: 78)+			(FM3.Class (id: 86)+				(name 'GlobalVariable')+				(package (ref: 10))+				(superclass (ref: 13))+				(attributes+					(FM3.Property (id: 87)+						(name 'parentScope')+						(class (ref: 86))+						(opposite (ref: 88))+						(type (ref: 89)))+					(FM3.Property (id: 90)+						(name 'parentModule')+						(class (ref: 86))+						(type (ref: 91)))))+			(FM3.Class (id: 63)+				(name 'Exception')+				(package (ref: 10))+				(superclass (ref: 8))+				(attributes+					(FM3.Property (id: 92)+						(name 'exceptionClass')+						(class (ref: 63))+						(type (ref: 33)))))+			(FM3.Class (id: 93)+				(name 'EnumValue')+				(package (ref: 10))+				(superclass (ref: 50))+				(attributes+					(FM3.Property (id: 94)+						(name 'parentEnum')+						(class (ref: 93))+						(type (ref: 95)))))+			(FM3.Class (id: 96) 				(name 'FileAnchor')-				(package (ref: 1))-				(superclass (ref: 9))+				(package (ref: 10))+				(superclass (ref: 97)) 				(attributes-					(FM3.Property (id: 79)-						(name 'endLine')-						(class (ref: 78))-						(type (ref: Number)))-					(FM3.Property (id: 80)+					(FM3.Property (id: 98) 						(name 'fileName')-						(class (ref: 78))+						(class (ref: 96)) 						(type (ref: String)))-					(FM3.Property (id: 81)+					(FM3.Property (id: 99) 						(name 'startLine')-						(class (ref: 78))+						(class (ref: 96))+						(type (ref: Number)))+					(FM3.Property (id: 100)+						(name 'endLine')+						(class (ref: 96)) 						(type (ref: Number)))))-			(FM3.Class (id: 6)-				(name 'BehaviouralEntity')-				(package (ref: 1))-				(superclass (ref: 53))+			(FM3.Class (id: 101)+				(name 'SourceTextAnchor')+				(package (ref: 10))+				(superclass (ref: 97)))+			(FM3.Class (id: 97)+				(name 'SourceAnchor')+				(package (ref: 10))+				(superclass (ref: 8))+				(attributes+					(FM3.Property (id: 102)+						(name 'element')+						(class (ref: 97))+						(opposite (ref: 103))+						(type (ref: 41)))))+			(FM3.Class (id: 57)+				(name 'AnnotationTypeAttribute')+				(package (ref: 10))+				(superclass (ref: 50)) 				(attributes-					(FM3.Property (id: 82)-						(name 'accesses')-						(class (ref: 6))-						(derived true)-						(multivalued true)-						(opposite (ref: 83))-						(type (ref: 34)))-					(FM3.Property (id: 84)-						(name 'declaredType')-						(class (ref: 6))-						(type (ref: 15)))-					(FM3.Property (id: 5)-						(name 'localVariables')-						(class (ref: 6))-						(derived true)-						(multivalued true)-						(opposite (ref: 4))-						(type (ref: 2)))-					(FM3.Property (id: 44)-						(name 'incomingInvocations')-						(class (ref: 6))-						(derived true)-						(multivalued true)-						(opposite (ref: 43))-						(type (ref: 40)))-					(FM3.Property (id: 18)-						(name 'parameters')-						(class (ref: 6))+					(FM3.Property (id: 104)+						(name 'declaredType')+						(class (ref: 57))+						(type (ref: 19)))+					(FM3.Property (id: 56)+						(name 'parentAnnotationType')+						(class (ref: 57))+						(opposite (ref: 55))+						(type (ref: 49)))+					(FM3.Property (id: 105)+						(name 'annotationAttributeInstances')+						(class (ref: 57)) 						(derived true) 						(multivalued true)-						(opposite (ref: 17))+						(type (ref: 85)))))+			(FM3.Class (id: 22)+				(name 'Invocation')+				(package (ref: 10))+				(superclass (ref: 69))+				(attributes+					(FM3.Property (id: 21)+						(name 'sender')+						(class (ref: 22))+						(opposite (ref: 20)) 						(type (ref: 16)))-					(FM3.Property (id: 85)+					(FM3.Property (id: 106) 						(name 'signature')-						(class (ref: 6))+						(class (ref: 22)) 						(type (ref: String)))-					(FM3.Property (id: 46)-						(name 'outgoingInvocations')-						(class (ref: 6))-						(derived true)+					(FM3.Property (id: 107)+						(name 'receiver')+						(class (ref: 22))+						(opposite (ref: 108))+						(type (ref: 50)))+					(FM3.Property (id: 31)+						(name 'candidates')+						(class (ref: 22)) 						(multivalued true)-						(opposite (ref: 45))-						(type (ref: 40)))))-			(FM3.Class (id: 57)-				(name 'Exception')-				(package (ref: 1))-				(superclass (ref: 10))+						(opposite (ref: 30))+						(type (ref: 16)))+					(FM3.Property (id: 109)+						(name 'receiverSourceCode')+						(class (ref: 22))+						(type (ref: String)))))+			(FM3.Class (id: 110)+				(name 'MethodGroup')+				(package (ref: 10))+				(superclass (ref: 3)))+			(FM3.Class (id: 111)+				(name 'Function')+				(package (ref: 10))+				(superclass (ref: 16)) 				(attributes-					(FM3.Property (id: 86)-						(name 'exceptionClass')-						(class (ref: 57))-						(type (ref: 87)))))-			(FM3.Class (id: 15)-				(name 'Type')-				(package (ref: 1))-				(superclass (ref: 53))+					(FM3.Property (id: 112)+						(name 'parentModule')+						(class (ref: 111))+						(type (ref: 91)))+					(FM3.Property (id: 113)+						(name 'parentScope')+						(class (ref: 111))+						(opposite (ref: 114))+						(type (ref: 89)))))+			(FM3.Class (id: 115)+				(name 'JavaSourceLanguage')+				(package (ref: 10))+				(superclass (ref: 83)))+			(FM3.Class (id: 116)+				(name 'CustomSourceLanguage')+				(package (ref: 10))+				(superclass (ref: 83)) 				(attributes-					(FM3.Property (id: 28)-						(name 'subInheritances')-						(class (ref: 15))+					(FM3.Property (id: 117)+						(name 'name')+						(class (ref: 116))+						(type (ref: String)))))+			(FM3.Class (id: 78)+				(name 'LeafEntity')+				(package (ref: 10))+				(superclass (ref: 50)))+			(FM3.Class (id: 91)+				(name 'Module')+				(package (ref: 10))+				(superclass (ref: 89)))+			(FM3.Class (id: 118)+				(name 'Namespace')+				(package (ref: 10))+				(superclass (ref: 89)))+			(FM3.Class (id: 119)+				(name 'PackageGroup')+				(package (ref: 10))+				(superclass (ref: 3)))+			(FM3.Class (id: 50)+				(name 'NamedEntity')+				(package (ref: 10))+				(superclass (ref: 41))+				(attributes+					(FM3.Property (id: 120)+						(name 'isFinal')+						(class (ref: 50))+						(type (ref: Boolean)))+					(FM3.Property (id: 108)+						(name 'receivingInvocations')+						(class (ref: 50)) 						(derived true) 						(multivalued true)-						(opposite (ref: 27))-						(type (ref: 25)))-					(FM3.Property (id: 30)-						(name 'superInheritances')-						(class (ref: 15))-						(derived true)+						(opposite (ref: 107))+						(type (ref: 22)))+					(FM3.Property (id: 121)+						(name 'name')+						(class (ref: 50))+						(type (ref: String)))+					(FM3.Property (id: 122)+						(name 'isPublic')+						(class (ref: 50))+						(type (ref: Boolean)))+					(FM3.Property (id: 123)+						(name 'isProtected')+						(class (ref: 50))+						(type (ref: Boolean)))+					(FM3.Property (id: 124)+						(name 'parentPackage')+						(class (ref: 50))+						(opposite (ref: 125))+						(type (ref: 126)))+					(FM3.Property (id: 127)+						(name 'isStub')+						(class (ref: 50))+						(type (ref: Boolean)))+					(FM3.Property (id: 128)+						(name 'isPrivate')+						(class (ref: 50))+						(type (ref: Boolean)))+					(FM3.Property (id: 129)+						(name 'modifiers')+						(class (ref: 50)) 						(multivalued true)-						(opposite (ref: 29))-						(type (ref: 25)))-					(FM3.Property (id: 38)-						(name 'attributes')-						(class (ref: 15))+						(type (ref: String)))+					(FM3.Property (id: 130)+						(name 'isPackage')+						(class (ref: 50))+						(type (ref: Boolean)))+					(FM3.Property (id: 131)+						(name 'isAbstract')+						(class (ref: 50))+						(type (ref: Boolean)))+					(FM3.Property (id: 132)+						(name 'belongsTo')+						(class (ref: 50)) 						(derived true)-						(multivalued true)-						(opposite (ref: 37))-						(type (ref: 36)))-					(FM3.Property (id: 88)-						(name 'methods')-						(class (ref: 15))+						(type (ref: 17)))))+			(FM3.Class (id: 126)+				(name 'Package')+				(package (ref: 10))+				(superclass (ref: 89))+				(attributes+					(FM3.Property (id: 125)+						(name 'childNamedEntities')+						(class (ref: 126)) 						(derived true) 						(multivalued true)-						(opposite (ref: 89))-						(type (ref: 60)))-					(FM3.Property (id: 74)+						(opposite (ref: 124))+						(type (ref: 50)))))+			(FM3.Class (id: 133)+				(name 'ImplicitVariable')+				(package (ref: 10))+				(superclass (ref: 13))+				(attributes+					(FM3.Property (id: 134) 						(name 'container')-						(class (ref: 15))-						(opposite (ref: 73))-						(type (ref: 53)))))-			(FM3.Class (id: 90)-				(name 'ClassGroup')-				(package (ref: 1))-				(superclass (ref: 8)))-			(FM3.Class (id: 91)-				(name 'Namespace')-				(package (ref: 1))-				(superclass (ref: 61)))-			(FM3.Class (id: 60)+						(class (ref: 133))+						(type (ref: 19)))))+			(FM3.Class (id: 66) 				(name 'Method')-				(package (ref: 1))-				(superclass (ref: 6))+				(package (ref: 10))+				(superclass (ref: 16)) 				(attributes-					(FM3.Property (id: 92)-						(name 'caughtExceptions')-						(class (ref: 60))+					(FM3.Property (id: 135)+						(name 'thrownExceptions')+						(class (ref: 66)) 						(derived true) 						(multivalued true)-						(opposite (ref: 93))-						(type (ref: 94)))-					(FM3.Property (id: 89)-						(name 'parentType')-						(class (ref: 60))-						(opposite (ref: 88))-						(type (ref: 15)))-					(FM3.Property (id: 95)-						(name 'hasClassScope')-						(class (ref: 60))-						(type (ref: Boolean)))-					(FM3.Property (id: 96)+						(opposite (ref: 136))+						(type (ref: 137)))+					(FM3.Property (id: 138) 						(name 'kind')-						(class (ref: 60))+						(class (ref: 66)) 						(type (ref: String)))-					(FM3.Property (id: 59)+					(FM3.Property (id: 139)+						(name 'hasClassScope')+						(class (ref: 66))+						(type (ref: Boolean)))+					(FM3.Property (id: 65) 						(name 'declaredExceptions')-						(class (ref: 60))+						(class (ref: 66)) 						(derived true) 						(multivalued true)-						(opposite (ref: 58))-						(type (ref: 56)))-					(FM3.Property (id: 97)-						(name 'thrownExceptions')-						(class (ref: 60))+						(opposite (ref: 64))+						(type (ref: 62)))+					(FM3.Property (id: 140)+						(name 'caughtExceptions')+						(class (ref: 66)) 						(derived true) 						(multivalued true)-						(opposite (ref: 98))-						(type (ref: 99)))))-			(FM3.Class (id: 100)-				(name 'Comment')-				(package (ref: 1))-				(superclass (ref: 13))-				(attributes-					(FM3.Property (id: 101)-						(name 'container')-						(class (ref: 100))-						(opposite (ref: 102))-						(type (ref: 13)))-					(FM3.Property (id: 103)-						(name 'content')-						(class (ref: 100))-						(type (ref: String)))))-			(FM3.Class (id: 49)-				(name 'NamedEntity')-				(package (ref: 1))-				(superclass (ref: 13))+						(opposite (ref: 141))+						(type (ref: 142)))+					(FM3.Property (id: 143)+						(name 'parentType')+						(class (ref: 66))+						(opposite (ref: 144))+						(type (ref: 19)))))+			(FM3.Class (id: 83)+				(name 'SourceLanguage')+				(package (ref: 10))+				(superclass (ref: 8)) 				(attributes-					(FM3.Property (id: 104)-						(name 'modifiers')-						(class (ref: 49))-						(multivalued true)-						(type (ref: String)))-					(FM3.Property (id: 105)-						(name 'isAbstract')-						(class (ref: 49))-						(type (ref: Boolean)))-					(FM3.Property (id: 106)-						(name 'isPublic')-						(class (ref: 49))-						(type (ref: Boolean)))-					(FM3.Property (id: 107)-						(name 'belongsTo')-						(class (ref: 49))+					(FM3.Property (id: 145)+						(name 'sourcedEntities')+						(class (ref: 83)) 						(derived true)-						(type (ref: 53)))-					(FM3.Property (id: 108)-						(name 'isPrivate')-						(class (ref: 49))-						(type (ref: Boolean)))-					(FM3.Property (id: 109)-						(name 'isPackage')-						(class (ref: 49))-						(type (ref: Boolean)))-					(FM3.Property (id: 110)+						(multivalued true)+						(opposite (ref: 146))+						(type (ref: 41)))+					(FM3.Property (id: 147) 						(name 'name')-						(class (ref: 49))-						(type (ref: String)))-					(FM3.Property (id: 77)-						(name 'parentPackage')-						(class (ref: 49))-						(opposite (ref: 76))-						(type (ref: 75)))-					(FM3.Property (id: 48)-						(name 'receivingInvocations')-						(class (ref: 49))+						(class (ref: 83)) 						(derived true)-						(multivalued true)-						(opposite (ref: 47))-						(type (ref: 40)))-					(FM3.Property (id: 111)-						(name 'isProtected')-						(class (ref: 49))-						(type (ref: Boolean)))-					(FM3.Property (id: 112)-						(name 'isStub')-						(class (ref: 49))+						(type (ref: String)))))+			(FM3.Class (id: 29)+				(name 'Access')+				(package (ref: 10))+				(superclass (ref: 69))+				(attributes+					(FM3.Property (id: 28)+						(name 'accessor')+						(class (ref: 29))+						(opposite (ref: 27))+						(type (ref: 16)))+					(FM3.Property (id: 148)+						(name 'isWrite')+						(class (ref: 29)) 						(type (ref: Boolean)))-					(FM3.Property (id: 113)-						(name 'isFinal')-						(class (ref: 49))+					(FM3.Property (id: 81)+						(name 'variable')+						(class (ref: 29))+						(opposite (ref: 80))+						(type (ref: 13)))+					(FM3.Property (id: 149)+						(name 'isRead')+						(class (ref: 29))+						(derived true) 						(type (ref: Boolean)))))-			(FM3.Class (id: 21)-				(name 'AnnotationInstance')-				(package (ref: 1))-				(superclass (ref: 10))+			(FM3.Class (id: 150)+				(name 'AnnotationTypeGroup')+				(package (ref: 10))+				(superclass (ref: 3)))+			(FM3.Class (id: 89)+				(name 'ScopingEntity')+				(package (ref: 10))+				(superclass (ref: 17)) 				(attributes 					(FM3.Property (id: 114)-						(name 'annotationType')-						(class (ref: 21))-						(opposite (ref: 115))-						(type (ref: 72)))-					(FM3.Property (id: 20)-						(name 'annotatedEntity')-						(class (ref: 21))-						(opposite (ref: 19))-						(type (ref: 10)))))-			(FM3.Class (id: 116)-				(name 'PackageGroup')-				(package (ref: 1))-				(superclass (ref: 8)))-			(FM3.Class (id: 117)-				(name 'NamespaceGroup')-				(package (ref: 1))-				(superclass (ref: 8)))-			(FM3.Class (id: 64)-				(name 'Function')-				(package (ref: 1))-				(superclass (ref: 6))-				(attributes-					(FM3.Property (id: 63)+						(name 'functions')+						(class (ref: 89))+						(derived true)+						(multivalued true)+						(opposite (ref: 113))+						(type (ref: 111)))+					(FM3.Property (id: 151) 						(name 'parentScope')-						(class (ref: 64))-						(opposite (ref: 62))-						(type (ref: 61)))))-			(FM3.Class (id: 13)+						(class (ref: 89))+						(opposite (ref: 152))+						(type (ref: 89)))+					(FM3.Property (id: 88)+						(name 'globalVariables')+						(class (ref: 89))+						(derived true)+						(multivalued true)+						(opposite (ref: 87))+						(type (ref: 86)))+					(FM3.Property (id: 152)+						(name 'childScopes')+						(class (ref: 89))+						(derived true)+						(multivalued true)+						(opposite (ref: 151))+						(type (ref: 89)))))+			(FM3.Class (id: 142)+				(name 'CaughtException')+				(package (ref: 10))+				(superclass (ref: 63))+				(attributes+					(FM3.Property (id: 141)+						(name 'definingMethod')+						(class (ref: 142))+						(opposite (ref: 140))+						(type (ref: 66)))))+			(FM3.Class (id: 41) 				(name 'SourcedEntity')-				(package (ref: 1))-				(superclass (ref: 10))+				(package (ref: 10))+				(superclass (ref: 8)) 				(attributes-					(FM3.Property (id: 12)-						(name 'sourceAnchor')-						(class (ref: 13))-						(opposite (ref: 11))-						(type (ref: 9)))-					(FM3.Property (id: 102)+					(FM3.Property (id: 44) 						(name 'comments')-						(class (ref: 13))+						(class (ref: 41)) 						(derived true) 						(multivalued true)-						(opposite (ref: 101))-						(type (ref: 100)))))-			(FM3.Class (id: 118)-				(name 'UnknownVariable')-				(package (ref: 1))-				(superclass (ref: 3)))-			(FM3.Class (id: 69)-				(name 'GlobalVariable')-				(package (ref: 1))-				(superclass (ref: 3))+						(opposite (ref: 43))+						(type (ref: 40)))+					(FM3.Property (id: 103)+						(name 'sourceAnchor')+						(class (ref: 41))+						(opposite (ref: 102))+						(type (ref: 97)))+					(FM3.Property (id: 146)+						(name 'declaredSourceLanguage')+						(class (ref: 41))+						(opposite (ref: 145))+						(type (ref: 83)))))+			(FM3.Class (id: 137)+				(name 'ThrownException')+				(package (ref: 10))+				(superclass (ref: 63)) 				(attributes-					(FM3.Property (id: 68)-						(name 'parentScope')-						(class (ref: 69))-						(opposite (ref: 67))-						(type (ref: 61)))))-			(FM3.Class (id: 87)-				(name 'Class')-				(package (ref: 1))-				(superclass (ref: 15))+					(FM3.Property (id: 136)+						(name 'definingMethod')+						(class (ref: 137))+						(opposite (ref: 135))+						(type (ref: 66)))))+			(FM3.Class (id: 17)+				(name 'ContainerEntity')+				(package (ref: 10))+				(superclass (ref: 50)) 				(attributes-					(FM3.Property (id: 119)-						(name 'isAbstract')-						(class (ref: 87))+					(FM3.Property (id: 153)+						(name 'types')+						(class (ref: 17)) 						(derived true)-						(type (ref: Boolean)))-					(FM3.Property (id: 120)-						(name 'isInterface')-						(class (ref: 87))-						(type (ref: Boolean)))))-			(FM3.Class (id: 72)-				(name 'AnnotationType')-				(package (ref: 1))-				(superclass (ref: 49))+						(multivalued true)+						(opposite (ref: 154))+						(type (ref: 19)))+					(FM3.Property (id: 155)+						(name 'incomingReferences')+						(class (ref: 17))+						(derived true)+						(multivalued true)+						(opposite (ref: 156))+						(type (ref: 157)))+					(FM3.Property (id: 158)+						(name 'outgoingReferences')+						(class (ref: 17))+						(derived true)+						(multivalued true)+						(opposite (ref: 159))+						(type (ref: 157)))+					(FM3.Property (id: 52)+						(name 'definedAnnotationTypes')+						(class (ref: 17))+						(derived true)+						(multivalued true)+						(opposite (ref: 51))+						(type (ref: 49)))))+			(FM3.Class (id: 95)+				(name 'Enum')+				(package (ref: 10))+				(superclass (ref: 19)))+			(FM3.Class (id: 160)+				(name 'GlobalVariableGroup')+				(package (ref: 10))+				(superclass (ref: 3)))+			(FM3.Class (id: 85)+				(name 'AnnotationInstanceAttribute')+				(package (ref: 10))+				(superclass (ref: 8)))+			(FM3.Class (id: 19)+				(name 'Type')+				(package (ref: 10))+				(superclass (ref: 17)) 				(attributes-					(FM3.Property (id: 71)+					(FM3.Property (id: 61)+						(name 'attributes')+						(class (ref: 19))+						(derived true)+						(multivalued true)+						(opposite (ref: 60))+						(type (ref: 58)))+					(FM3.Property (id: 144)+						(name 'methods')+						(class (ref: 19))+						(derived true)+						(multivalued true)+						(opposite (ref: 143))+						(type (ref: 66)))+					(FM3.Property (id: 154) 						(name 'container')-						(class (ref: 72))-						(opposite (ref: 70))-						(type (ref: 53)))-					(FM3.Property (id: 115)-						(name 'instances')-						(class (ref: 72))+						(class (ref: 19))+						(opposite (ref: 153))+						(type (ref: 17)))+					(FM3.Property (id: 73)+						(name 'superInheritances')+						(class (ref: 19)) 						(derived true) 						(multivalued true)-						(opposite (ref: 114))-						(type (ref: 21)))))-			(FM3.Class (id: 31)-				(name 'LeafEntity')-				(package (ref: 1))-				(superclass (ref: 49)))-			(FM3.Class (id: 94)-				(name 'CaughtException')-				(package (ref: 1))-				(superclass (ref: 57))-				(attributes-					(FM3.Property (id: 93)-						(name 'definingMethod')-						(class (ref: 94))-						(opposite (ref: 92))-						(type (ref: 60)))))-			(FM3.Class (id: 99)-				(name 'ThrownException')-				(package (ref: 1))-				(superclass (ref: 57))-				(attributes-					(FM3.Property (id: 98)-						(name 'definingMethod')-						(class (ref: 99))-						(opposite (ref: 97))-						(type (ref: 60)))))-			(FM3.Class (id: 34)-				(name 'Access')-				(package (ref: 1))-				(superclass (ref: 26))+						(opposite (ref: 72))+						(type (ref: 68)))+					(FM3.Property (id: 71)+						(name 'subInheritances')+						(class (ref: 19))+						(derived true)+						(multivalued true)+						(opposite (ref: 70))+						(type (ref: 68)))))+			(FM3.Class (id: 33)+				(name 'Class')+				(package (ref: 10))+				(superclass (ref: 19)) 				(attributes-					(FM3.Property (id: 121)-						(name 'isRead')-						(class (ref: 34))+					(FM3.Property (id: 161)+						(name 'isAbstract')+						(class (ref: 33)) 						(derived true) 						(type (ref: Boolean)))-					(FM3.Property (id: 122)-						(name 'isWrite')-						(class (ref: 34))-						(type (ref: Boolean)))-					(FM3.Property (id: 83)-						(name 'accessor')-						(class (ref: 34))-						(opposite (ref: 82))-						(type (ref: 6)))-					(FM3.Property (id: 33)-						(name 'variable')-						(class (ref: 34))-						(opposite (ref: 32))-						(type (ref: 3)))))-			(FM3.Class (id: 123)-				(name 'SourceTextAnchor')-				(package (ref: 1))-				(superclass (ref: 9)))+					(FM3.Property (id: 162)+						(name 'isInterface')+						(class (ref: 33))+						(type (ref: Boolean))))) 			(FM3.Class (id: 26)-				(name 'Association')-				(package (ref: 1))+				(name 'LocalVariable')+				(package (ref: 10)) 				(superclass (ref: 13)) 				(attributes-					(FM3.Property (id: 124)-						(name 'previous')-						(class (ref: 26))-						(opposite (ref: 125))-						(type (ref: 26)))-					(FM3.Property (id: 126)-						(name 'to')-						(class (ref: 26))-						(derived true)-						(type (ref: 49)))-					(FM3.Property (id: 127)-						(name 'from')-						(class (ref: 26))-						(derived true)-						(type (ref: 49)))-					(FM3.Property (id: 125)-						(name 'next')+					(FM3.Property (id: 25)+						(name 'parentBehaviouralEntity') 						(class (ref: 26))-						(derived true)-						(opposite (ref: 124))-						(type (ref: 26)))))))-	(FM3.Package (id: 128)-		(name 'FILE')-		(classes-			(FM3.Class (id: 129)-				(name 'FileGroup')-				(package (ref: 128))-				(superclass (ref: 8)))-			(FM3.Class (id: 130)-				(name 'File')-				(package (ref: 128))-				(superclass (ref: 131)))-			(FM3.Class (id: 132)-				(name 'Folder')-				(package (ref: 128))-				(superclass (ref: 131)))-			(FM3.Class (id: 131)-				(name 'AbstractFile')-				(package (ref: 128))-				(superclass (ref: 10))+						(opposite (ref: 24))+						(type (ref: 16)))))+			(FM3.Class (id: 163)+				(name 'UnknownSourceLanguage')+				(package (ref: 10))+				(superclass (ref: 83)))+			(FM3.Class (id: 164)+				(name 'SmalltalkMonticelloSourceLanguage')+				(package (ref: 10))+				(superclass (ref: 83)))+			(FM3.Class (id: 157)+				(name 'Reference')+				(package (ref: 10))+				(superclass (ref: 69)) 				(attributes-					(FM3.Property (id: 133)-						(name 'name')-						(class (ref: 131))-						(type (ref: String)))))-			(FM3.Class (id: 134)-				(name 'FolderGroup')-				(package (ref: 128))-				(superclass (ref: 8)))))-	(FM3.Package (id: 135)+					(FM3.Property (id: 156)+						(name 'target')+						(class (ref: 157))+						(opposite (ref: 155))+						(type (ref: 17)))+					(FM3.Property (id: 159)+						(name 'source')+						(class (ref: 157))+						(opposite (ref: 158))+						(type (ref: 17)))))))+	(FM3.Package (id: 165) 		(name 'Dude') 		(classes-			(FM3.Class (id: 136)-				(name 'CodeFragment')-				(package (ref: 135))-				(superclass (ref: 10)))-			(FM3.Class (id: 137)-				(name 'CodeLine')-				(package (ref: 135))-				(superclass (ref: 10)))-			(FM3.Class (id: 138)-				(name 'Multiplication')-				(package (ref: 135))-				(superclass (ref: 10)))-			(FM3.Class (id: 139)+			(FM3.Class (id: 166) 				(name 'MultiplicationGroup')-				(package (ref: 135))-				(superclass (ref: 8)))-			(FM3.Class (id: 140)+				(package (ref: 165))+				(superclass (ref: 3)))+			(FM3.Class (id: 167) 				(name 'DuplicationGroup')-				(package (ref: 135))+				(package (ref: 165))+				(superclass (ref: 3)))+			(FM3.Class (id: 168)+				(name 'CodeLine')+				(package (ref: 165))+				(superclass (ref: 8)))+			(FM3.Class (id: 169)+				(name 'CodeFragment')+				(package (ref: 165)) 				(superclass (ref: 8)))-			(FM3.Class (id: 141)+			(FM3.Class (id: 170) 				(name 'Duplication')-				(package (ref: 135))-				(superclass (ref: 10)))))-	(FM3.Package (id: 142)+				(package (ref: 165))+				(superclass (ref: 8))+				(attributes+					(FM3.Property (id: 171)+						(name 'multiplicationInvolved')+						(class (ref: 170))+						(opposite (ref: 172))+						(type (ref: 173)))))+			(FM3.Class (id: 173)+				(name 'Multiplication')+				(package (ref: 165))+				(superclass (ref: 8))+				(attributes+					(FM3.Property (id: 172)+						(name 'duplications')+						(class (ref: 173))+						(derived true)+						(multivalued true)+						(opposite (ref: 171))+						(type (ref: 170)))))))+	(FM3.Package (id: 174) 		(name 'Hismo') 		(classes-			(FM3.Class (id: 143)-				(name 'HismoAbstractHistory')-				(package (ref: 142))-				(superclass (ref: 10)))-			(FM3.Class (id: 144)-				(name 'HismoNamespaceVersion')-				(package (ref: 142))-				(superclass (ref: 145)))-			(FM3.Class (id: 146)-				(name 'HismoAttributeHistory')-				(package (ref: 142))-				(superclass (ref: 143)))-			(FM3.Class (id: 147)-				(name 'HismoFileHistory')-				(package (ref: 142))-				(superclass (ref: 143)))-			(FM3.Class (id: 148)-				(name 'HismoCoChangeHistory')-				(package (ref: 142))-				(superclass (ref: 143)))-			(FM3.Class (id: 149)-				(name 'HismoClassHistory')-				(package (ref: 142))-				(superclass (ref: 143)))-			(FM3.Class (id: 150)-				(name 'HismoMethodVersion')-				(package (ref: 142))-				(superclass (ref: 145)))-			(FM3.Class (id: 145)-				(name 'HismoEntityVersion')-				(package (ref: 142))-				(superclass (ref: 151)))-			(FM3.Class (id: 152)-				(name 'HismoNamespaceHistory')-				(package (ref: 142))-				(superclass (ref: 143)))-			(FM3.Class (id: 153)-				(name 'HismoNamespaceHistoryGroup')-				(package (ref: 142))-				(superclass (ref: 154)))-			(FM3.Class (id: 155)-				(name 'HismoInvocationHistory')-				(package (ref: 142))-				(superclass (ref: 143)))-			(FM3.Class (id: 156)-				(name 'HismoClassHierarchy')-				(package (ref: 142))-				(superclass (ref: 143)))-			(FM3.Class (id: 157)-				(name 'HismoCoChangePattern')-				(package (ref: 142))-				(superclass (ref: 8)))-			(FM3.Class (id: 158)-				(name 'HismoFolderHistory')-				(package (ref: 142))-				(superclass (ref: 143)))-			(FM3.Class (id: 159)-				(name 'HismoMethodHistory')-				(package (ref: 142))-				(superclass (ref: 143)))-			(FM3.Class (id: 160)+			(FM3.Class (id: 175) 				(name 'HismoClassVersion')-				(package (ref: 142))-				(superclass (ref: 145)))-			(FM3.Class (id: 161)+				(package (ref: 174))+				(superclass (ref: 176)))+			(FM3.Class (id: 177) 				(name 'HismoMethodHistoryGroup')-				(package (ref: 142))-				(superclass (ref: 154)))-			(FM3.Class (id: 162)+				(package (ref: 174))+				(superclass (ref: 178)))+			(FM3.Class (id: 179) 				(name 'HismoPackageHistory')-				(package (ref: 142))-				(superclass (ref: 143)))-			(FM3.Class (id: 163)-				(name 'HismoClassHistoryGroup')-				(package (ref: 142))-				(superclass (ref: 154)))-			(FM3.Class (id: 164)+				(package (ref: 174))+				(superclass (ref: 180)))+			(FM3.Class (id: 181)+				(name 'HismoClassHierarchy')+				(package (ref: 174))+				(superclass (ref: 180)))+			(FM3.Class (id: 182) 				(name 'HismoCoChangeVersion')-				(package (ref: 142))-				(superclass (ref: 151)))-			(FM3.Class (id: 151)-				(name 'HismoAbstractVersion')-				(package (ref: 142))-				(superclass (ref: 10)))-			(FM3.Class (id: 165)-				(name 'HismoInheritanceDefinitionHistory')-				(package (ref: 142))-				(superclass (ref: 143)))-			(FM3.Class (id: 154)+				(package (ref: 174))+				(superclass (ref: 183)))+			(FM3.Class (id: 176)+				(name 'HismoEntityVersion')+				(package (ref: 174))+				(superclass (ref: 183)))+			(FM3.Class (id: 184)+				(name 'HismoClassHistory')+				(package (ref: 174))+				(superclass (ref: 180)))+			(FM3.Class (id: 185)+				(name 'HismoNamespaceHistory')+				(package (ref: 174))+				(superclass (ref: 180)))+			(FM3.Class (id: 178) 				(name 'HismoHistoryGroup')-				(package (ref: 142))-				(superclass (ref: 8)))-			(FM3.Class (id: 166)+				(package (ref: 174))+				(superclass (ref: 3)))+			(FM3.Class (id: 186)+				(name 'HismoAccessHistory')+				(package (ref: 174))+				(superclass (ref: 180)))+			(FM3.Class (id: 187)+				(name 'HismoCoChangePattern')+				(package (ref: 174))+				(superclass (ref: 3)))+			(FM3.Class (id: 188)+				(name 'HismoInheritanceDefinitionHistory')+				(package (ref: 174))+				(superclass (ref: 180)))+			(FM3.Class (id: 189) 				(name 'HismoModelHistory')-				(package (ref: 142))-				(superclass (ref: 143)))))-	(FM3.Package (id: 167)+				(package (ref: 174))+				(superclass (ref: 180)))+			(FM3.Class (id: 190)+				(name 'HismoNamespaceVersion')+				(package (ref: 174))+				(superclass (ref: 176)))+			(FM3.Class (id: 180)+				(name 'HismoAbstractHistory')+				(package (ref: 174))+				(superclass (ref: 8)))+			(FM3.Class (id: 191)+				(name 'HismoInvocationHistory')+				(package (ref: 174))+				(superclass (ref: 180)))+			(FM3.Class (id: 192)+				(name 'HismoNamespaceHistoryGroup')+				(package (ref: 174))+				(superclass (ref: 178)))+			(FM3.Class (id: 193)+				(name 'HismoClassHistoryGroup')+				(package (ref: 174))+				(superclass (ref: 178)))+			(FM3.Class (id: 194)+				(name 'HismoMethodHistory')+				(package (ref: 174))+				(superclass (ref: 180)))+			(FM3.Class (id: 195)+				(name 'HismoAttributeHistory')+				(package (ref: 174))+				(superclass (ref: 180)))+			(FM3.Class (id: 196)+				(name 'HismoCoChangeHistory')+				(package (ref: 174))+				(superclass (ref: 180)))+			(FM3.Class (id: 197)+				(name 'HismoMethodVersion')+				(package (ref: 174))+				(superclass (ref: 176)))+			(FM3.Class (id: 198)+				(name 'HismoFileHistory')+				(package (ref: 174))+				(superclass (ref: 180)))+			(FM3.Class (id: 199)+				(name 'HismoFolderHistory')+				(package (ref: 174))+				(superclass (ref: 180)))+			(FM3.Class (id: 183)+				(name 'HismoAbstractVersion')+				(package (ref: 174))+				(superclass (ref: 8)))))+	(FM3.Package (id: 200) 		(name 'Moose') 		(classes-			(FM3.Class (id: 8)-				(name 'MooseGroup')-				(package (ref: 167))-				(superclass (ref: 168)))-			(FM3.Class (id: 168)-				(name 'MooseAbsractGroup')+			(FM3.Class (id: 201)+				(name 'Entity') 				(abstract true)-				(package (ref: 167))-				(superclass (ref: 169)))-			(FM3.Class (id: 170)-				(name 'HismoAccessHistory')-				(package (ref: 167))-				(superclass (ref: 143)))-			(FM3.Class (id: 171)-				(name 'MooseModel')-				(package (ref: 167))-				(superclass (ref: 168))+				(package (ref: 200))+				(superclass (ref: Object)))+			(FM3.Class (id: 3)+				(name 'Group')+				(package (ref: 200))+				(superclass (ref: 202)))+			(FM3.Class (id: 203)+				(name 'Model')+				(package (ref: 200))+				(superclass (ref: 202)) 				(attributes-					(FM3.Property (id: 172)+					(FM3.Property (id: 204) 						(name 'sourceLanguage')-						(class (ref: 171))+						(class (ref: 203)) 						(type (ref: String)))))-			(FM3.Class (id: 169)-				(name 'MooseEntity')+			(FM3.Class (id: 202)+				(name 'AbsractGroup') 				(abstract true)-				(package (ref: 167))-				(superclass (ref: Object))))))
-\ No newline at end of file
-+				(package (ref: 200))+				(superclass (ref: 201))))))Index: verveine.core/lib/fame.jar
-===================================================================
-Cannot display: file marked as a binary type.
-svn:mime-type = application/octet-stream
-Index: verveine.core/lib/akuhn-util-r28011.jar
-===================================================================
-Cannot display: file marked as a binary type.
-svn:mime-type = application/octet-stream
-
-Property changes on: verveine.core/lib/akuhn-util-r28011.jar
-___________________________________________________________________
-Added: svn:mime-type
-   + application/octet-stream
-
-Index: verveine.core/src/fr/inria/verveine/core/GenerateFamix.java
-===================================================================
---- verveine.core/src/fr/inria/verveine/core/GenerateFamix.java	(revision 77)
-+++ verveine.core/src/fr/inria/verveine/core/GenerateFamix.java	(revision 78)
-@@ -12,7 +12,7 @@
- 	}
- 	
- 	public static void generateCode() {
--		InputSource input = InputSource.fromFilename("mse/famix30_famix.mse");
-+		InputSource input = InputSource.fromFilename("mse/famix30_complete.mse");
-         Tower t = new Tower();
-         t.getMetamodel().importMSE(input);
- 		CodeGeneration gen = new CodeGeneration("fr.inria.verveine.core.gen", "src", "");
-Index: verveine.core/src/fr/inria/verveine/core/gen/file/FILEModel.java
-===================================================================
---- verveine.core/src/fr/inria/verveine/core/gen/file/FILEModel.java	(revision 77)
-+++ verveine.core/src/fr/inria/verveine/core/gen/file/FILEModel.java	(revision 78)
-@@ -13,10 +13,10 @@
-     
-     public static void importInto(MetaRepository metamodel) {
- 		metamodel.with(fr.inria.verveine.core.gen.file.FileGroup.class);
--		metamodel.with(fr.inria.verveine.core.gen.file.FolderGroup.class);
--		metamodel.with(fr.inria.verveine.core.gen.file.File.class);
--		metamodel.with(fr.inria.verveine.core.gen.file.AbstractFile.class);
- 		metamodel.with(fr.inria.verveine.core.gen.file.Folder.class);
-+		metamodel.with(fr.inria.verveine.core.gen.file.AbstractFile.class);
-+		metamodel.with(fr.inria.verveine.core.gen.file.File.class);
-+		metamodel.with(fr.inria.verveine.core.gen.file.FolderGroup.class);
- 
-     }
- 
-Index: verveine.core/src/fr/inria/verveine/core/gen/file/FolderGroup.java
-===================================================================
---- verveine.core/src/fr/inria/verveine/core/gen/file/FolderGroup.java	(revision 77)
-+++ verveine.core/src/fr/inria/verveine/core/gen/file/FolderGroup.java	(revision 78)
-@@ -1,14 +1,14 @@
- // Automagically generated code, please do not change
- package fr.inria.verveine.core.gen.file;
- 
--import fr.inria.verveine.core.gen.moose.MooseGroup;
- import ch.akuhn.fame.FameDescription;
- import ch.akuhn.fame.FamePackage;
-+import fr.inria.verveine.core.gen.moose.Group;
- 
- 
- @FamePackage("FILE")
- @FameDescription("FolderGroup")
--public class FolderGroup extends MooseGroup {
-+public class FolderGroup extends Group {
- 
- 
- 
-Index: verveine.core/src/fr/inria/verveine/core/gen/file/FileGroup.java
-===================================================================
---- verveine.core/src/fr/inria/verveine/core/gen/file/FileGroup.java	(revision 77)
-+++ verveine.core/src/fr/inria/verveine/core/gen/file/FileGroup.java	(revision 78)
-@@ -1,14 +1,14 @@
- // Automagically generated code, please do not change
- package fr.inria.verveine.core.gen.file;
- 
--import fr.inria.verveine.core.gen.moose.MooseGroup;
- import ch.akuhn.fame.FameDescription;
- import ch.akuhn.fame.FamePackage;
-+import fr.inria.verveine.core.gen.moose.Group;
- 
- 
- @FamePackage("FILE")
- @FameDescription("FileGroup")
--public class FileGroup extends MooseGroup {
-+public class FileGroup extends Group {
- 
- 
- 
-Index: verveine.core/src/fr/inria/verveine/core/gen/hismo/HismoModel.java
-===================================================================
---- verveine.core/src/fr/inria/verveine/core/gen/hismo/HismoModel.java	(revision 77)
-+++ verveine.core/src/fr/inria/verveine/core/gen/hismo/HismoModel.java	(revision 78)
-@@ -12,30 +12,31 @@
-     }
-     
-     public static void importInto(MetaRepository metamodel) {
--		metamodel.with(fr.inria.verveine.core.gen.hismo.HismoAbstractVersion.class);
-+		metamodel.with(fr.inria.verveine.core.gen.hismo.HismoClassHierarchy.class);
-+		metamodel.with(fr.inria.verveine.core.gen.hismo.HismoAccessHistory.class);
- 		metamodel.with(fr.inria.verveine.core.gen.hismo.HismoMethodHistoryGroup.class);
--		metamodel.with(fr.inria.verveine.core.gen.hismo.HismoPackageHistory.class);
--		metamodel.with(fr.inria.verveine.core.gen.hismo.HismoInheritanceDefinitionHistory.class);
--		metamodel.with(fr.inria.verveine.core.gen.hismo.HismoClassHistory.class);
- 		metamodel.with(fr.inria.verveine.core.gen.hismo.HismoClassVersion.class);
--		metamodel.with(fr.inria.verveine.core.gen.hismo.HismoClassHierarchy.class);
--		metamodel.with(fr.inria.verveine.core.gen.hismo.HismoModelHistory.class);
-+		metamodel.with(fr.inria.verveine.core.gen.hismo.HismoMethodHistory.class);
-+		metamodel.with(fr.inria.verveine.core.gen.hismo.HismoNamespaceHistory.class);
-+		metamodel.with(fr.inria.verveine.core.gen.hismo.HismoCoChangePattern.class);
- 		metamodel.with(fr.inria.verveine.core.gen.hismo.HismoInvocationHistory.class);
-+		metamodel.with(fr.inria.verveine.core.gen.hismo.HismoModelHistory.class);
- 		metamodel.with(fr.inria.verveine.core.gen.hismo.HismoHistoryGroup.class);
--		metamodel.with(fr.inria.verveine.core.gen.hismo.HismoFileHistory.class);
--		metamodel.with(fr.inria.verveine.core.gen.hismo.HismoEntityVersion.class);
--		metamodel.with(fr.inria.verveine.core.gen.hismo.HismoNamespaceVersion.class);
- 		metamodel.with(fr.inria.verveine.core.gen.hismo.HismoFolderHistory.class);
--		metamodel.with(fr.inria.verveine.core.gen.hismo.HismoNamespaceHistory.class);
-+		metamodel.with(fr.inria.verveine.core.gen.hismo.HismoEntityVersion.class);
-+		metamodel.with(fr.inria.verveine.core.gen.hismo.HismoMethodVersion.class);
- 		metamodel.with(fr.inria.verveine.core.gen.hismo.HismoCoChangeVersion.class);
--		metamodel.with(fr.inria.verveine.core.gen.hismo.HismoClassHistoryGroup.class);
-+		metamodel.with(fr.inria.verveine.core.gen.hismo.HismoPackageHistory.class);
- 		metamodel.with(fr.inria.verveine.core.gen.hismo.HismoAbstractHistory.class);
- 		metamodel.with(fr.inria.verveine.core.gen.hismo.HismoAttributeHistory.class);
--		metamodel.with(fr.inria.verveine.core.gen.hismo.HismoMethodVersion.class);
--		metamodel.with(fr.inria.verveine.core.gen.hismo.HismoNamespaceHistoryGroup.class);
--		metamodel.with(fr.inria.verveine.core.gen.hismo.HismoCoChangePattern.class);
--		metamodel.with(fr.inria.verveine.core.gen.hismo.HismoMethodHistory.class);
- 		metamodel.with(fr.inria.verveine.core.gen.hismo.HismoCoChangeHistory.class);
-+		metamodel.with(fr.inria.verveine.core.gen.hismo.HismoClassHistory.class);
-+		metamodel.with(fr.inria.verveine.core.gen.hismo.HismoInheritanceDefinitionHistory.class);
-+		metamodel.with(fr.inria.verveine.core.gen.hismo.HismoNamespaceVersion.class);
-+		metamodel.with(fr.inria.verveine.core.gen.hismo.HismoNamespaceHistoryGroup.class);
-+		metamodel.with(fr.inria.verveine.core.gen.hismo.HismoFileHistory.class);
-+		metamodel.with(fr.inria.verveine.core.gen.hismo.HismoAbstractVersion.class);
-+		metamodel.with(fr.inria.verveine.core.gen.hismo.HismoClassHistoryGroup.class);
- 
-     }
- 
-Index: verveine.core/src/fr/inria/verveine/core/gen/hismo/HismoCoChangePattern.java
-===================================================================
---- verveine.core/src/fr/inria/verveine/core/gen/hismo/HismoCoChangePattern.java	(revision 77)
-+++ verveine.core/src/fr/inria/verveine/core/gen/hismo/HismoCoChangePattern.java	(revision 78)
-@@ -1,14 +1,14 @@
- // Automagically generated code, please do not change
- package fr.inria.verveine.core.gen.hismo;
- 
--import fr.inria.verveine.core.gen.moose.MooseGroup;
- import ch.akuhn.fame.FameDescription;
- import ch.akuhn.fame.FamePackage;
-+import fr.inria.verveine.core.gen.moose.Group;
- 
- 
- @FamePackage("Hismo")
- @FameDescription("HismoCoChangePattern")
--public class HismoCoChangePattern extends MooseGroup {
-+public class HismoCoChangePattern extends Group {
- 
- 
- 
-Index: verveine.core/src/fr/inria/verveine/core/gen/hismo/HismoHistoryGroup.java
-===================================================================
---- verveine.core/src/fr/inria/verveine/core/gen/hismo/HismoHistoryGroup.java	(revision 77)
-+++ verveine.core/src/fr/inria/verveine/core/gen/hismo/HismoHistoryGroup.java	(revision 78)
-@@ -1,14 +1,14 @@
- // Automagically generated code, please do not change
- package fr.inria.verveine.core.gen.hismo;
- 
--import fr.inria.verveine.core.gen.moose.MooseGroup;
- import ch.akuhn.fame.FameDescription;
- import ch.akuhn.fame.FamePackage;
-+import fr.inria.verveine.core.gen.moose.Group;
- 
- 
- @FamePackage("Hismo")
- @FameDescription("HismoHistoryGroup")
--public class HismoHistoryGroup extends MooseGroup {
-+public class HismoHistoryGroup extends Group {
- 
- 
- 
-Index: verveine.core/src/fr/inria/verveine/core/gen/hismo/HismoAccessHistory.java
-===================================================================
---- verveine.core/src/fr/inria/verveine/core/gen/hismo/HismoAccessHistory.java	(revision 0)
-+++ verveine.core/src/fr/inria/verveine/core/gen/hismo/HismoAccessHistory.java	(revision 78)
-@@ -0,0 +1,17 @@
-+// Automagically generated code, please do not change
-+package fr.inria.verveine.core.gen.hismo;
-+
-+import ch.akuhn.fame.FameDescription;
-+import ch.akuhn.fame.FamePackage;
-+
-+
-+@FamePackage("Hismo")
-+@FameDescription("HismoAccessHistory")
-+public class HismoAccessHistory extends HismoAbstractHistory {
-+
-+
-+
-+
-+
-+}
-+
-Index: verveine.core/src/fr/inria/verveine/core/gen/dude/DudeModel.java
-===================================================================
---- verveine.core/src/fr/inria/verveine/core/gen/dude/DudeModel.java	(revision 77)
-+++ verveine.core/src/fr/inria/verveine/core/gen/dude/DudeModel.java	(revision 78)
-@@ -12,11 +12,11 @@
-     }
-     
-     public static void importInto(MetaRepository metamodel) {
--		metamodel.with(fr.inria.verveine.core.gen.dude.Duplication.class);
--		metamodel.with(fr.inria.verveine.core.gen.dude.DuplicationGroup.class);
--		metamodel.with(fr.inria.verveine.core.gen.dude.MultiplicationGroup.class);
- 		metamodel.with(fr.inria.verveine.core.gen.dude.CodeFragment.class);
- 		metamodel.with(fr.inria.verveine.core.gen.dude.Multiplication.class);
-+		metamodel.with(fr.inria.verveine.core.gen.dude.DuplicationGroup.class);
-+		metamodel.with(fr.inria.verveine.core.gen.dude.MultiplicationGroup.class);
-+		metamodel.with(fr.inria.verveine.core.gen.dude.Duplication.class);
- 		metamodel.with(fr.inria.verveine.core.gen.dude.CodeLine.class);
- 
-     }
-Index: verveine.core/src/fr/inria/verveine/core/gen/dude/DuplicationGroup.java
-===================================================================
---- verveine.core/src/fr/inria/verveine/core/gen/dude/DuplicationGroup.java	(revision 77)
-+++ verveine.core/src/fr/inria/verveine/core/gen/dude/DuplicationGroup.java	(revision 78)
-@@ -1,14 +1,14 @@
- // Automagically generated code, please do not change
- package fr.inria.verveine.core.gen.dude;
- 
--import fr.inria.verveine.core.gen.moose.MooseGroup;
- import ch.akuhn.fame.FameDescription;
- import ch.akuhn.fame.FamePackage;
-+import fr.inria.verveine.core.gen.moose.Group;
- 
- 
- @FamePackage("Dude")
- @FameDescription("DuplicationGroup")
--public class DuplicationGroup extends MooseGroup {
-+public class DuplicationGroup extends Group {
- 
- 
- 
-Index: verveine.core/src/fr/inria/verveine/core/gen/dude/MultiplicationGroup.java
-===================================================================
---- verveine.core/src/fr/inria/verveine/core/gen/dude/MultiplicationGroup.java	(revision 77)
-+++ verveine.core/src/fr/inria/verveine/core/gen/dude/MultiplicationGroup.java	(revision 78)
-@@ -1,14 +1,14 @@
- // Automagically generated code, please do not change
- package fr.inria.verveine.core.gen.dude;
- 
--import fr.inria.verveine.core.gen.moose.MooseGroup;
- import ch.akuhn.fame.FameDescription;
- import ch.akuhn.fame.FamePackage;
-+import fr.inria.verveine.core.gen.moose.Group;
- 
- 
- @FamePackage("Dude")
- @FameDescription("MultiplicationGroup")
--public class MultiplicationGroup extends MooseGroup {
-+public class MultiplicationGroup extends Group {
- 
- 
- 
-Index: verveine.core/src/fr/inria/verveine/core/gen/dude/Duplication.java
-===================================================================
---- verveine.core/src/fr/inria/verveine/core/gen/dude/Duplication.java	(revision 77)
-+++ verveine.core/src/fr/inria/verveine/core/gen/dude/Duplication.java	(revision 78)
-@@ -1,6 +1,7 @@
- // Automagically generated code, please do not change
- package fr.inria.verveine.core.gen.dude;
- 
-+import ch.akuhn.fame.FameProperty;
- import ch.akuhn.fame.FameDescription;
- import fr.inria.verveine.core.gen.famix.Entity;
- import ch.akuhn.fame.FamePackage;
-@@ -12,7 +13,24 @@
- 
- 
- 
-+    private Multiplication multiplicationInvolved;
-+    
-+    @FameProperty(name = "multiplicationInvolved", opposite = "duplications")
-+    public Multiplication getMultiplicationInvolved() {
-+        return multiplicationInvolved;
-+    }
- 
-+    public void setMultiplicationInvolved(Multiplication multiplicationInvolved) {
-+        if (this.multiplicationInvolved != null) {
-+            if (this.multiplicationInvolved.equals(multiplicationInvolved)) return;
-+            this.multiplicationInvolved.getDuplications().remove(this);
-+        }
-+        this.multiplicationInvolved = multiplicationInvolved;
-+        if (multiplicationInvolved == null) return;
-+        multiplicationInvolved.getDuplications().add(this);
-+    }
-+    
-+
- 
- }
- 
-Index: verveine.core/src/fr/inria/verveine/core/gen/dude/Multiplication.java
-===================================================================
---- verveine.core/src/fr/inria/verveine/core/gen/dude/Multiplication.java	(revision 77)
-+++ verveine.core/src/fr/inria/verveine/core/gen/dude/Multiplication.java	(revision 78)
-@@ -1,6 +1,9 @@
- // Automagically generated code, please do not change
- package fr.inria.verveine.core.gen.dude;
- 
-+import ch.akuhn.fame.internal.MultivalueSet;
-+import java.util.*;
-+import ch.akuhn.fame.FameProperty;
- import ch.akuhn.fame.FameDescription;
- import fr.inria.verveine.core.gen.famix.Entity;
- import ch.akuhn.fame.FamePackage;
-@@ -12,7 +15,61 @@
- 
- 
- 
-+    private Collection<Duplication> duplications; 
-+
-+    @FameProperty(name = "duplications", opposite = "multiplicationInvolved", derived = true)
-+    public Collection<Duplication> getDuplications() {
-+        if (duplications == null) {
-+            duplications = new MultivalueSet<Duplication>() {
-+                @Override
-+                protected void clearOpposite(Duplication e) {
-+                    e.setMultiplicationInvolved(null);
-+                }
-+                @Override
-+                protected void setOpposite(Duplication e) {
-+                    e.setMultiplicationInvolved(Multiplication.this);
-+                }
-+            };
-+        }
-+        return duplications;
-+    }
-+    
-+    public void setDuplications(Collection<? extends Duplication> duplications) {
-+        this.getDuplications().clear();
-+        this.getDuplications().addAll(duplications);
-+    }                    
-+    
-+        
-+    public void addDuplications(Duplication one) {
-+        this.getDuplications().add(one);
-+    }   
-+    
-+    public void addDuplications(Duplication one, Duplication... many) {
-+        this.getDuplications().add(one);
-+        for (Duplication each : many)
-+            this.getDuplications().add(each);
-+    }   
-+    
-+    public void addDuplications(Iterable<? extends Duplication> many) {
-+        for (Duplication each : many)
-+            this.getDuplications().add(each);
-+    }   
-+                
-+    public void addDuplications(Duplication[] many) {
-+        for (Duplication each : many)
-+            this.getDuplications().add(each);
-+    }
-+    
-+    public int numberOfDuplications() {
-+        return getDuplications().size();
-+    }
- 
-+    public boolean hasDuplications() {
-+        return !getDuplications().isEmpty();
-+    }
-+    
-+                
-+
- 
- }
- 
-Index: verveine.core/src/fr/inria/verveine/core/gen/moose/MooseAbsractGroup.java
-===================================================================
---- verveine.core/src/fr/inria/verveine/core/gen/moose/MooseAbsractGroup.java	(revision 77)
-+++ verveine.core/src/fr/inria/verveine/core/gen/moose/MooseAbsractGroup.java	(revision 78)
-@@ -1,17 +0,0 @@
--// Automagically generated code, please do not change
--package fr.inria.verveine.core.gen.moose;
--
--import ch.akuhn.fame.FameDescription;
--import ch.akuhn.fame.FamePackage;
--
--
--@FamePackage("Moose")
--@FameDescription("MooseAbsractGroup")
--public class MooseAbsractGroup extends MooseEntity {
--
--
--
--
--
--}
--
-Index: verveine.core/src/fr/inria/verveine/core/gen/moose/MooseEntity.java
-===================================================================
---- verveine.core/src/fr/inria/verveine/core/gen/moose/MooseEntity.java	(revision 77)
-+++ verveine.core/src/fr/inria/verveine/core/gen/moose/MooseEntity.java	(revision 78)
-@@ -1,17 +0,0 @@
--// Automagically generated code, please do not change
--package fr.inria.verveine.core.gen.moose;
--
--import ch.akuhn.fame.FameDescription;
--import ch.akuhn.fame.FamePackage;
--
--
--@FamePackage("Moose")
--@FameDescription("MooseEntity")
--public class MooseEntity  {
--
--
--
--
--
--}
--
-Index: verveine.core/src/fr/inria/verveine/core/gen/moose/MooseGroup.java
-===================================================================
---- verveine.core/src/fr/inria/verveine/core/gen/moose/MooseGroup.java	(revision 77)
-+++ verveine.core/src/fr/inria/verveine/core/gen/moose/MooseGroup.java	(revision 78)
-@@ -1,17 +0,0 @@
--// Automagically generated code, please do not change
--package fr.inria.verveine.core.gen.moose;
--
--import ch.akuhn.fame.FameDescription;
--import ch.akuhn.fame.FamePackage;
--
--
--@FamePackage("Moose")
--@FameDescription("MooseGroup")
--public class MooseGroup extends MooseAbsractGroup {
--
--
--
--
--
--}
--
-Index: verveine.core/src/fr/inria/verveine/core/gen/moose/HismoAccessHistory.java
-===================================================================
---- verveine.core/src/fr/inria/verveine/core/gen/moose/HismoAccessHistory.java	(revision 77)
-+++ verveine.core/src/fr/inria/verveine/core/gen/moose/HismoAccessHistory.java	(revision 78)
-@@ -1,18 +0,0 @@
--// Automagically generated code, please do not change
--package fr.inria.verveine.core.gen.moose;
--
--import fr.inria.verveine.core.gen.hismo.HismoAbstractHistory;
--import ch.akuhn.fame.FameDescription;
--import ch.akuhn.fame.FamePackage;
--
--
--@FamePackage("Moose")
--@FameDescription("HismoAccessHistory")
--public class HismoAccessHistory extends HismoAbstractHistory {
--
--
--
--
--
--}
--
-Index: verveine.core/src/fr/inria/verveine/core/gen/moose/Model.java
-===================================================================
---- verveine.core/src/fr/inria/verveine/core/gen/moose/Model.java	(revision 0)
-+++ verveine.core/src/fr/inria/verveine/core/gen/moose/Model.java	(revision 78)
-@@ -0,0 +1,29 @@
-+// Automagically generated code, please do not change
-+package fr.inria.verveine.core.gen.moose;
-+
-+import ch.akuhn.fame.FameProperty;
-+import ch.akuhn.fame.FameDescription;
-+import ch.akuhn.fame.FamePackage;
-+
-+
-+@FamePackage("Moose")
-+@FameDescription("Model")
-+public class Model extends AbsractGroup {
-+
-+
-+
-+    private String sourceLanguage;
-+    
-+    @FameProperty(name = "sourceLanguage")
-+    public String getSourceLanguage() {
-+        return sourceLanguage;
-+    }
-+
-+    public void setSourceLanguage(String sourceLanguage) {
-+        this.sourceLanguage = sourceLanguage;
-+    }
-+    
-+
-+
-+}
-+
-Index: verveine.core/src/fr/inria/verveine/core/gen/moose/MooseModel.java
-===================================================================
---- verveine.core/src/fr/inria/verveine/core/gen/moose/MooseModel.java	(revision 77)
-+++ verveine.core/src/fr/inria/verveine/core/gen/moose/MooseModel.java	(revision 78)
-@@ -12,11 +12,10 @@
-     }
-     
-     public static void importInto(MetaRepository metamodel) {
--		metamodel.with(fr.inria.verveine.core.gen.moose.MooseGroup.class);
--		metamodel.with(fr.inria.verveine.core.gen.moose.HismoAccessHistory.class);
--		metamodel.with(fr.inria.verveine.core.gen.moose.MooseModel.class);
--		metamodel.with(fr.inria.verveine.core.gen.moose.MooseAbsractGroup.class);
--		metamodel.with(fr.inria.verveine.core.gen.moose.MooseEntity.class);
-+		metamodel.with(fr.inria.verveine.core.gen.moose.AbsractGroup.class);
-+		metamodel.with(fr.inria.verveine.core.gen.moose.Model.class);
-+		metamodel.with(fr.inria.verveine.core.gen.moose.Entity.class);
-+		metamodel.with(fr.inria.verveine.core.gen.moose.Group.class);
- 
-     }
- 
-Index: verveine.core/src/fr/inria/verveine/core/gen/moose/AbsractGroup.java
-===================================================================
---- verveine.core/src/fr/inria/verveine/core/gen/moose/AbsractGroup.java	(revision 0)
-+++ verveine.core/src/fr/inria/verveine/core/gen/moose/AbsractGroup.java	(revision 78)
-@@ -0,0 +1,17 @@
-+// Automagically generated code, please do not change
-+package fr.inria.verveine.core.gen.moose;
-+
-+import ch.akuhn.fame.FameDescription;
-+import ch.akuhn.fame.FamePackage;
-+
-+
-+@FamePackage("Moose")
-+@FameDescription("AbsractGroup")
-+public class AbsractGroup extends Entity {
-+
-+
-+
-+
-+
-+}
-+
-Index: verveine.core/src/fr/inria/verveine/core/gen/moose/Entity.java
-===================================================================
---- verveine.core/src/fr/inria/verveine/core/gen/moose/Entity.java	(revision 0)
-+++ verveine.core/src/fr/inria/verveine/core/gen/moose/Entity.java	(revision 78)
-@@ -0,0 +1,17 @@
-+// Automagically generated code, please do not change
-+package fr.inria.verveine.core.gen.moose;
-+
-+import ch.akuhn.fame.FameDescription;
-+import ch.akuhn.fame.FamePackage;
-+
-+
-+@FamePackage("Moose")
-+@FameDescription("Entity")
-+public class Entity  {
-+
-+
-+
-+
-+
-+}
-+
-Index: verveine.core/src/fr/inria/verveine/core/gen/moose/Group.java
-===================================================================
---- verveine.core/src/fr/inria/verveine/core/gen/moose/Group.java	(revision 0)
-+++ verveine.core/src/fr/inria/verveine/core/gen/moose/Group.java	(revision 78)
-@@ -0,0 +1,17 @@
-+// Automagically generated code, please do not change
-+package fr.inria.verveine.core.gen.moose;
-+
-+import ch.akuhn.fame.FameDescription;
-+import ch.akuhn.fame.FamePackage;
-+
-+
-+@FamePackage("Moose")
-+@FameDescription("Group")
-+public class Group extends AbsractGroup {
-+
-+
-+
-+
-+
-+}
-+
-Index: verveine.core/src/fr/inria/verveine/core/gen/famix/SmalltalkMonticelloSourceLanguage.java
-===================================================================
---- verveine.core/src/fr/inria/verveine/core/gen/famix/SmalltalkMonticelloSourceLanguage.java	(revision 0)
-+++ verveine.core/src/fr/inria/verveine/core/gen/famix/SmalltalkMonticelloSourceLanguage.java	(revision 78)
-@@ -0,0 +1,17 @@
-+// Automagically generated code, please do not change
-+package fr.inria.verveine.core.gen.famix;
-+
-+import ch.akuhn.fame.FameDescription;
-+import ch.akuhn.fame.FamePackage;
-+
-+
-+@FamePackage("FAMIX")
-+@FameDescription("SmalltalkMonticelloSourceLanguage")
-+public class SmalltalkMonticelloSourceLanguage extends SourceLanguage {
-+
-+
-+
-+
-+
-+}
-+
-Index: verveine.core/src/fr/inria/verveine/core/gen/famix/AnnotationTypeAttribute.java
-===================================================================
---- verveine.core/src/fr/inria/verveine/core/gen/famix/AnnotationTypeAttribute.java	(revision 0)
-+++ verveine.core/src/fr/inria/verveine/core/gen/famix/AnnotationTypeAttribute.java	(revision 78)
-@@ -0,0 +1,53 @@
-+// Automagically generated code, please do not change
-+package fr.inria.verveine.core.gen.famix;
-+
-+import java.util.*;
-+import ch.akuhn.fame.FameProperty;
-+import ch.akuhn.fame.FameDescription;
-+import ch.akuhn.fame.FamePackage;
-+
-+
-+@FamePackage("FAMIX")
-+@FameDescription("AnnotationTypeAttribute")
-+public class AnnotationTypeAttribute extends NamedEntity {
-+
-+
-+
-+    private Type declaredType;
-+    
-+    @FameProperty(name = "declaredType")
-+    public Type getDeclaredType() {
-+        return declaredType;
-+    }
-+
-+    public void setDeclaredType(Type declaredType) {
-+        this.declaredType = declaredType;
-+    }
-+    
-+    private AnnotationType parentAnnotationType;
-+    
-+    @FameProperty(name = "parentAnnotationType", opposite = "attributes")
-+    public AnnotationType getParentAnnotationType() {
-+        return parentAnnotationType;
-+    }
-+
-+    public void setParentAnnotationType(AnnotationType parentAnnotationType) {
-+        if (this.parentAnnotationType != null) {
-+            if (this.parentAnnotationType.equals(parentAnnotationType)) return;
-+            this.parentAnnotationType.getAttributes().remove(this);
-+        }
-+        this.parentAnnotationType = parentAnnotationType;
-+        if (parentAnnotationType == null) return;
-+        parentAnnotationType.getAttributes().add(this);
-+    }
-+    
-+    @FameProperty(name = "annotationAttributeInstances", derived = true)
-+    public Collection<AnnotationInstanceAttribute> getAnnotationAttributeInstances() {
-+        // TODO: this is a derived property, implement this method manually.
-+        throw new UnsupportedOperationException("Not yet implemented!");  
-+    }
-+        
-+
-+
-+}
-+
-Index: verveine.core/src/fr/inria/verveine/core/gen/famix/EnumValue.java
-===================================================================
---- verveine.core/src/fr/inria/verveine/core/gen/famix/EnumValue.java	(revision 0)
-+++ verveine.core/src/fr/inria/verveine/core/gen/famix/EnumValue.java	(revision 78)
-@@ -0,0 +1,29 @@
-+// Automagically generated code, please do not change
-+package fr.inria.verveine.core.gen.famix;
-+
-+import ch.akuhn.fame.FameProperty;
-+import ch.akuhn.fame.FameDescription;
-+import ch.akuhn.fame.FamePackage;
-+
-+
-+@FamePackage("FAMIX")
-+@FameDescription("EnumValue")
-+public class EnumValue extends NamedEntity {
-+
-+
-+
-+    private Enum parentEnum;
-+    
-+    @FameProperty(name = "parentEnum")
-+    public Enum getParentEnum() {
-+        return parentEnum;
-+    }
-+
-+    public void setParentEnum(Enum parentEnum) {
-+        this.parentEnum = parentEnum;
-+    }
-+    
-+
-+
-+}
-+
-Index: verveine.core/src/fr/inria/verveine/core/gen/famix/Access.java
-===================================================================
---- verveine.core/src/fr/inria/verveine/core/gen/famix/Access.java	(revision 77)
-+++ verveine.core/src/fr/inria/verveine/core/gen/famix/Access.java	(revision 78)
-@@ -72,8 +72,6 @@
- 	public NamedEntity getFrom() {
- 		return this.getAccessor();
- 	}
--    
--
- 
- }
- 
-Index: verveine.core/src/fr/inria/verveine/core/gen/famix/SourcedEntity.java
-===================================================================
---- verveine.core/src/fr/inria/verveine/core/gen/famix/SourcedEntity.java	(revision 77)
-+++ verveine.core/src/fr/inria/verveine/core/gen/famix/SourcedEntity.java	(revision 78)
-@@ -14,6 +14,23 @@
- 
- 
- 
-+    private SourceLanguage declaredSourceLanguage;
-+    
-+    @FameProperty(name = "declaredSourceLanguage", opposite = "sourcedEntities")
-+    public SourceLanguage getDeclaredSourceLanguage() {
-+        return declaredSourceLanguage;
-+    }
-+
-+    public void setDeclaredSourceLanguage(SourceLanguage declaredSourceLanguage) {
-+        if (this.declaredSourceLanguage != null) {
-+            if (this.declaredSourceLanguage.equals(declaredSourceLanguage)) return;
-+            this.declaredSourceLanguage.getSourcedEntities().remove(this);
-+        }
-+        this.declaredSourceLanguage = declaredSourceLanguage;
-+        if (declaredSourceLanguage == null) return;
-+        declaredSourceLanguage.getSourcedEntities().add(this);
-+    }
-+    
-     private SourceAnchor sourceAnchor;
-     
-     @FameProperty(name = "sourceAnchor", opposite = "element")
-Index: verveine.core/src/fr/inria/verveine/core/gen/famix/Enum.java
-===================================================================
---- verveine.core/src/fr/inria/verveine/core/gen/famix/Enum.java	(revision 0)
-+++ verveine.core/src/fr/inria/verveine/core/gen/famix/Enum.java	(revision 78)
-@@ -0,0 +1,17 @@
-+// Automagically generated code, please do not change
-+package fr.inria.verveine.core.gen.famix;
-+
-+import ch.akuhn.fame.FameDescription;
-+import ch.akuhn.fame.FamePackage;
-+
-+
-+@FamePackage("FAMIX")
-+@FameDescription("Enum")
-+public class Enum extends Type {
-+
-+
-+
-+
-+
-+}
-+
-Index: verveine.core/src/fr/inria/verveine/core/gen/famix/NamespaceGroup.java
-===================================================================
---- verveine.core/src/fr/inria/verveine/core/gen/famix/NamespaceGroup.java	(revision 77)
-+++ verveine.core/src/fr/inria/verveine/core/gen/famix/NamespaceGroup.java	(revision 78)
-@@ -3,11 +3,12 @@
- 
- import ch.akuhn.fame.FameDescription;
- import ch.akuhn.fame.FamePackage;
-+import fr.inria.verveine.core.gen.moose.Group;
- 
- 
- @FamePackage("FAMIX")
- @FameDescription("NamespaceGroup")
--public class NamespaceGroup  {
-+public class NamespaceGroup extends Group {
- 
- 
- 
-Index: verveine.core/src/fr/inria/verveine/core/gen/famix/SmalltalkSourceLanguage.java
-===================================================================
---- verveine.core/src/fr/inria/verveine/core/gen/famix/SmalltalkSourceLanguage.java	(revision 0)
-+++ verveine.core/src/fr/inria/verveine/core/gen/famix/SmalltalkSourceLanguage.java	(revision 78)
-@@ -0,0 +1,17 @@
-+// Automagically generated code, please do not change
-+package fr.inria.verveine.core.gen.famix;
-+
-+import ch.akuhn.fame.FameDescription;
-+import ch.akuhn.fame.FamePackage;
-+
-+
-+@FamePackage("FAMIX")
-+@FameDescription("SmalltalkSourceLanguage")
-+public class SmalltalkSourceLanguage extends SourceLanguage {
-+
-+
-+
-+
-+
-+}
-+
-Index: verveine.core/src/fr/inria/verveine/core/gen/famix/Method.java
-===================================================================
---- verveine.core/src/fr/inria/verveine/core/gen/famix/Method.java	(revision 77)
-+++ verveine.core/src/fr/inria/verveine/core/gen/famix/Method.java	(revision 78)
-@@ -3,7 +3,6 @@
- 
- import ch.akuhn.fame.internal.MultivalueSet;
- import java.util.*;
--
- import ch.akuhn.fame.FameProperty;
- import ch.akuhn.fame.FameDescription;
- import ch.akuhn.fame.FamePackage;
-@@ -188,17 +187,6 @@
-     }
-     
-                 
--    private String kind;
--    
--    @FameProperty(name = "kind")
--    public String getKind() {
--        return kind;
--    }
--
--    public void setKind(String kind) {
--        this.kind = kind;
--    }
--    
-     private Type parentType;
-     
-     @FameProperty(name = "parentType", opposite = "methods")
-@@ -216,6 +204,17 @@
-         parentType.getMethods().add(this);
-     }
-     
-+    private String kind;
-+    
-+    @FameProperty(name = "kind")
-+    public String getKind() {
-+        return kind;
-+    }
-+
-+    public void setKind(String kind) {
-+        this.kind = kind;
-+    }
-+   
-     private Collection<Type> declaredArgumentTypes;
-     
-     @FameProperty(name = "declaredArgumentTypes")
-@@ -226,4 +225,8 @@
-     public void setDeclaredArgumentTypes(Collection<Type> declaredArgumentTypes) {
-         this.declaredArgumentTypes = declaredArgumentTypes;
-     }
--}
-\ No newline at end of file
-+    
-+
-+
-+}
-+
-Index: verveine.core/src/fr/inria/verveine/core/gen/famix/AnnotationInstanceAttribute.java
-===================================================================
---- verveine.core/src/fr/inria/verveine/core/gen/famix/AnnotationInstanceAttribute.java	(revision 0)
-+++ verveine.core/src/fr/inria/verveine/core/gen/famix/AnnotationInstanceAttribute.java	(revision 78)
-@@ -0,0 +1,17 @@
-+// Automagically generated code, please do not change
-+package fr.inria.verveine.core.gen.famix;
-+
-+import ch.akuhn.fame.FameDescription;
-+import ch.akuhn.fame.FamePackage;
-+
-+
-+@FamePackage("FAMIX")
-+@FameDescription("AnnotationInstanceAttribute")
-+public class AnnotationInstanceAttribute extends Entity {
-+
-+
-+
-+
-+
-+}
-+
-Index: verveine.core/src/fr/inria/verveine/core/gen/famix/GlobalVariableGroup.java
-===================================================================
---- verveine.core/src/fr/inria/verveine/core/gen/famix/GlobalVariableGroup.java	(revision 77)
-+++ verveine.core/src/fr/inria/verveine/core/gen/famix/GlobalVariableGroup.java	(revision 78)
-@@ -3,11 +3,12 @@
- 
- import ch.akuhn.fame.FameDescription;
- import ch.akuhn.fame.FamePackage;
-+import fr.inria.verveine.core.gen.moose.Group;
- 
- 
- @FamePackage("FAMIX")
- @FameDescription("GlobalVariableGroup")
--public class GlobalVariableGroup  {
-+public class GlobalVariableGroup extends Group {
- 
- 
- 
-Index: verveine.core/src/fr/inria/verveine/core/gen/famix/Module.java
-===================================================================
---- verveine.core/src/fr/inria/verveine/core/gen/famix/Module.java	(revision 0)
-+++ verveine.core/src/fr/inria/verveine/core/gen/famix/Module.java	(revision 78)
-@@ -0,0 +1,17 @@
-+// Automagically generated code, please do not change
-+package fr.inria.verveine.core.gen.famix;
-+
-+import ch.akuhn.fame.FameDescription;
-+import ch.akuhn.fame.FamePackage;
-+
-+
-+@FamePackage("FAMIX")
-+@FameDescription("Module")
-+public class Module extends ScopingEntity {
-+
-+
-+
-+
-+
-+}
-+
-Index: verveine.core/src/fr/inria/verveine/core/gen/famix/FAMIXModel.java
-===================================================================
---- verveine.core/src/fr/inria/verveine/core/gen/famix/FAMIXModel.java	(revision 77)
-+++ verveine.core/src/fr/inria/verveine/core/gen/famix/FAMIXModel.java	(revision 78)
-@@ -12,47 +12,62 @@
-     }
-     
-     public static void importInto(MetaRepository metamodel) {
--		metamodel.with(fr.inria.verveine.core.gen.famix.FileAnchor.class);
--		metamodel.with(fr.inria.verveine.core.gen.famix.Class.class);
--		metamodel.with(fr.inria.verveine.core.gen.famix.Invocation.class);
-+		metamodel.with(fr.inria.verveine.core.gen.famix.EnumValue.class);
- 		metamodel.with(fr.inria.verveine.core.gen.famix.CaughtException.class);
--		metamodel.with(fr.inria.verveine.core.gen.famix.DeclaredException.class);
--		metamodel.with(fr.inria.verveine.core.gen.famix.ClassGroup.class);
--		metamodel.with(fr.inria.verveine.core.gen.famix.SourcedEntity.class);
--		metamodel.with(fr.inria.verveine.core.gen.famix.Association.class);
--		metamodel.with(fr.inria.verveine.core.gen.famix.SourceAnchor.class);
--		metamodel.with(fr.inria.verveine.core.gen.famix.Namespace.class);
--		metamodel.with(fr.inria.verveine.core.gen.famix.AnnotationType.class);
- 		metamodel.with(fr.inria.verveine.core.gen.famix.LeafEntity.class);
--		metamodel.with(fr.inria.verveine.core.gen.famix.PackageGroup.class);
--		metamodel.with(fr.inria.verveine.core.gen.famix.AnnotationInstance.class);
--		metamodel.with(fr.inria.verveine.core.gen.famix.SourceTextAnchor.class);
--		metamodel.with(fr.inria.verveine.core.gen.famix.MethodGroup.class);
--		metamodel.with(fr.inria.verveine.core.gen.famix.ScopingEntity.class);
--		metamodel.with(fr.inria.verveine.core.gen.famix.Function.class);
--		metamodel.with(fr.inria.verveine.core.gen.famix.Attribute.class);
--		metamodel.with(fr.inria.verveine.core.gen.famix.UnknownVariable.class);
--		metamodel.with(fr.inria.verveine.core.gen.famix.NamedEntity.class);
--		metamodel.with(fr.inria.verveine.core.gen.famix.BehaviouralEntity.class);
--		metamodel.with(fr.inria.verveine.core.gen.famix.Access.class);
--		metamodel.with(fr.inria.verveine.core.gen.famix.Method.class);
--		metamodel.with(fr.inria.verveine.core.gen.famix.GlobalVariable.class);
-+		metamodel.with(fr.inria.verveine.core.gen.famix.SourcedEntity.class);
- 		metamodel.with(fr.inria.verveine.core.gen.famix.Type.class);
-+		metamodel.with(fr.inria.verveine.core.gen.famix.GlobalVariable.class);
-+		metamodel.with(fr.inria.verveine.core.gen.famix.ParameterType.class);
-+		metamodel.with(fr.inria.verveine.core.gen.famix.Inheritance.class);
- 		metamodel.with(fr.inria.verveine.core.gen.famix.PrimitiveType.class);
-+		metamodel.with(fr.inria.verveine.core.gen.famix.JavaSourceLanguage.class);
-+		metamodel.with(fr.inria.verveine.core.gen.famix.Access.class);
-+		metamodel.with(fr.inria.verveine.core.gen.famix.StructuralEntity.class);
-+		metamodel.with(fr.inria.verveine.core.gen.famix.AnnotationTypeGroup.class);
-+		metamodel.with(fr.inria.verveine.core.gen.famix.AnnotationInstance.class);
- 		metamodel.with(fr.inria.verveine.core.gen.famix.Exception.class);
--		metamodel.with(fr.inria.verveine.core.gen.famix.NamespaceGroup.class);
--		metamodel.with(fr.inria.verveine.core.gen.famix.Parameter.class);
--		metamodel.with(fr.inria.verveine.core.gen.famix.Inheritance.class);
--		metamodel.with(fr.inria.verveine.core.gen.famix.Entity.class);
-+		metamodel.with(fr.inria.verveine.core.gen.famix.Reference.class);
-+		metamodel.with(fr.inria.verveine.core.gen.famix.ParameterizedType.class);
- 		metamodel.with(fr.inria.verveine.core.gen.famix.ThrownException.class);
--		metamodel.with(fr.inria.verveine.core.gen.famix.LocalVariable.class);
--		metamodel.with(fr.inria.verveine.core.gen.famix.GlobalVariableGroup.class);
-+		metamodel.with(fr.inria.verveine.core.gen.famix.Invocation.class);
-+		metamodel.with(fr.inria.verveine.core.gen.famix.BehaviouralEntity.class);
-+		metamodel.with(fr.inria.verveine.core.gen.famix.AnnotationType.class);
-+		metamodel.with(fr.inria.verveine.core.gen.famix.ClassGroup.class);
-+		metamodel.with(fr.inria.verveine.core.gen.famix.UnknownSourceLanguage.class);
- 		metamodel.with(fr.inria.verveine.core.gen.famix.ContainerEntity.class);
-+		metamodel.with(fr.inria.verveine.core.gen.famix.SourceTextAnchor.class);
-+		metamodel.with(fr.inria.verveine.core.gen.famix.FileAnchor.class);
-+		metamodel.with(fr.inria.verveine.core.gen.famix.SmalltalkMonticelloSourceLanguage.class);
-+		metamodel.with(fr.inria.verveine.core.gen.famix.AnnotationTypeAttribute.class);
-+		metamodel.with(fr.inria.verveine.core.gen.famix.AnnotationInstanceAttribute.class);
-+		metamodel.with(fr.inria.verveine.core.gen.famix.Association.class);
-+		metamodel.with(fr.inria.verveine.core.gen.famix.Attribute.class);
-+		metamodel.with(fr.inria.verveine.core.gen.famix.ScopingEntity.class);
-+		metamodel.with(fr.inria.verveine.core.gen.famix.ParameterizableClass.class);
-+		metamodel.with(fr.inria.verveine.core.gen.famix.Namespace.class);
- 		metamodel.with(fr.inria.verveine.core.gen.famix.Package.class);
--		metamodel.with(fr.inria.verveine.core.gen.famix.Comment.class);
--		metamodel.with(fr.inria.verveine.core.gen.famix.StructuralEntity.class);
--		metamodel.with(fr.inria.verveine.core.gen.famix.Reference.class);
-+		metamodel.with(fr.inria.verveine.core.gen.famix.DeclaredException.class);
- 		metamodel.with(fr.inria.verveine.core.gen.famix.ImplicitVariable.class);
-+		metamodel.with(fr.inria.verveine.core.gen.famix.Class.class);
-+		metamodel.with(fr.inria.verveine.core.gen.famix.Comment.class);
-+		metamodel.with(fr.inria.verveine.core.gen.famix.Method.class);
-+		metamodel.with(fr.inria.verveine.core.gen.famix.NamespaceGroup.class);
-+		metamodel.with(fr.inria.verveine.core.gen.famix.SourceAnchor.class);
-+		metamodel.with(fr.inria.verveine.core.gen.famix.NamedEntity.class);
-+		metamodel.with(fr.inria.verveine.core.gen.famix.Module.class);
-+		metamodel.with(fr.inria.verveine.core.gen.famix.GlobalVariableGroup.class);
-+		metamodel.with(fr.inria.verveine.core.gen.famix.CustomSourceLanguage.class);
-+		metamodel.with(fr.inria.verveine.core.gen.famix.Function.class);
-+		metamodel.with(fr.inria.verveine.core.gen.famix.Entity.class);
-+		metamodel.with(fr.inria.verveine.core.gen.famix.SmalltalkSourceLanguage.class);
-+		metamodel.with(fr.inria.verveine.core.gen.famix.SourceLanguage.class);
-+		metamodel.with(fr.inria.verveine.core.gen.famix.Parameter.class);
-+		metamodel.with(fr.inria.verveine.core.gen.famix.Enum.class);
-+		metamodel.with(fr.inria.verveine.core.gen.famix.UnknownVariable.class);
-+		metamodel.with(fr.inria.verveine.core.gen.famix.MethodGroup.class);
-+		metamodel.with(fr.inria.verveine.core.gen.famix.PackageGroup.class);
-+		metamodel.with(fr.inria.verveine.core.gen.famix.LocalVariable.class);
- 
-     }
- 
-Index: verveine.core/src/fr/inria/verveine/core/gen/famix/AnnotationTypeGroup.java
-===================================================================
---- verveine.core/src/fr/inria/verveine/core/gen/famix/AnnotationTypeGroup.java	(revision 0)
-+++ verveine.core/src/fr/inria/verveine/core/gen/famix/AnnotationTypeGroup.java	(revision 78)
-@@ -0,0 +1,18 @@
-+// Automagically generated code, please do not change
-+package fr.inria.verveine.core.gen.famix;
-+
-+import ch.akuhn.fame.FameDescription;
-+import ch.akuhn.fame.FamePackage;
-+import fr.inria.verveine.core.gen.moose.Group;
-+
-+
-+@FamePackage("FAMIX")
-+@FameDescription("AnnotationTypeGroup")
-+public class AnnotationTypeGroup extends Group {
-+
-+
-+
-+
-+
-+}
-+
-Index: verveine.core/src/fr/inria/verveine/core/gen/famix/ParameterizedType.java
-===================================================================
---- verveine.core/src/fr/inria/verveine/core/gen/famix/ParameterizedType.java	(revision 0)
-+++ verveine.core/src/fr/inria/verveine/core/gen/famix/ParameterizedType.java	(revision 78)
-@@ -0,0 +1,72 @@
-+// Automagically generated code, please do not change
-+package fr.inria.verveine.core.gen.famix;
-+
-+import java.util.*;
-+import ch.akuhn.fame.FameProperty;
-+import ch.akuhn.fame.FameDescription;
-+import ch.akuhn.fame.FamePackage;
-+
-+
-+@FamePackage("FAMIX")
-+@FameDescription("ParameterizedType")
-+public class ParameterizedType extends Type {
-+
-+
-+
-+    private Collection<Type> arguments; 
-+
-+    @FameProperty(name = "arguments")
-+    public Collection<Type> getArguments() {
-+        if (arguments == null) arguments = new HashSet<Type>();
-+        return arguments;
-+    }
-+    
-+    public void setArguments(Collection<? extends Type> arguments) {
-+        this.getArguments().clear();
-+        this.getArguments().addAll(arguments);
-+    }                    
-+
-+    public void addArguments(Type one) {
-+        this.getArguments().add(one);
-+    }   
-+    
-+    public void addArguments(Type one, Type... many) {
-+        this.getArguments().add(one);
-+        for (Type each : many)
-+            this.getArguments().add(each);
-+    }   
-+    
-+    public void addArguments(Iterable<? extends Type> many) {
-+        for (Type each : many)
-+            this.getArguments().add(each);
-+    }   
-+                
-+    public void addArguments(Type[] many) {
-+        for (Type each : many)
-+            this.getArguments().add(each);
-+    }
-+    
-+    public int numberOfArguments() {
-+        return getArguments().size();
-+    }
-+
-+    public boolean hasArguments() {
-+        return !getArguments().isEmpty();
-+    }
-+    
-+                
-+    private ParameterizableClass parameterizableClass;
-+    
-+    @FameProperty(name = "parameterizableClass")
-+    public ParameterizableClass getParameterizableClass() {
-+        return parameterizableClass;
-+    }
-+
-+    public void setParameterizableClass(ParameterizableClass parameterizableClass) {
-+        this.parameterizableClass = parameterizableClass;
-+    }
-+    
-+
-+
-+}
-+
-Index: verveine.core/src/fr/inria/verveine/core/gen/famix/BehaviouralEntity.java
-===================================================================
---- verveine.core/src/fr/inria/verveine/core/gen/famix/BehaviouralEntity.java	(revision 77)
-+++ verveine.core/src/fr/inria/verveine/core/gen/famix/BehaviouralEntity.java	(revision 78)
-@@ -324,7 +324,7 @@
- 
- 	public void setNOS(int nos) {
- 		this.nos = nos;
--	}
-+    }
-     
- 
- 
-Index: verveine.core/src/fr/inria/verveine/core/gen/famix/CustomSourceLanguage.java
-===================================================================
---- verveine.core/src/fr/inria/verveine/core/gen/famix/CustomSourceLanguage.java	(revision 0)
-+++ verveine.core/src/fr/inria/verveine/core/gen/famix/CustomSourceLanguage.java	(revision 78)
-@@ -0,0 +1,29 @@
-+// Automagically generated code, please do not change
-+package fr.inria.verveine.core.gen.famix;
-+
-+import ch.akuhn.fame.FameProperty;
-+import ch.akuhn.fame.FameDescription;
-+import ch.akuhn.fame.FamePackage;
-+
-+
-+@FamePackage("FAMIX")
-+@FameDescription("CustomSourceLanguage")
-+public class CustomSourceLanguage extends SourceLanguage {
-+
-+
-+
-+    private String name;
-+    
-+    @FameProperty(name = "name")
-+    public String getName() {
-+        return name;
-+    }
-+
-+    public void setName(String name) {
-+        this.name = name;
-+    }
-+    
-+
-+
-+}
-+
-Index: verveine.core/src/fr/inria/verveine/core/gen/famix/AnnotationInstance.java
-===================================================================
---- verveine.core/src/fr/inria/verveine/core/gen/famix/AnnotationInstance.java	(revision 77)
-+++ verveine.core/src/fr/inria/verveine/core/gen/famix/AnnotationInstance.java	(revision 78)
-@@ -1,6 +1,7 @@
- // Automagically generated code, please do not change
- package fr.inria.verveine.core.gen.famix;
- 
-+import java.util.*;
- import ch.akuhn.fame.FameProperty;
- import ch.akuhn.fame.FameDescription;
- import ch.akuhn.fame.FamePackage;
-@@ -46,6 +47,12 @@
-         annotationType.getInstances().add(this);
-     }
-     
-+    @FameProperty(name = "attributes", derived = true)
-+    public Collection<AnnotationInstanceAttribute> getAttributes() {
-+        // TODO: this is a derived property, implement this method manually.
-+        throw new UnsupportedOperationException("Not yet implemented!");  
-+    }
-+        
- 
- 
- }
-Index: verveine.core/src/fr/inria/verveine/core/gen/famix/SourceLanguage.java
-===================================================================
---- verveine.core/src/fr/inria/verveine/core/gen/famix/SourceLanguage.java	(revision 0)
-+++ verveine.core/src/fr/inria/verveine/core/gen/famix/SourceLanguage.java	(revision 78)
-@@ -0,0 +1,80 @@
-+// Automagically generated code, please do not change
-+package fr.inria.verveine.core.gen.famix;
-+
-+import ch.akuhn.fame.internal.MultivalueSet;
-+import java.util.*;
-+import ch.akuhn.fame.FameProperty;
-+import ch.akuhn.fame.FameDescription;
-+import ch.akuhn.fame.FamePackage;
-+
-+
-+@FamePackage("FAMIX")
-+@FameDescription("SourceLanguage")
-+public class SourceLanguage extends Entity {
-+
-+
-+
-+    @FameProperty(name = "name", derived = true)
-+    public String getName() {
-+        // TODO: this is a derived property, implement this method manually.
-+        throw new UnsupportedOperationException("Not yet implemented!");  
-+    }
-+    
-+    private Collection<SourcedEntity> sourcedEntities; 
-+
-+    @FameProperty(name = "sourcedEntities", opposite = "declaredSourceLanguage", derived = true)
-+    public Collection<SourcedEntity> getSourcedEntities() {
-+        if (sourcedEntities == null) {
-+            sourcedEntities = new MultivalueSet<SourcedEntity>() {
-+                @Override
-+                protected void clearOpposite(SourcedEntity e) {
-+                    e.setDeclaredSourceLanguage(null);
-+                }
-+                @Override
-+                protected void setOpposite(SourcedEntity e) {
-+                    e.setDeclaredSourceLanguage(SourceLanguage.this);
-+                }
-+            };
-+        }
-+        return sourcedEntities;
-+    }
-+    
-+    public void setSourcedEntities(Collection<? extends SourcedEntity> sourcedEntities) {
-+        this.getSourcedEntities().clear();
-+        this.getSourcedEntities().addAll(sourcedEntities);
-+    }                    
-+    
-+        
-+    public void addSourcedEntities(SourcedEntity one) {
-+        this.getSourcedEntities().add(one);
-+    }   
-+    
-+    public void addSourcedEntities(SourcedEntity one, SourcedEntity... many) {
-+        this.getSourcedEntities().add(one);
-+        for (SourcedEntity each : many)
-+            this.getSourcedEntities().add(each);
-+    }   
-+    
-+    public void addSourcedEntities(Iterable<? extends SourcedEntity> many) {
-+        for (SourcedEntity each : many)
-+            this.getSourcedEntities().add(each);
-+    }   
-+                
-+    public void addSourcedEntities(SourcedEntity[] many) {
-+        for (SourcedEntity each : many)
-+            this.getSourcedEntities().add(each);
-+    }
-+    
-+    public int numberOfSourcedEntities() {
-+        return getSourcedEntities().size();
-+    }
-+
-+    public boolean hasSourcedEntities() {
-+        return !getSourcedEntities().isEmpty();
-+    }
-+    
-+                
-+
-+
-+}
-+
-Index: verveine.core/src/fr/inria/verveine/core/gen/famix/Class.java
-===================================================================
---- verveine.core/src/fr/inria/verveine/core/gen/famix/Class.java	(revision 77)
-+++ verveine.core/src/fr/inria/verveine/core/gen/famix/Class.java	(revision 78)
-@@ -1,8 +1,6 @@
- // Automagically generated code, please do not change
- package fr.inria.verveine.core.gen.famix;
- 
--import java.util.Collection;
--
- import ch.akuhn.fame.FameProperty;
- import ch.akuhn.fame.FameDescription;
- import ch.akuhn.fame.FamePackage;
-@@ -13,7 +11,7 @@
- public class Class extends Type {
- 
- 
--	// Apparently, we should not use getIsAbstract() (from NamedEntity) here ?!?!?
-+
-     @FameProperty(name = "isAbstract", derived = true)
-     public Boolean getIsAbstract() {
-         // TODO: this is a derived property, implement this method manually.
-@@ -31,14 +29,7 @@
-         this.isInterface = isInterface;
-     }
-     
--    private Collection<Type> parameterTypes;
--    
--    @FameProperty(name = "parameterTypes")
--    public Collection<Type> getParameterTypes() {
--    	return parameterTypes;
--    }
--    
--    public void setParameterTypes(Collection<Type> parameterTypes) {
--    	this.parameterTypes = parameterTypes;
--    }
--}
-\ No newline at end of file
-+
-+
-+}
-+
-Index: verveine.core/src/fr/inria/verveine/core/gen/famix/StructuralEntity.java
-===================================================================
---- verveine.core/src/fr/inria/verveine/core/gen/famix/StructuralEntity.java	(revision 77)
-+++ verveine.core/src/fr/inria/verveine/core/gen/famix/StructuralEntity.java	(revision 78)
-@@ -25,17 +25,6 @@
-         this.declaredType = declaredType;
-     }
-     
--    private Collection<Type> declaredArgumentTypes;
--    
--    @FameProperty(name = "declaredArgumentTypes")
--    public Collection<Type> getDeclaredArgumentTypes() {
--        return declaredArgumentTypes;
--    }
--
--    public void setDeclaredArgumentTypes(Collection<Type> declaredArgumentTypes) {
--        this.declaredArgumentTypes = declaredArgumentTypes;
--    }
--    
-     private Collection<Access> incomingAccesses; 
- 
-     @FameProperty(name = "incomingAccesses", opposite = "variable", derived = true)
-Index: verveine.core/src/fr/inria/verveine/core/gen/famix/JavaSourceLanguage.java
-===================================================================
---- verveine.core/src/fr/inria/verveine/core/gen/famix/JavaSourceLanguage.java	(revision 0)
-+++ verveine.core/src/fr/inria/verveine/core/gen/famix/JavaSourceLanguage.java	(revision 78)
-@@ -0,0 +1,17 @@
-+// Automagically generated code, please do not change
-+package fr.inria.verveine.core.gen.famix;
-+
-+import ch.akuhn.fame.FameDescription;
-+import ch.akuhn.fame.FamePackage;
-+
-+
-+@FamePackage("FAMIX")
-+@FameDescription("JavaSourceLanguage")
-+public class JavaSourceLanguage extends SourceLanguage {
-+
-+
-+
-+
-+
-+}
-+
-Index: verveine.core/src/fr/inria/verveine/core/gen/famix/GlobalVariable.java
-===================================================================
---- verveine.core/src/fr/inria/verveine/core/gen/famix/GlobalVariable.java	(revision 77)
-+++ verveine.core/src/fr/inria/verveine/core/gen/famix/GlobalVariable.java	(revision 78)
-@@ -29,7 +29,18 @@
-         parentScope.getGlobalVariables().add(this);
-     }
-     
-+    private Module parentModule;
-+    
-+    @FameProperty(name = "parentModule")
-+    public Module getParentModule() {
-+        return parentModule;
-+    }
- 
-+    public void setParentModule(Module parentModule) {
-+        this.parentModule = parentModule;
-+    }
-+    
-+
- 
- }
- 
-Index: verveine.core/src/fr/inria/verveine/core/gen/famix/PackageGroup.java
-===================================================================
---- verveine.core/src/fr/inria/verveine/core/gen/famix/PackageGroup.java	(revision 77)
-+++ verveine.core/src/fr/inria/verveine/core/gen/famix/PackageGroup.java	(revision 78)
-@@ -3,11 +3,12 @@
- 
- import ch.akuhn.fame.FameDescription;
- import ch.akuhn.fame.FamePackage;
-+import fr.inria.verveine.core.gen.moose.Group;
- 
- 
- @FamePackage("FAMIX")
- @FameDescription("PackageGroup")
--public class PackageGroup  {
-+public class PackageGroup extends Group {
- 
- 
- 
-Index: verveine.core/src/fr/inria/verveine/core/gen/famix/AnnotationType.java
-===================================================================
---- verveine.core/src/fr/inria/verveine/core/gen/famix/AnnotationType.java	(revision 77)
-+++ verveine.core/src/fr/inria/verveine/core/gen/famix/AnnotationType.java	(revision 78)
-@@ -31,6 +31,60 @@
-         container.getDefinedAnnotationTypes().add(this);
-     }
-     
-+    private Collection<AnnotationTypeAttribute> attributes; 
-+
-+    @FameProperty(name = "attributes", opposite = "parentAnnotationType", derived = true)
-+    public Collection<AnnotationTypeAttribute> getAttributes() {
-+        if (attributes == null) {
-+            attributes = new MultivalueSet<AnnotationTypeAttribute>() {
-+                @Override
-+                protected void clearOpposite(AnnotationTypeAttribute e) {
-+                    e.setParentAnnotationType(null);
-+                }
-+                @Override
-+                protected void setOpposite(AnnotationTypeAttribute e) {
-+                    e.setParentAnnotationType(AnnotationType.this);
-+                }
-+            };
-+        }
-+        return attributes;
-+    }
-+    
-+    public void setAttributes(Collection<? extends AnnotationTypeAttribute> attributes) {
-+        this.getAttributes().clear();
-+        this.getAttributes().addAll(attributes);
-+    }                    
-+    
-+        
-+    public void addAttributes(AnnotationTypeAttribute one) {
-+        this.getAttributes().add(one);
-+    }   
-+    
-+    public void addAttributes(AnnotationTypeAttribute one, AnnotationTypeAttribute... many) {
-+        this.getAttributes().add(one);
-+        for (AnnotationTypeAttribute each : many)
-+            this.getAttributes().add(each);
-+    }   
-+    
-+    public void addAttributes(Iterable<? extends AnnotationTypeAttribute> many) {
-+        for (AnnotationTypeAttribute each : many)
-+            this.getAttributes().add(each);
-+    }   
-+                
-+    public void addAttributes(AnnotationTypeAttribute[] many) {
-+        for (AnnotationTypeAttribute each : many)
-+            this.getAttributes().add(each);
-+    }
-+    
-+    public int numberOfAttributes() {
-+        return getAttributes().size();
-+    }
-+
-+    public boolean hasAttributes() {
-+        return !getAttributes().isEmpty();
-+    }
-+    
-+                
-     private Collection<AnnotationInstance> instances; 
- 
-     @FameProperty(name = "instances", opposite = "annotationType", derived = true)
-Index: verveine.core/src/fr/inria/verveine/core/gen/famix/ClassGroup.java
-===================================================================
---- verveine.core/src/fr/inria/verveine/core/gen/famix/ClassGroup.java	(revision 77)
-+++ verveine.core/src/fr/inria/verveine/core/gen/famix/ClassGroup.java	(revision 78)
-@@ -3,11 +3,12 @@
- 
- import ch.akuhn.fame.FameDescription;
- import ch.akuhn.fame.FamePackage;
-+import fr.inria.verveine.core.gen.moose.Group;
- 
- 
- @FamePackage("FAMIX")
- @FameDescription("ClassGroup")
--public class ClassGroup  {
-+public class ClassGroup extends Group {
- 
- 
- 
-Index: verveine.core/src/fr/inria/verveine/core/gen/famix/ParameterType.java
-===================================================================
---- verveine.core/src/fr/inria/verveine/core/gen/famix/ParameterType.java	(revision 0)
-+++ verveine.core/src/fr/inria/verveine/core/gen/famix/ParameterType.java	(revision 78)
-@@ -0,0 +1,17 @@
-+// Automagically generated code, please do not change
-+package fr.inria.verveine.core.gen.famix;
-+
-+import ch.akuhn.fame.FameDescription;
-+import ch.akuhn.fame.FamePackage;
-+
-+
-+@FamePackage("FAMIX")
-+@FameDescription("ParameterType")
-+public class ParameterType extends Type {
-+
-+
-+
-+
-+
-+}
-+
-Index: verveine.core/src/fr/inria/verveine/core/gen/famix/UnknownSourceLanguage.java
-===================================================================
---- verveine.core/src/fr/inria/verveine/core/gen/famix/UnknownSourceLanguage.java	(revision 0)
-+++ verveine.core/src/fr/inria/verveine/core/gen/famix/UnknownSourceLanguage.java	(revision 78)
-@@ -0,0 +1,17 @@
-+// Automagically generated code, please do not change
-+package fr.inria.verveine.core.gen.famix;
-+
-+import ch.akuhn.fame.FameDescription;
-+import ch.akuhn.fame.FamePackage;
-+
-+
-+@FamePackage("FAMIX")
-+@FameDescription("UnknownSourceLanguage")
-+public class UnknownSourceLanguage extends SourceLanguage {
-+
-+
-+
-+
-+
-+}
-+
-Index: verveine.core/src/fr/inria/verveine/core/gen/famix/Function.java
-===================================================================
---- verveine.core/src/fr/inria/verveine/core/gen/famix/Function.java	(revision 77)
-+++ verveine.core/src/fr/inria/verveine/core/gen/famix/Function.java	(revision 78)
-@@ -29,7 +29,18 @@
-         parentScope.getFunctions().add(this);
-     }
-     
-+    private Module parentModule;
-+    
-+    @FameProperty(name = "parentModule")
-+    public Module getParentModule() {
-+        return parentModule;
-+    }
- 
-+    public void setParentModule(Module parentModule) {
-+        this.parentModule = parentModule;
-+    }
-+    
-+
- 
- }
- 
-Index: verveine.core/src/fr/inria/verveine/core/gen/famix/MethodGroup.java
-===================================================================
---- verveine.core/src/fr/inria/verveine/core/gen/famix/MethodGroup.java	(revision 77)
-+++ verveine.core/src/fr/inria/verveine/core/gen/famix/MethodGroup.java	(revision 78)
-@@ -3,11 +3,12 @@
- 
- import ch.akuhn.fame.FameDescription;
- import ch.akuhn.fame.FamePackage;
-+import fr.inria.verveine.core.gen.moose.Group;
- 
- 
- @FamePackage("FAMIX")
- @FameDescription("MethodGroup")
--public class MethodGroup  {
-+public class MethodGroup extends Group {
- 
- 
- 
-Index: verveine.core/src/fr/inria/verveine/core/gen/famix/ParameterizableClass.java
-===================================================================
---- verveine.core/src/fr/inria/verveine/core/gen/famix/ParameterizableClass.java	(revision 0)
-+++ verveine.core/src/fr/inria/verveine/core/gen/famix/ParameterizableClass.java	(revision 78)
-@@ -0,0 +1,25 @@
-+// Automagically generated code, please do not change
-+package fr.inria.verveine.core.gen.famix;
-+
-+import java.util.*;
-+import ch.akuhn.fame.FameProperty;
-+import ch.akuhn.fame.FameDescription;
-+import ch.akuhn.fame.FamePackage;
-+
-+
-+@FamePackage("FAMIX")
-+@FameDescription("ParameterizableClass")
-+public class ParameterizableClass extends Class {
-+
-+
-+
-+    @FameProperty(name = "parameters", derived = true)
-+    public Collection<ParameterType> getParameters() {
-+        // TODO: this is a derived property, implement this method manually.
-+        throw new UnsupportedOperationException("Not yet implemented!");  
-+    }
-+        
-+
-+
-+}
-+
